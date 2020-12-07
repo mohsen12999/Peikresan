@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Peikresan.Data.Models;
-using EventLog = System.Diagnostics.EventLog;
 
 namespace Peikresan.Data
 {
