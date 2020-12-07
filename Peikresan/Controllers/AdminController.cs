@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -10,9 +11,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Peikresan.Models;
-using Peikresan.Models.ViewModels;
-using Peikresan.services;
+using Peikresan.Data;
+using Peikresan.Data.Models;
+using Peikresan.Data.ViewModels;
+using Peikresan.Services;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -109,7 +111,7 @@ namespace Peikresan.Controllers
             {
                 using (var fileStream = categoryModel.file.OpenReadStream())
                 {
-                    using (Image<Rgba32> image = (Image<Rgba32>)Image.Load(fileStream))
+                    using (Image<Rgba32> image = Image.Load<Rgba32>(fileStream))
                     {
                         image.Mutate(x => x
                                 .Resize(500, 425)
@@ -268,7 +270,7 @@ namespace Peikresan.Controllers
             {
                 using (var fileStream = productModel.file.OpenReadStream())
                 {
-                    using (Image<Rgba32> image = (Image<Rgba32>)Image.Load(fileStream))
+                    using (Image<Rgba32> image = Image.Load<Rgba32>(fileStream))
                     {
                         image.Mutate(x => x
                                 .Resize(500, 500)
@@ -448,7 +450,7 @@ namespace Peikresan.Controllers
             {
                 using (var fileStream = bannerModel.file.OpenReadStream())
                 {
-                    using (Image<Rgba32> image = (Image<Rgba32>)Image.Load(fileStream))
+                    using (Image<Rgba32> image = Image.Load<Rgba32>(fileStream))
                     {
                         image.Mutate(x => x
                                 .Resize(500, 425)
@@ -589,7 +591,7 @@ namespace Peikresan.Controllers
             {
                 using (var fileStream = sliderModel.file.OpenReadStream())
                 {
-                    using (Image<Rgba32> image = (Image<Rgba32>)Image.Load(fileStream))
+                    using (Image<Rgba32> image = Image.Load<Rgba32>(fileStream))
                     {
                         image.Mutate(x => x
                                 .Resize(500, 425)

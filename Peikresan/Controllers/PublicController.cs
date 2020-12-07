@@ -1,12 +1,12 @@
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Peikresan.Models;
-using Peikresan.Models.ViewModels;
-using Peikresan.services;
+using Peikresan.Data;
+using Peikresan.Data.Models;
+using Peikresan.Data.ViewModels;
+
 
 namespace Peikresan.Controllers
 {
