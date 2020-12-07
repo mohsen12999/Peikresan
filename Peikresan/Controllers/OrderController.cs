@@ -5,8 +5,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Peikresan.Models;
-using Peikresan.Models.ViewModels;
+using Peikresan.Data;
+using Peikresan.Data.Models;
+using Peikresan.Data.ViewModels;
 
 namespace Peikresan.Controllers
 {

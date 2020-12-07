@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using Peikresan.Models;
-using Peikresan.services;
-using Peikresan.Models.ViewModels;
+using Peikresan.Data;
+using Peikresan.Data.Models;
+using Peikresan.Data.ViewModels;
+using Peikresan.Services;
 
 namespace Peikresan.Controllers
 {

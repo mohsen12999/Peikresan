@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Peikresan.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -11,10 +10,12 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authorization;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
-using Peikresan.Models.ViewModels;
 using System.Linq;
 using Microsoft.Extensions.Logging;
-using Peikresan.services;
+using Peikresan.Data;
+using Peikresan.Data.Models;
+using Peikresan.Data.ViewModels;
+using Peikresan.Services;
 
 namespace Peikresan.Controllers
 {

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
@@ -118,7 +117,7 @@ namespace Peikresan.Controllers
                         //.Grayscale()
                         );
                         var filepath = "img\\category\\cat" + DateTime.Now.Ticks + ".jpg";
-                        image.Save(Path.Combine(_webRootPath, filepath)); // Automatic encoder selected based on extension.
+                        await image.SaveAsync(Path.Combine(_webRootPath, filepath)); // Automatic encoder selected based on extension.
                         filename = filepath;
                     }
                 }
@@ -277,7 +276,7 @@ namespace Peikresan.Controllers
                         //.Grayscale()
                         );
                         var filepath = "img\\product\\product-" + DateTime.Now.Ticks + ".jpg";
-                        image.Save(Path.Combine(_webRootPath, filepath)); // Automatic encoder selected based on extension.
+                        await image.SaveAsync(Path.Combine(_webRootPath, filepath)); // Automatic encoder selected based on extension.
                         filename = filepath;
                     }
                 }
@@ -457,7 +456,7 @@ namespace Peikresan.Controllers
                         //.Grayscale()
                         );
                         var filepath = "img\\banner\\cat" + DateTime.Now.Ticks + ".jpg";
-                        image.Save(Path.Combine(_webRootPath, filepath)); // Automatic encoder selected based on extension.
+                        await image.SaveAsync(Path.Combine(_webRootPath, filepath)); // Automatic encoder selected based on extension.
                         filename = filepath;
                     }
                 }
@@ -598,7 +597,7 @@ namespace Peikresan.Controllers
                         //.Grayscale()
                         );
                         var filepath = "img\\category\\cat" + DateTime.Now.Ticks + ".jpg";
-                        image.Save(Path.Combine(_webRootPath, filepath)); // Automatic encoder selected based on extension.
+                        await image.SaveAsync(Path.Combine(_webRootPath, filepath)); // Automatic encoder selected based on extension.
                         filename = filepath;
                     }
                 }
