@@ -39,46 +39,136 @@ namespace Peikresan.Controllers
 
             try
             {
-                var user = new User() { UserName = registerModel.username, Email = registerModel.email };
-                var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.roleId.Trim()).FirstAsync();
-                if (role != null) user.Role = role;
 
-                if (string.IsNullOrEmpty(registerModel.firstName) == false && registerModel.firstName.ToLower() != "undefines")
+                if (registerModel.id == "" || registerModel.id.ToLower() == "undefined")
                 {
-                    user.FirstName = registerModel.firstName.Trim();
-                }
-                if (string.IsNullOrEmpty(registerModel.lastName) == false && registerModel.lastName.ToLower() != "undefines")
-                {
-                    user.LastName = registerModel.lastName.Trim();
-                }
-                if (string.IsNullOrEmpty(registerModel.mobile) == false && registerModel.mobile.ToLower() != "undefines")
-                {
-                    user.Mobile = registerModel.mobile.Trim();
-                }
+                    var user = new User() { UserName = registerModel.username, Email = registerModel.email };
+                    var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.roleId.Trim()).FirstAsync();
+                    if (role != null) user.Role = role;
 
-                var passwordHasher = new PasswordHasher<User>();
-                var passwordHash = passwordHasher.HashPassword(user, registerModel.password);
-                user.PasswordHash = passwordHash;
-
-                await _context.Users.AddAsync(user);
-                await _context.SaveChangesAsync();
-
-                return Ok(new
-                {
-                    success = true,
-                    user = new { user.Id, user.FirstName, role = user.Role?.Name ?? "", user.UserName, user.LastName, user.Mobile },
-                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                    if (string.IsNullOrEmpty(registerModel.firstName) == false &&
+                        registerModel.firstName.ToLower() != "undefined")
                     {
-                        UserId = thisUser.Id.ToString(),
-                        WebsiteModel = WebsiteModel.User,
-                        WebsiteEventType = WebsiteEventType.Insert,
-                        Description = "Admin " + thisUser.FullName + " Register User " + user.FullName + " - role: " + (role?.Name ?? "")
-                    })
-                });
+                        user.FirstName = registerModel.firstName.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.lastName) == false &&
+                        registerModel.lastName.ToLower() != "undefined")
+                    {
+                        user.LastName = registerModel.lastName.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.mobile) == false &&
+                        registerModel.mobile.ToLower() != "undefined")
+                    {
+                        user.Mobile = registerModel.mobile.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.address) == false &&
+                        registerModel.address.ToLower() != "undefined")
+                    {
+                        user.Address = registerModel.address.Trim();
+                    }
+
+                    var passwordHasher = new PasswordHasher<User>();
+                    var passwordHash = passwordHasher.HashPassword(user, registerModel.password);
+                    user.PasswordHash = passwordHash;
+
+                    await _context.Users.AddAsync(user);
+                    await _context.SaveChangesAsync();
+
+                    return Ok(new
+                    {
+                        success = true,
+                        user = new
+                        {
+                            user.Id,
+                            user.FirstName,
+                            role = user.Role?.Name ?? "",
+                            user.UserName,
+                            user.LastName,
+                            user.Mobile
+                        },
+                        eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                        {
+                            UserId = thisUser.Id.ToString(),
+                            WebsiteModel = WebsiteModel.User,
+                            WebsiteEventType = WebsiteEventType.Insert,
+                            Description = "Admin " + thisUser.FullName + " Register User " + user.FullName + " - role: " +
+                                          (role?.Name ?? "")
+                        })
+                    });
+                }
+                else
+                {
+                    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == registerModel.id);
+                    if (user == null)
+                    {
+                        return BadRequest("can not find user to change");
+                    }
+                    var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.roleId.Trim()).FirstAsync();
+                    if (role != null) user.Role = role;
+
+                    if (string.IsNullOrEmpty(registerModel.firstName) == false &&
+                        registerModel.firstName.ToLower() != "undefined")
+                    {
+                        user.FirstName = registerModel.firstName.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.lastName) == false &&
+                        registerModel.lastName.ToLower() != "undefined")
+                    {
+                        user.LastName = registerModel.lastName.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.mobile) == false &&
+                        registerModel.mobile.ToLower() != "undefined")
+                    {
+                        user.Mobile = registerModel.mobile.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.address) == false &&
+                        registerModel.address.ToLower() != "undefined")
+                    {
+                        user.Address = registerModel.address.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.password) == false &&
+                        registerModel.password.ToLower() != "undefined")
+                    {
+                        var passwordHasher = new PasswordHasher<User>();
+                        var passwordHash = passwordHasher.HashPassword(user, registerModel.password);
+                        user.PasswordHash = passwordHash;
+                    }
+
+                    _context.Users.Update(user);
+                    await _context.SaveChangesAsync();
+                    return Ok(new
+                    {
+                        success = true,
+                        user = new
+                        {
+                            user.Id,
+                            user.FirstName,
+                            role = user.Role?.Name ?? "",
+                            user.UserName,
+                            user.LastName,
+                            user.Mobile
+                        },
+                        eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                        {
+                            UserId = thisUser.Id.ToString(),
+                            WebsiteModel = WebsiteModel.User,
+                            WebsiteEventType = WebsiteEventType.Update,
+                            Description = "Admin " + thisUser.FullName + " Update User " + user.FullName + " - role: " +
+                                          (role?.Name ?? "")
+                        })
+                    });
+                }
             }
             catch (Exception e)
             {
-                return BadRequest("error in add user " + e.Message);
+                return BadRequest("error in add or update user " + e.Message);
             }
 
         }
@@ -115,7 +205,7 @@ namespace Peikresan.Controllers
             {
                 users,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
                     WebsiteModel = WebsiteModel.User,
