@@ -93,7 +93,7 @@ namespace Peikresan.Controllers
                     users,
                     roles,
                     orders,
-                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                    eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
                         WebsiteModel = WebsiteModel.User,
@@ -120,7 +120,7 @@ namespace Peikresan.Controllers
                 role = thisUser.Role?.Name ?? "",
                 orders = userOrders,
                 sellerProducts,
-                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
                     WebsiteModel = WebsiteModel.User,
@@ -202,29 +202,11 @@ namespace Peikresan.Controllers
 
                 var tokenString = GenerateJwtToken(user);
 
-                var eventLogUser = new WebsiteLog
-                {
-                    UserId = user.Id.ToString(),
-                    WebsiteModel = WebsiteModel.User,
-                    WebsiteEventType = WebsiteEventType.Insert,
-                    Description = "add user " + user.FullName
-                };
-
-                try
-                {
-                    await _context.EventLogs.AddAsync(eventLogUser);
-                    await _context.SaveChangesAsync();
-                }
-                catch (Exception e)
-                {
-                    _logger.Log(LogLevel.Error, "problem in save event " + e.Message);
-                }
-
                 return Ok(new
                 {
                     token = tokenString,
                     userDetails = user,
-                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                    eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = user.Id.ToString(),
                         WebsiteModel = WebsiteModel.User,
