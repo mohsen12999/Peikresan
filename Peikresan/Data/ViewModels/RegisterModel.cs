@@ -1,6 +1,8 @@
 namespace Peikresan.Data.ViewModels
 {
-    public class RegisterModel{
+    public class RegisterModel
+    {
+        public string id { get; set; }
         public string username { get; set; }
         public string email { get; set; }
         public string password { get; set; }
