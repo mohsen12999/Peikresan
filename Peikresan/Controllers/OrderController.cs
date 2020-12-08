@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using Peikresan.Data;
 using Peikresan.Data.Models;
 using Peikresan.Data.ViewModels;
+using Peikresan.Services;
 
 namespace Peikresan.Controllers
 {
@@ -69,13 +70,21 @@ namespace Peikresan.Controllers
             try
             {
                 _context.Orders.Update(order);
-                await _context.EventLogs.AddAsync(new WebsiteLog()
-                {
-                    WebsiteModel = WebsiteModel.Order, WebsiteEventType = WebsiteEventType.Update, ObjectId = order.Id,
-                    Description = "AssignToSeller " + seller.FullName, UserId = seller.Id.ToString()
-                });
                 await _context.SaveChangesAsync();
-                return Ok(new { order, success = true });
+
+                return Ok(new
+                {
+                    order,
+                    success = true,
+                    EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                    {
+                        WebsiteModel = WebsiteModel.Order,
+                        WebsiteEventType = WebsiteEventType.Update,
+                        ObjectId = order.Id,
+                        Description = "AssignToSeller " + seller.FullName,
+                        UserId = seller.Id.ToString()
+                    })
+                });
             }
             catch (Exception e)
             {
@@ -119,17 +128,20 @@ namespace Peikresan.Controllers
             try
             {
                 _context.Orders.Update(order);
-                await _context.EventLogs.AddAsync(new WebsiteLog()
-                {
-                    WebsiteModel = WebsiteModel.Order,
-                    WebsiteEventType = WebsiteEventType.Update,
-                    ObjectId = order.Id,
-                    Description = "SellerDeny",
-                    UserId = ""
-                });
-
                 await _context.SaveChangesAsync();
-                return Ok(new { order, success = true });
+                return Ok(new
+                {
+                    order,
+                    success = true,
+                    EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                    {
+                        WebsiteModel = WebsiteModel.Order,
+                        WebsiteEventType = WebsiteEventType.Update,
+                        ObjectId = order.Id,
+                        Description = "SellerDeny",
+                        UserId = ""
+                    })
+                });
             }
             catch (Exception e)
             {
@@ -183,18 +195,20 @@ namespace Peikresan.Controllers
             try
             {
                 _context.Orders.Update(order);
-
-                await _context.EventLogs.AddAsync(new WebsiteLog()
-                {
-                    WebsiteModel = WebsiteModel.Order,
-                    WebsiteEventType = WebsiteEventType.Update,
-                    ObjectId = order.Id,
-                    Description = "AssignToDeliver "+deliver.FullName,
-                    UserId = deliver.Id.ToString()
-                });
-
                 await _context.SaveChangesAsync();
-                return Ok(new { order, success = true });
+                return Ok(new
+                {
+                    order,
+                    success = true,
+                    EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                    {
+                        WebsiteModel = WebsiteModel.Order,
+                        WebsiteEventType = WebsiteEventType.Update,
+                        ObjectId = order.Id,
+                        Description = "AssignToDeliver " + deliver.FullName,
+                        UserId = deliver.Id.ToString()
+                    })
+                });
             }
             catch (Exception e)
             {
@@ -238,16 +252,20 @@ namespace Peikresan.Controllers
             try
             {
                 _context.Orders.Update(order);
-                await _context.EventLogs.AddAsync(new WebsiteLog()
-                {
-                    WebsiteModel = WebsiteModel.Order,
-                    WebsiteEventType = WebsiteEventType.Update,
-                    ObjectId = order.Id,
-                    Description = "DeliverDeny",
-                    UserId = ""
-                });
                 await _context.SaveChangesAsync();
-                return Ok(new { order, success = true });
+                return Ok(new
+                {
+                    order,
+                    success = true,
+                    EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                    {
+                        WebsiteModel = WebsiteModel.Order,
+                        WebsiteEventType = WebsiteEventType.Update,
+                        ObjectId = order.Id,
+                        Description = "DeliverDeny",
+                        UserId = ""
+                    })
+                });
             }
             catch (Exception e)
             {
@@ -284,16 +302,21 @@ namespace Peikresan.Controllers
             try
             {
                 _context.Orders.Update(order);
-                await _context.EventLogs.AddAsync(new WebsiteLog()
-                {
-                    WebsiteModel = WebsiteModel.Order,
-                    WebsiteEventType = WebsiteEventType.Update,
-                    ObjectId = order.Id,
-                    Description = "DeliveryGetProduct",
-                    UserId = ""
-                });
+
                 await _context.SaveChangesAsync();
-                return Ok(new { order, success = true });
+                return Ok(new
+                {
+                    order,
+                    success = true,
+                    EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                    {
+                        WebsiteModel = WebsiteModel.Order,
+                        WebsiteEventType = WebsiteEventType.Update,
+                        ObjectId = order.Id,
+                        Description = "DeliveryGetProduct",
+                        UserId = ""
+                    })
+                });
             }
             catch (Exception e)
             {
@@ -331,16 +354,20 @@ namespace Peikresan.Controllers
             {
                 _context.Orders.Update(order);
 
-                await _context.EventLogs.AddAsync(new WebsiteLog()
-                {
-                    WebsiteModel = WebsiteModel.Order,
-                    WebsiteEventType = WebsiteEventType.Update,
-                    ObjectId = order.Id,
-                    Description = "DeliveredProduct",
-                    UserId = ""
-                });
                 await _context.SaveChangesAsync();
-                return Ok(new { order, success = true });
+                return Ok(new
+                {
+                    order,
+                    success = true,
+                    EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                    {
+                        WebsiteModel = WebsiteModel.Order,
+                        WebsiteEventType = WebsiteEventType.Update,
+                        ObjectId = order.Id,
+                        Description = "DeliveredProduct",
+                        UserId = ""
+                    })
+                });
             }
             catch (Exception e)
             {

@@ -12,9 +12,6 @@ using Peikresan.Data;
 using Peikresan.Data.Models;
 using Peikresan.Data.ViewModels;
 using Peikresan.Services;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 namespace Peikresan.Controllers
 {
@@ -52,28 +49,9 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Add Product");
             }
 
-            var filename = "";
-                // await ImageServices.SaveAndConvertImage(productModel.file, _webRootPath, WebsiteModel.Product, 500, 500);
-            try
-            {
-                using (var fileStream = productModel.file.OpenReadStream())
-                {
-                    using (Image<Rgba32> image = Image.Load<Rgba32>(fileStream))
-                    {
-                        image.Mutate(x => x
-                                .Resize(500, 500)
-                        //.Grayscale()
-                        );
-                        var filepath = "img\\product\\product-" + DateTime.Now.Ticks + ".jpg";
-                        await image.SaveAsync(Path.Combine(_webRootPath, filepath)); // Automatic encoder selected based on extension.
-                        filename = filepath;
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                filename = "";
-            }
+            var filename = 
+                await ImageServices.SaveAndConvertImage(productModel.file, _webRootPath, WebsiteModel.Product, 500, 500);
+            
             var productCategory = string.IsNullOrEmpty(productModel.category) ? null : productModel.category.Trim();
             if (productCategory != null && productCategory.IndexOf('/') > 0)
             {
@@ -118,7 +96,7 @@ namespace Peikresan.Controllers
                     cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
                     product = new { product.Id, product.Title, product.Description, product.Price, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
-                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog()
+                    eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog()
                     {
                         UserId = thisUser.Id.ToString(),
                         WebsiteModel = WebsiteModel.Product,
@@ -167,7 +145,7 @@ namespace Peikresan.Controllers
                     cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
                     product = new { product.Id, product.Title, product.Description, product.Price, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
-                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                    eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
                         WebsiteModel = WebsiteModel.Product,
@@ -206,7 +184,7 @@ namespace Peikresan.Controllers
             {
                 products,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
                     WebsiteModel = WebsiteModel.Product,
@@ -217,5 +195,5 @@ namespace Peikresan.Controllers
             });
         }
 
-     }
+    }
 }

@@ -54,7 +54,7 @@ namespace Peikresan.Controllers
                         success = true,
                         sellerProduct,
                         product,
-                        eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                        eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                         {
                             UserId = thisUser.Id.ToString(),
                             WebsiteModel = WebsiteModel.SellerProduct,
@@ -89,7 +89,7 @@ namespace Peikresan.Controllers
                         success = true,
                         sellerProduct,
                         product,
-                        eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                        eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                         {
                             UserId = thisUser.Id.ToString(),
                             WebsiteModel = WebsiteModel.SellerProduct,
@@ -140,7 +140,7 @@ namespace Peikresan.Controllers
                 {
                     sellerProducts,
                     success = true,
-                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                    eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
                         WebsiteModel = WebsiteModel.SellerProduct,

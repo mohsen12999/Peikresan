@@ -11,9 +11,6 @@ using Peikresan.Data;
 using Peikresan.Data.Models;
 using Peikresan.Data.ViewModels;
 using Peikresan.Services;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
-using SixLabors.ImageSharp.Processing;
 
 namespace Peikresan.Controllers
 {
@@ -30,18 +27,7 @@ namespace Peikresan.Controllers
         {
             _logger = logger;
             _context = context;
-            _webRootPath = appEnvironment.WebRootPath;
-            if (_webRootPath == null)
-            {
-                if (appEnvironment.IsDevelopment())
-                {
-                    _webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp\\public");
-                }
-                else
-                {
-                    _webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp\\build");
-                }
-            }
+            _webRootPath = appEnvironment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), appEnvironment.IsDevelopment() ? "ClientApp\\public" : "ClientApp\\build");
         }
 
         [Authorize]
@@ -55,30 +41,8 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Add Slider");
             }
 
-            string filename;
-            var imgError = "";
-            try
-            {
-                using (var fileStream = sliderModel.file.OpenReadStream())
-                {
-                    using (Image<Rgba32> image = Image.Load<Rgba32>(fileStream))
-                    {
-                        image.Mutate(x => x
-                                .Resize(500, 425)
-                        //.Grayscale()
-                        );
-                        var filepath = "img\\category\\cat" + DateTime.Now.Ticks + ".jpg";
-                        await image.SaveAsync(Path.Combine(_webRootPath, filepath)); // Automatic encoder selected based on extension.
-                        filename = filepath;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning(e.Message);
-                imgError = e.Message;
-                filename = "";
-            }
+            var filename =
+                await ImageServices.SaveAndConvertImage(sliderModel.file, _webRootPath, WebsiteModel.Slider, 500, 425);
 
             if (sliderModel.id == "" || sliderModel.id.ToLower() == "undefined")
             {
@@ -94,10 +58,9 @@ namespace Peikresan.Controllers
                 {
                     slider,
                     success = true,
-                    imgError,
                     _webRootPath,
                     sliderModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                    eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
                         WebsiteModel = WebsiteModel.Slider,
@@ -112,7 +75,7 @@ namespace Peikresan.Controllers
                 var slider = await _context.Sliders.FindAsync(int.Parse(sliderModel.id));
                 if (slider == null)
                 {
-                    return NotFound("Slidder not Found: " + sliderModel.id);
+                    return NotFound("Slider not Found: " + sliderModel.id);
                 }
                 slider.Title = sliderModel.title;
                 if (filename.Length > 0)
@@ -126,10 +89,9 @@ namespace Peikresan.Controllers
                 {
                     slider,
                     success = true,
-                    imgError,
                     _webRootPath,
                     sliderModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                    eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
                         WebsiteModel = WebsiteModel.Slider,
@@ -166,7 +128,7 @@ namespace Peikresan.Controllers
             {
                 sliders,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
+                eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
                     WebsiteModel = WebsiteModel.Slider,
