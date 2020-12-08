@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Peikresan.Data.Models
 {
-    public class EventLog
+    public class WebsiteLog
     {
         public int Id { get; set; }
 
@@ -14,13 +14,13 @@ namespace Peikresan.Data.Models
         public string UserId { get; set; }
         public int? ObjectId { get; set; }
 
-        public EventLogModel EventLogModel { get; set; }
-        public EventLogType EventLogType { get; set; }
+        public WebsiteModel WebsiteModel { get; set; }
+        public WebsiteEventType WebsiteEventType { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 
-    public enum EventLogModel
+    public enum WebsiteModel
     {
         User = 1,
         Product = 10,
@@ -35,7 +35,7 @@ namespace Peikresan.Data.Models
         Other = 200
     }
 
-    public enum EventLogType
+    public enum WebsiteEventType
     {
         Logging = 1,
         Insert = 10,

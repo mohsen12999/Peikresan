@@ -69,9 +69,9 @@ namespace Peikresan.Controllers
             try
             {
                 _context.Orders.Update(order);
-                await _context.EventLogs.AddAsync(new EventLog()
+                await _context.EventLogs.AddAsync(new WebsiteLog()
                 {
-                    EventLogModel = EventLogModel.Order, EventLogType = EventLogType.Update, ObjectId = order.Id,
+                    WebsiteModel = WebsiteModel.Order, WebsiteEventType = WebsiteEventType.Update, ObjectId = order.Id,
                     Description = "AssignToSeller " + seller.FullName, UserId = seller.Id.ToString()
                 });
                 await _context.SaveChangesAsync();
@@ -119,10 +119,10 @@ namespace Peikresan.Controllers
             try
             {
                 _context.Orders.Update(order);
-                await _context.EventLogs.AddAsync(new EventLog()
+                await _context.EventLogs.AddAsync(new WebsiteLog()
                 {
-                    EventLogModel = EventLogModel.Order,
-                    EventLogType = EventLogType.Update,
+                    WebsiteModel = WebsiteModel.Order,
+                    WebsiteEventType = WebsiteEventType.Update,
                     ObjectId = order.Id,
                     Description = "SellerDeny",
                     UserId = ""
@@ -184,10 +184,10 @@ namespace Peikresan.Controllers
             {
                 _context.Orders.Update(order);
 
-                await _context.EventLogs.AddAsync(new EventLog()
+                await _context.EventLogs.AddAsync(new WebsiteLog()
                 {
-                    EventLogModel = EventLogModel.Order,
-                    EventLogType = EventLogType.Update,
+                    WebsiteModel = WebsiteModel.Order,
+                    WebsiteEventType = WebsiteEventType.Update,
                     ObjectId = order.Id,
                     Description = "AssignToDeliver "+deliver.FullName,
                     UserId = deliver.Id.ToString()
@@ -238,10 +238,10 @@ namespace Peikresan.Controllers
             try
             {
                 _context.Orders.Update(order);
-                await _context.EventLogs.AddAsync(new EventLog()
+                await _context.EventLogs.AddAsync(new WebsiteLog()
                 {
-                    EventLogModel = EventLogModel.Order,
-                    EventLogType = EventLogType.Update,
+                    WebsiteModel = WebsiteModel.Order,
+                    WebsiteEventType = WebsiteEventType.Update,
                     ObjectId = order.Id,
                     Description = "DeliverDeny",
                     UserId = ""
@@ -284,10 +284,10 @@ namespace Peikresan.Controllers
             try
             {
                 _context.Orders.Update(order);
-                await _context.EventLogs.AddAsync(new EventLog()
+                await _context.EventLogs.AddAsync(new WebsiteLog()
                 {
-                    EventLogModel = EventLogModel.Order,
-                    EventLogType = EventLogType.Update,
+                    WebsiteModel = WebsiteModel.Order,
+                    WebsiteEventType = WebsiteEventType.Update,
                     ObjectId = order.Id,
                     Description = "DeliveryGetProduct",
                     UserId = ""
@@ -331,10 +331,10 @@ namespace Peikresan.Controllers
             {
                 _context.Orders.Update(order);
 
-                await _context.EventLogs.AddAsync(new EventLog()
+                await _context.EventLogs.AddAsync(new WebsiteLog()
                 {
-                    EventLogModel = EventLogModel.Order,
-                    EventLogType = EventLogType.Update,
+                    WebsiteModel = WebsiteModel.Order,
+                    WebsiteEventType = WebsiteEventType.Update,
                     ObjectId = order.Id,
                     Description = "DeliveredProduct",
                     UserId = ""

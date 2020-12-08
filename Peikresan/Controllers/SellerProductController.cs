@@ -54,11 +54,11 @@ namespace Peikresan.Controllers
                         success = true,
                         sellerProduct,
                         product,
-                        eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                        eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                         {
                             UserId = thisUser.Id.ToString(),
-                            EventLogModel = EventLogModel.SellerProduct,
-                            EventLogType = EventLogType.Insert,
+                            WebsiteModel = WebsiteModel.SellerProduct,
+                            WebsiteEventType = WebsiteEventType.Insert,
                             Description = "add " + product.Title + " for " + thisUser.FullName
                         })
                     });
@@ -89,11 +89,11 @@ namespace Peikresan.Controllers
                         success = true,
                         sellerProduct,
                         product,
-                        eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                        eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                         {
                             UserId = thisUser.Id.ToString(),
-                            EventLogModel = EventLogModel.SellerProduct,
-                            EventLogType = EventLogType.Update,
+                            WebsiteModel = WebsiteModel.SellerProduct,
+                            WebsiteEventType = WebsiteEventType.Update,
                             Description = "Update " + product.Title + " for " + thisUser.FullName
                         })
                     });
@@ -140,11 +140,11 @@ namespace Peikresan.Controllers
                 {
                     sellerProducts,
                     success = true,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.SellerProduct,
-                        EventLogType = EventLogType.Delete,
+                        WebsiteModel = WebsiteModel.SellerProduct,
+                        WebsiteEventType = WebsiteEventType.Delete,
                         Description = "Delete SellerProduct" + id
                     })
                 });

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
+using System.Spatial;
 
 namespace Peikresan.Data.Models
 {
@@ -14,11 +15,15 @@ namespace Peikresan.Data.Models
         public string Mobile { get; set; }
         public string Address { get; set; }
 
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+        [NotMapped] public GeographyPoint Location => GeographyPoint.Create(Latitude, Longitude);
+
         public virtual Role Role { get; set; }
         // public RoleStatus RoleStatus { get; set; } = RoleStatus.User;
 
         public virtual IList<SellerProduct> SellerProducts { get; set; }
-        
+
         // for seller user
         public virtual IList<Order> SellOrders { get; set; }
 

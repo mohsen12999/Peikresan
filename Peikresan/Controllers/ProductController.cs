@@ -30,18 +30,7 @@ namespace Peikresan.Controllers
         {
             _logger = logger;
             _context = context;
-            _webRootPath = appEnvironment.WebRootPath;
-            if (_webRootPath == null)
-            {
-                if (appEnvironment.IsDevelopment())
-                {
-                    _webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp\\public");
-                }
-                else
-                {
-                    _webRootPath = Path.Combine(Directory.GetCurrentDirectory(), "ClientApp\\build");
-                }
-            }
+            _webRootPath = appEnvironment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), appEnvironment.IsDevelopment() ? "ClientApp\\public" : "ClientApp\\build");
         }
 
         [HttpGet]
@@ -63,7 +52,8 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Add Product");
             }
 
-            string filename;
+            var filename = "";
+                // await ImageServices.SaveAndConvertImage(productModel.file, _webRootPath, WebsiteModel.Product, 500, 500);
             try
             {
                 using (var fileStream = productModel.file.OpenReadStream())
@@ -128,11 +118,11 @@ namespace Peikresan.Controllers
                     cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
                     product = new { product.Id, product.Title, product.Description, product.Price, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog()
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Product,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.Product,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         ObjectId = product.Id,
                         Description = "add product " + product.Title
                     })
@@ -177,11 +167,11 @@ namespace Peikresan.Controllers
                     cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
                     product = new { product.Id, product.Title, product.Description, product.Price, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Product,
-                        EventLogType = EventLogType.Update,
+                        WebsiteModel = WebsiteModel.Product,
+                        WebsiteEventType = WebsiteEventType.Update,
                         ObjectId = product.Id,
                         Description = "Update product " + product.Title
                     })
@@ -216,11 +206,11 @@ namespace Peikresan.Controllers
             {
                 products,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.Product,
-                    EventLogType = EventLogType.Delete,
+                    WebsiteModel = WebsiteModel.Product,
+                    WebsiteEventType = WebsiteEventType.Delete,
                     ObjectId = product.Id,
                     Description = "Delete product " + product.Title
                 })

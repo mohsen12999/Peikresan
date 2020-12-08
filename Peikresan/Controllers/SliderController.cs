@@ -97,11 +97,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     sliderModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Slider,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.Slider,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         ObjectId = slider.Id,
                         Description = "Add slider " + slider.Title
                     })
@@ -129,11 +129,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     sliderModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Slider,
-                        EventLogType = EventLogType.Update,
+                        WebsiteModel = WebsiteModel.Slider,
+                        WebsiteEventType = WebsiteEventType.Update,
                         ObjectId = slider.Id,
                         Description = "Update Slider " + slider.Title
                     })
@@ -166,11 +166,11 @@ namespace Peikresan.Controllers
             {
                 sliders,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.Slider,
-                    EventLogType = EventLogType.Delete,
+                    WebsiteModel = WebsiteModel.Slider,
+                    WebsiteEventType = WebsiteEventType.Delete,
                     ObjectId = slider.Id,
                     Description = "Delete Slider " + slider.Title
                 })

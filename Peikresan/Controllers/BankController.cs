@@ -96,9 +96,9 @@ namespace Peikresan.Controllers
                 await _context.OrderItems.AddRangeAsync(orderItemList);
                 order.TotalPrice = PriceService.CalculatePrice(orderItemList, order.DeliverAtDoor);
                 _context.Orders.Update(order);
-                await _context.EventLogs.AddAsync(new EventLog()
+                await _context.WebsiteLog.AddAsync(new WebsiteLog()
                 {
-                    EventLogModel = EventLogModel.Order, EventLogType = EventLogType.Insert,
+                    WebsiteModel = WebsiteModel.Order, WebsiteEventType = WebsiteEventType.Insert,
                     Description = "make order with " + orderItemList.Count + " item", ObjectId = order.Id, UserId = ""
                 });
                 await _context.SaveChangesAsync();

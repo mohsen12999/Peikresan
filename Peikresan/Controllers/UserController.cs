@@ -67,11 +67,11 @@ namespace Peikresan.Controllers
                 {
                     success = true,
                     user = new { user.Id, user.FirstName, role = user.Role?.Name ?? "", user.UserName, user.LastName, user.Mobile },
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.User,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.User,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         Description = "Admin " + thisUser.FullName + " Register User " + user.FullName + " - role: " + (role?.Name ?? "")
                     })
                 });
@@ -115,11 +115,11 @@ namespace Peikresan.Controllers
             {
                 users,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.User,
-                    EventLogType = EventLogType.Insert,
+                    WebsiteModel = WebsiteModel.User,
+                    WebsiteEventType = WebsiteEventType.Insert,
                     Description = "Admin " + thisUser.FullName + " Remove User " + user.FullName
                 })
             });

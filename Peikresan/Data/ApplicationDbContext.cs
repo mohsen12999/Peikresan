@@ -56,6 +56,6 @@ namespace Peikresan.Data
         public DbSet<SellerProduct> SellerProducts { get; set; }
         public DbSet<AwesomeProduct> AwesomeProducts { get; set; }
 
-        public DbSet<EventLog> EventLogs { get; set; }
+        public DbSet<WebsiteLog> WebsiteLog { get; set; }
     }
 }

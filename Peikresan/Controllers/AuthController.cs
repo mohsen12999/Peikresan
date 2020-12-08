@@ -93,11 +93,11 @@ namespace Peikresan.Controllers
                     users,
                     roles,
                     orders,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.User,
-                        EventLogType = EventLogType.Logging,
+                        WebsiteModel = WebsiteModel.User,
+                        WebsiteEventType = WebsiteEventType.Logging,
                         Description = "logging admin " + thisUser.FullName
                     })
                 });
@@ -120,11 +120,11 @@ namespace Peikresan.Controllers
                 role = thisUser.Role?.Name ?? "",
                 orders = userOrders,
                 sellerProducts,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.User,
-                    EventLogType = EventLogType.Logging,
+                    WebsiteModel = WebsiteModel.User,
+                    WebsiteEventType = WebsiteEventType.Logging,
                     Description = "logging user " + thisUser.FullName
                 })
             });
@@ -202,11 +202,11 @@ namespace Peikresan.Controllers
 
                 var tokenString = GenerateJwtToken(user);
 
-                var eventLogUser = new EventLog
+                var eventLogUser = new WebsiteLog
                 {
                     UserId = user.Id.ToString(),
-                    EventLogModel = EventLogModel.User,
-                    EventLogType = EventLogType.Insert,
+                    WebsiteModel = WebsiteModel.User,
+                    WebsiteEventType = WebsiteEventType.Insert,
                     Description = "add user " + user.FullName
                 };
 
@@ -224,11 +224,11 @@ namespace Peikresan.Controllers
                 {
                     token = tokenString,
                     userDetails = user,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = user.Id.ToString(),
-                        EventLogModel = EventLogModel.User,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.User,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         Description = "add user " + user.FullName
                     })
                 });

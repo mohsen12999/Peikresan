@@ -5,13 +5,13 @@ using Peikresan.Data.Models;
 
 namespace Peikresan.Services
 {
-    public static class EventLogServices
+    public static class WebsiteLogServices
     {
-        public static async Task<int> SaveEventLog(ApplicationDbContext context, EventLog eventLog)
+        public static async Task<int> SaveEventLog(ApplicationDbContext context, WebsiteLog eventLog)
         {
             try
             {
-                await context.EventLogs.AddAsync(eventLog);
+                await context.WebsiteLog.AddAsync(eventLog);
                 await context.SaveChangesAsync();
                 return eventLog.Id;
             }

@@ -111,11 +111,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     categoryModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Category,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.Category,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         ObjectId = cat.Id,
                         Description = "add Category " + cat.Title
                     })
@@ -148,11 +148,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     categoryModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Category,
-                        EventLogType = EventLogType.Update,
+                        WebsiteModel = WebsiteModel.Category,
+                        WebsiteEventType = WebsiteEventType.Update,
                         ObjectId = cat.Id,
                         Description = "Update Category " + cat.Title
                     })
@@ -188,11 +188,11 @@ namespace Peikresan.Controllers
             {
                 categories,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.Category,
-                    EventLogType = EventLogType.Delete,
+                    WebsiteModel = WebsiteModel.Category,
+                    WebsiteEventType = WebsiteEventType.Delete,
                     ObjectId = cat.Id,
                     Description = "Delete Category " + cat.Title
                 })

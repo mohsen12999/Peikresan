@@ -97,11 +97,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     bannerModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Banner,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.Banner,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         ObjectId = banner.Id,
                         Description = "add Banner " + banner.Title
                     })
@@ -133,11 +133,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     bannerModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Banner,
-                        EventLogType = EventLogType.Update,
+                        WebsiteModel = WebsiteModel.Banner,
+                        WebsiteEventType = WebsiteEventType.Update,
                         ObjectId = banner.Id,
                         Description = "Update Banner " + banner.Title
                     })
@@ -170,11 +170,11 @@ namespace Peikresan.Controllers
             {
                 banners,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.Banner,
-                    EventLogType = EventLogType.Delete,
+                    WebsiteModel = WebsiteModel.Banner,
+                    WebsiteEventType = WebsiteEventType.Delete,
                     ObjectId = banner.Id,
                     Description = "Delete Banner " + banner.Title
                 })

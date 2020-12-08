@@ -153,11 +153,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     categoryModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Category,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.Category,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         ObjectId = cat.Id,
                         Description = "add Category " + cat.Title
                     })
@@ -190,11 +190,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     categoryModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Category,
-                        EventLogType = EventLogType.Update,
+                        WebsiteModel = WebsiteModel.Category,
+                        WebsiteEventType = WebsiteEventType.Update,
                         ObjectId = cat.Id,
                         Description = "Update Category " + cat.Title
                     })
@@ -230,11 +230,11 @@ namespace Peikresan.Controllers
             {
                 categories,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.Category,
-                    EventLogType = EventLogType.Delete,
+                    WebsiteModel = WebsiteModel.Category,
+                    WebsiteEventType = WebsiteEventType.Delete,
                     ObjectId = cat.Id,
                     Description = "Delete Category " + cat.Title
                 })
@@ -329,11 +329,11 @@ namespace Peikresan.Controllers
                     cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
                     product = new { product.Id, product.Title, product.Description, product.Price, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Product,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.Product,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         ObjectId = product.Id,
                         Description = "add product " + product.Title
                     })
@@ -378,11 +378,11 @@ namespace Peikresan.Controllers
                     cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
                     product = new { product.Id, product.Title, product.Description, product.Price, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Product,
-                        EventLogType = EventLogType.Update,
+                        WebsiteModel = WebsiteModel.Product,
+                        WebsiteEventType = WebsiteEventType.Update,
                         ObjectId = product.Id,
                         Description = "Update product " + product.Title
                     })
@@ -417,11 +417,11 @@ namespace Peikresan.Controllers
             {
                 products,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.Product,
-                    EventLogType = EventLogType.Delete,
+                    WebsiteModel = WebsiteModel.Product,
+                    WebsiteEventType = WebsiteEventType.Delete,
                     ObjectId = product.Id,
                     Description = "Delete product " + product.Title
                 })
@@ -485,11 +485,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     bannerModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Banner,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.Banner,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         ObjectId = banner.Id,
                         Description = "add Banner " + banner.Title
                     })
@@ -521,11 +521,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     bannerModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Banner,
-                        EventLogType = EventLogType.Update,
+                        WebsiteModel = WebsiteModel.Banner,
+                        WebsiteEventType = WebsiteEventType.Update,
                         ObjectId = banner.Id,
                         Description = "Update Banner " + banner.Title
                     })
@@ -558,11 +558,11 @@ namespace Peikresan.Controllers
             {
                 banners,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.Banner,
-                    EventLogType = EventLogType.Delete,
+                    WebsiteModel = WebsiteModel.Banner,
+                    WebsiteEventType = WebsiteEventType.Delete,
                     ObjectId = banner.Id,
                     Description = "Delete Banner " + banner.Title
                 })
@@ -626,11 +626,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     sliderModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Slider,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.Slider,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         ObjectId = slider.Id,
                         Description = "Add slider " + slider.Title
                     })
@@ -658,11 +658,11 @@ namespace Peikresan.Controllers
                     imgError,
                     _webRootPath,
                     sliderModel,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.Slider,
-                        EventLogType = EventLogType.Update,
+                        WebsiteModel = WebsiteModel.Slider,
+                        WebsiteEventType = WebsiteEventType.Update,
                         ObjectId = slider.Id,
                         Description = "Update Slider " + slider.Title
                     })
@@ -695,11 +695,11 @@ namespace Peikresan.Controllers
             {
                 sliders,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.Slider,
-                    EventLogType = EventLogType.Delete,
+                    WebsiteModel = WebsiteModel.Slider,
+                    WebsiteEventType = WebsiteEventType.Delete,
                     ObjectId = slider.Id,
                     Description = "Delete Slider " + slider.Title
                 })
@@ -751,11 +751,11 @@ namespace Peikresan.Controllers
                 {
                     success = true,
                     user = new { user.Id, user.FirstName, role = user.Role?.Name ?? "", user.UserName, user.LastName, user.Mobile },
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.User,
-                        EventLogType = EventLogType.Insert,
+                        WebsiteModel = WebsiteModel.User,
+                        WebsiteEventType = WebsiteEventType.Insert,
                         Description = "Admin " + thisUser.FullName + " Register User " + user.FullName + " - role: " + (role?.Name ?? "")
                     })
                 });
@@ -799,11 +799,11 @@ namespace Peikresan.Controllers
             {
                 users,
                 success = true,
-                eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
-                    EventLogModel = EventLogModel.User,
-                    EventLogType = EventLogType.Insert,
+                    WebsiteModel = WebsiteModel.User,
+                    WebsiteEventType = WebsiteEventType.Insert,
                     Description = "Admin " + thisUser.FullName + " Remove User " + user.FullName
                 })
             });
@@ -842,11 +842,11 @@ namespace Peikresan.Controllers
                         success = true,
                         sellerProduct,
                         product,
-                        eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                        eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                         {
                             UserId = thisUser.Id.ToString(),
-                            EventLogModel = EventLogModel.SellerProduct,
-                            EventLogType = EventLogType.Insert,
+                            WebsiteModel = WebsiteModel.SellerProduct,
+                            WebsiteEventType = WebsiteEventType.Insert,
                             Description = "add " + product.Title + " for " + thisUser.FullName
                         })
                     });
@@ -877,11 +877,11 @@ namespace Peikresan.Controllers
                         success = true,
                         sellerProduct,
                         product,
-                        eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                        eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                         {
                             UserId = thisUser.Id.ToString(),
-                            EventLogModel = EventLogModel.SellerProduct,
-                            EventLogType = EventLogType.Update,
+                            WebsiteModel = WebsiteModel.SellerProduct,
+                            WebsiteEventType = WebsiteEventType.Update,
                             Description = "Update " + product.Title + " for " + thisUser.FullName
                         })
                     });
@@ -928,11 +928,11 @@ namespace Peikresan.Controllers
                 {
                     sellerProducts,
                     success = true,
-                    eventId = await EventLogServices.SaveEventLog(_context, new EventLog
+                    eventId = await EventLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
-                        EventLogModel = EventLogModel.SellerProduct,
-                        EventLogType = EventLogType.Delete,
+                        WebsiteModel = WebsiteModel.SellerProduct,
+                        WebsiteEventType = WebsiteEventType.Delete,
                         Description = "Delete SellerProduct" + id
                     })
                 });
