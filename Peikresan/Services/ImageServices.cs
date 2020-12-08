@@ -22,9 +22,15 @@ namespace Peikresan.Services
                         image.Mutate(x => x.Resize(width, height)
                             //.Grayscale()
                         );
-                        var filePath = "img\\pic-" + DateTime.Now.Ticks + ".jpg";
-                        if (model == WebsiteModel.Product) filePath = "img\\product\\product-" + DateTime.Now.Ticks + ".jpg";
-                        
+                        var filePath = model switch
+                        {
+                            WebsiteModel.Product => "img\\product\\product_" + DateTime.Now.Ticks + ".jpg",
+                            WebsiteModel.Category => "img\\category\\cat_" + DateTime.Now.Ticks + ".jpg",
+                            WebsiteModel.Slider => "img\\slider\\slider_" + DateTime.Now.Ticks + ".jpg",
+                            WebsiteModel.Banner => "img\\banner\\banner_" + DateTime.Now.Ticks + ".jpg",
+                            _ => "img\\pic-" + DateTime.Now.Ticks + ".jpg"
+                        };
+
                         await image.SaveAsync(Path.Combine(webRootPath, filePath));
                         return filePath;
                     }
