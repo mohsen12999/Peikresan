@@ -338,4 +338,9 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+
+# npm package info
 Peikresan/ClientApp/package-lock.json
+
+# server data
+Peikresan/appsettings.json
