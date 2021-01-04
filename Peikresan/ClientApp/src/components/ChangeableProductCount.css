@@ -1,0 +1,24 @@
+.product-span-count {
+  display: flex;
+  justify-content: space-around;
+}
+
+.product-span-count .add-product-btn {
+  color: green;
+  cursor: pointer;
+}
+
+.product-span-count .add-product-btn.disabled {
+  color: lightgray;
+  cursor: default;
+}
+
+.product-span-count .remove-product-btn {
+  color: red;
+  cursor: pointer;
+}
+
+.product-span-count .add-product-btn.disabled {
+  color: lightgray;
+  cursor: default;
+}
