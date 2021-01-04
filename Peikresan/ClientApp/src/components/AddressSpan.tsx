@@ -4,16 +4,16 @@ interface IAddressSpanProps{
   state: string,
   city: string,
   district: string,
-  mobile: number,
+  mobile: string,
   name: string,
   description:string,
   level:string,
   unit:string,
   number:string,
-  postalCode:number
+  postalCode:string
 }
 
-const AddressSpan:(IAddressSpanProps)=>JSX.Element = ({
+const AddressSpan:(props:IAddressSpanProps)=>JSX.Element = ({
   state,
   city,
   district,
@@ -28,7 +28,7 @@ const AddressSpan:(IAddressSpanProps)=>JSX.Element = ({
   <React.Fragment>
     <div>
       {state + ", " + city + ", " + district + ", موبایل: " + mobile}
-      {name && name > 0 && ", گیرنده: " + name}
+      {name && name.length > 0 && ", گیرنده: " + name}
     </div>
     <div>
       {description}
