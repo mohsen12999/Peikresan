@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import CategoryThumbnail from "./CategoryThumbnail";
-import { IMoreBtn,ICategory } from "../constants/Interfaces";
+import { IMoreBtn,ICategory } from "../shares/Interfaces";
 
 import "./ScrollbarsList.css";
 

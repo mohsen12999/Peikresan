@@ -2,7 +2,7 @@ import React from "react";
 import { Card } from "antd";
 import { Link } from "react-router-dom";
 
-import { ICategory } from "../constants/Interfaces";
+import { ICategory } from "../shares/Interfaces";
 import "./ProductThumbnail.css";
 
 const { Meta } = Card;
