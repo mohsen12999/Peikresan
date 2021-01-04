@@ -1,0 +1,28 @@
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-badge::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-badge {
+  display: flex;
+  direction: rtl;
+  min-width: 100%;
+  min-height: 30px;
+  overflow-x: auto;
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.text-badge {
+  padding: 3px 11px;
+  border-radius: 15px;
+  background-color: green;
+  color: white;
+  margin: 7px;
+  width: max-content;
+  display: inline-block;
+}

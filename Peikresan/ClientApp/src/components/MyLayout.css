@@ -1,0 +1,87 @@
+.my-header {
+  position: fixed;
+  width: 100vw;
+  background-color: white !important;
+  text-align: center;
+  padding: 1rem;
+  z-index: 2;
+}
+
+.my-header .search-input {
+  direction: rtl;
+  min-width: 200px;
+  max-width: 50%;
+}
+
+.my-header .show-drawer-btn {
+  float: right;
+}
+.my-header .open-color {
+  float: right;
+  color: black;
+  font-size: 2rem;
+}
+
+.my-header .show-drawer-btn > span {
+  transform: rotate(180deg) !important;
+}
+
+.my-header .show-cart-btn {
+  float: left;
+}
+
+.my-header .show-cart-btn .ant-badge {
+  color: black;
+  font-size: 2rem;
+}
+
+.ant-drawer-body {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+.ant-drawer-body .ant-menu-item {
+  direction: rtl !important;
+  text-align: right !important;
+}
+
+.ant-menu-item .anticon {
+  margin-left: 10px !important;
+}
+
+.ant-drawer-header {
+  text-align: center !important;
+}
+
+.main-layout {
+  padding-top: 84px !important;
+  background: #e1e1e1;
+  text-align: center;
+}
+
+.layout-footer {
+  padding: 1rem;
+  margin-bottom: 48px !important;
+  background-color: #646464;
+}
+
+.bottom-menu .ant-menu {
+  background-color: lightsteelblue !important;
+  position: fixed !important;
+  bottom: 0 !important;
+  width: 100% !important;
+}
+
+.ant-menu.ant-menu-horizontal {
+  display: flex;
+  justify-content: space-around;
+}
+/* 
+.ant-scroll-number-only-unit {
+  font-family: IRANSansFaNum !important;
+} */
+
+.bottom-menu .ant-menu {
+  background-color: white !important;
+  border-top: 1px solid black;
+}

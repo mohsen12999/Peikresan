@@ -1,0 +1,59 @@
+.multi-slide-img {
+  width: 100%;
+  padding: 2px;
+}
+
+.header-title {
+  margin-bottom: 0.5rem;
+  text-align: right;
+  padding: 0.5rem;
+}
+
+.more-link-div {
+  height: 100%;
+  padding: 2px;
+  font-weight: bold;
+  background-color: lightblue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+.suggestion-first-line {
+  display: flex;
+  direction: rtl;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.suggestion-title {
+  font-size: larger;
+  font-weight: bold;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+.suggestion-time {
+  font-size: larger;
+}
+
+.product-thumbnail {
+  margin-right: 10px;
+}
+
+.suggestion {
+  background-color: orangered;
+  padding: 0.5rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.react-multi-carousel-track {
+  direction: rtl !important;
+}
+
+.carousel-class {
+  transform: translate3d(-675px, 0px, 0px);
+}

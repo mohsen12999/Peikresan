@@ -1,0 +1,64 @@
+.scrollbar-main-section {
+  width: 100%;
+  /* background-color: #d01c35; */
+  color: white;
+}
+
+.scrollbar-title-div {
+  padding: 1rem;
+}
+
+.scrollbar-title {
+  text-align: right;
+}
+
+.scrollbar-list-row {
+  display: flex;
+  direction: rtl;
+  min-width: 100%;
+  min-height: 200px;
+  overflow-x: auto;
+
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scrollbar-list-row::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-list-item {
+  background-color: #e74c3c;
+  min-width: 200px;
+  margin: 5px;
+}
+
+.product-thumbnail {
+  min-width: max(15%, 150px);
+  padding: 3px;
+}
+
+.product-thumbnail.more-link-div {
+  height: inherit;
+  padding: 2px;
+  font-weight: bold;
+  background-color: lightblue;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+}
+
+.scrollbar-remain-time {
+  font-size: larger;
+  text-align: left;
+}
+
+.scrollbar-title-div.suggestion-title-row {
+  display: flex;
+  justify-content: space-between;
+  direction: rtl;
+}

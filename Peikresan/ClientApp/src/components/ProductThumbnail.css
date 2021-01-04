@@ -1,0 +1,31 @@
+.ant-card-meta-detail {
+  text-align: center !important;
+  direction: rtl;
+}
+
+.buy-btn {
+  margin: -4px;
+}
+
+/* .ant-card-meta-description {
+  font-family: IRANSansFaNum !important;
+} */
+
+img.product-image-thumb {
+  padding: 4px !important;
+  max-width: 100%;
+  border-radius: 10px 10px 0 0 !important;
+}
+.ant-card-meta-title {
+  font-size: 11px !important;
+  line-height: 1.5em !important;
+  height: 3em !important;
+  white-space: pre-wrap !important;
+}
+
+.product-thumb-card {
+  border-radius: 10px !important;
+}
+.product-thumb-card .ant-card-actions {
+  border-radius: 0 0 10px 10px !important;
+}
