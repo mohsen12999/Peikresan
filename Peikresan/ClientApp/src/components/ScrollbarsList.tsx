@@ -1,37 +1,38 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { IMoreBtn, IProduct } from "../shares/Interfaces";
 
-import CategoryThumbnail from "./CategoryThumbnail";
-import { IMoreBtn, ICategory } from "../shares/Interfaces";
-
+import ProductThumbnail from "./ProductThumbnail";
 import "./ScrollbarsList.css";
 
-interface ICategoryScrollbarsListProps {
+interface IScrollbarsListProps {
   title: string;
-  categories?: ICategory[];
-  more: IMoreBtn;
+  products: IProduct[];
+  more?: IMoreBtn;
 }
 
-const CategoryScrollbarsList: React.FC<ICategoryScrollbarsListProps> = ({
+const ScrollbarsList: React.FC<IScrollbarsListProps> = ({
   title,
-  categories,
+  products,
   more,
 }) => (
   <section className="scrollbar-main-section">
     <div className="scrollbar-title-div">
       <h4 className="scrollbar-title">
-        {title}{" "}
-        <Link style={{ float: "left" }} to={more.link}>
-          مشاهده همه
-        </Link>
+        {title}
+        {more && (
+          <Link style={{ float: "left" }} to={more.link}>
+            مشاهده همه
+          </Link>
+        )}
       </h4>
     </div>
     <section className="scrollbar-list-row">
-      {categories && categories.length > 0 && (
+      {products && products.length > 0 && (
         <React.Fragment>
-          {categories.map((cat) => (
-            <div className="product-thumbnail" key={cat.id}>
-              <CategoryThumbnail {...cat} />
+          {products.map((product) => (
+            <div className="product-thumbnail" key={product.id}>
+              <ProductThumbnail product={product} />
             </div>
           ))}
           {more && more.show && (
@@ -45,4 +46,4 @@ const CategoryScrollbarsList: React.FC<ICategoryScrollbarsListProps> = ({
   </section>
 );
 
-export default CategoryScrollbarsList;
+export default ScrollbarsList;

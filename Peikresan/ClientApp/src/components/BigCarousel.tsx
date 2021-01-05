@@ -3,7 +3,7 @@ import { Carousel } from "antd";
 
 import "./BigCarousel.css";
 
-const BigCarousel = () => (
+const BigCarousel: React.FC<{}> = () => (
   <Carousel autoplay>
     <div>
       <img

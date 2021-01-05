@@ -32,7 +32,7 @@ interface IMultiCarouselProps {
   more?: IMoreBtn;
 }
 
-const MultiCarousel: (props: IMultiCarouselProps) => JSX.Element = ({
+const MultiCarousel: React.FC<IMultiCarouselProps> = ({
   title,
   images,
   more,

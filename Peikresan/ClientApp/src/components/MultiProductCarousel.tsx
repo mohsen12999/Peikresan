@@ -34,9 +34,10 @@ interface IMultiProductCarouselProps {
   more?: IMoreBtn;
 }
 
-const MultiProductCarousel: (
-  props: IMultiProductCarouselProps
-) => JSX.Element = ({ products, more }) => {
+const MultiProductCarousel: React.FC<IMultiProductCarouselProps> = ({
+  products,
+  more,
+}) => {
   const [carousel, setCarousel] = React.useState<Carousel | null>();
 
   React.useEffect(() => {
@@ -67,7 +68,7 @@ const MultiProductCarousel: (
     >
       {products.map((product) => (
         <div className="product-thumbnail" key={product.id}>
-          <ProductThumbnail {...product} />
+          <ProductThumbnail product={product} />
         </div>
       ))}
       {more && more.show && (

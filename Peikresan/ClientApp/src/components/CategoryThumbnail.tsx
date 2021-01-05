@@ -7,23 +7,21 @@ import "./ProductThumbnail.css";
 
 const { Meta } = Card;
 
-
-const CategoryThumbnail:(props:ICategory)=>JSX.Element = ({ id, img, title }) => (
+const CategoryThumbnail: React.FC<ICategory> = ({ id, img, title }) => (
   <Link to={"/category/" + id}>
-  <Card
-    className="product-thumb-card"
-    hoverable
-    cover={
-      
+    <Card
+      className="product-thumb-card"
+      hoverable
+      cover={
         <img
           className="product-image-thumb"
           alt={"تصویر" + title}
           src={img && img !== "" ? img : "/img/category/cat-0.png"}
         />
-    }
-  >
-    <Meta className="persian-number" title={title} />
-  </Card>
+      }
+    >
+      <Meta className="persian-number" title={title} />
+    </Card>
   </Link>
 );
 

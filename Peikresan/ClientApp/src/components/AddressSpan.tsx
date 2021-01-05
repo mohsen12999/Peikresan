@@ -1,19 +1,7 @@
 import React from "react";
+import { IAddress } from "../shares/Interfaces";
 
-interface IAddressSpanProps{
-  state: string,
-  city: string,
-  district: string,
-  mobile: string,
-  name: string,
-  description:string,
-  level:string,
-  unit:string,
-  number:string,
-  postalCode:string
-}
-
-const AddressSpan:(props:IAddressSpanProps)=>JSX.Element = ({
+const AddressSpan: React.FC<IAddress> = ({
   state,
   city,
   district,
