@@ -1,17 +1,19 @@
-const TOKEN = "TOKEN"
-const ADDRESSES = "ADDRESSES"
-const SHOP_CART = "SHOP_CART"
-const FACTORS = "FACTORS"
-const PRODUCTS = "PRODUCTS"
-const CATEGORIES = "CATEGORIES"
-const SUGGESTIONS = "SUGGESTIONS"
-const NEWEST = "NEWEST"
-const MOST_SELL = "MOST_SELL"
-const SLIDERS = "SLIDERS"
-const BANNERS = "BANNERS"
-const DISTRICTS = "DISTRICTS"
+import { IAddress } from "./Interfaces";
 
-export const AddToken = (token) => {
+const TOKEN = "TOKEN";
+const ADDRESSES = "ADDRESSES";
+const SHOP_CART = "SHOP_CART";
+const FACTORS = "FACTORS";
+const PRODUCTS = "PRODUCTS";
+const CATEGORIES = "CATEGORIES";
+const SUGGESTIONS = "SUGGESTIONS";
+const NEWEST = "NEWEST";
+const MOST_SELL = "MOST_SELL";
+const SLIDERS = "SLIDERS";
+const BANNERS = "BANNERS";
+// const DISTRICTS = "DISTRICTS";
+
+export const AddToken = (token: string) => {
   localStorage.setItem(TOKEN, token);
 };
 
@@ -23,12 +25,12 @@ export const RemoveToken = () => {
   return localStorage.removeItem(TOKEN);
 };
 
-export const SaveAddresses = (addresses) => {
+export const SaveAddresses = (addresses: IAddress) => {
   localStorage.setItem(ADDRESSES, JSON.stringify(addresses));
 };
 
 export const GetAddresses = () => {
-  return JSON.parse(localStorage.getItem(ADDRESSES));
+  return JSON.parse(localStorage.getItem(ADDRESSES) as string);
 };
 
 export const SaveCart = (cart) => {
@@ -36,7 +38,7 @@ export const SaveCart = (cart) => {
 };
 
 export const GetCart = () => {
-  return JSON.parse(localStorage.getItem(SHOP_CART));
+  return JSON.parse(localStorage.getItem(SHOP_CART) as string);
 };
 
 export const SaveCart2Factor = (newFactors) => {
@@ -45,13 +47,13 @@ export const SaveCart2Factor = (newFactors) => {
 };
 
 export const GetFactors = () => {
-  return JSON.parse(localStorage.getItem(FACTORS));
+  return JSON.parse(localStorage.getItem(FACTORS) as string);
 };
 
 // public data
 
 export const GetProducts = () => {
-  return JSON.parse(localStorage.getItem(PRODUCTS));
+  return JSON.parse(localStorage.getItem(PRODUCTS) as string);
 };
 
 export const SaveProducts = (products) => {
@@ -60,7 +62,7 @@ export const SaveProducts = (products) => {
 };
 
 export const GetCategories = () => {
-  return JSON.parse(localStorage.getItem(CATEGORIES));
+  return JSON.parse(localStorage.getItem(CATEGORIES) as string);
 };
 
 export const SaveCategories = (categories) => {
@@ -69,7 +71,7 @@ export const SaveCategories = (categories) => {
 };
 
 export const GetSuggestions = () => {
-  return JSON.parse(localStorage.getItem(SUGGESTIONS));
+  return JSON.parse(localStorage.getItem(SUGGESTIONS) as string);
 };
 
 export const SaveSuggestions = (suggestions) => {
@@ -77,7 +79,7 @@ export const SaveSuggestions = (suggestions) => {
 };
 
 export const GetNewest = () => {
-  return JSON.parse(localStorage.getItem(NEWEST));
+  return JSON.parse(localStorage.getItem(NEWEST) as string);
 };
 
 export const SaveNewest = (newest) => {
@@ -85,7 +87,7 @@ export const SaveNewest = (newest) => {
 };
 
 export const GetMostSell = () => {
-  return JSON.parse(localStorage.getItem(MOST_SELL));
+  return JSON.parse(localStorage.getItem(MOST_SELL) as string);
 };
 
 export const SaveMostSell = (most_sell) => {
@@ -93,7 +95,7 @@ export const SaveMostSell = (most_sell) => {
 };
 
 export const GetSliders = () => {
-  return JSON.parse(localStorage.getItem(SLIDERS));
+  return JSON.parse(localStorage.getItem(SLIDERS) as string);
 };
 
 export const SaveSliders = (sliders) => {
@@ -101,17 +103,17 @@ export const SaveSliders = (sliders) => {
 };
 
 export const GetBanners = () => {
-  return JSON.parse(localStorage.getItem(BANNERS));
+  return JSON.parse(localStorage.getItem(BANNERS) as string);
 };
 
 export const SaveBanners = (banners) => {
   localStorage.setItem(BANNERS, JSON.stringify(banners));
 };
 
-export const GetDistricts = () => {
-  return JSON.parse(localStorage.getItem(DISTRICTS));
-};
+// export const GetDistricts = () => {
+//   return JSON.parse(localStorage.getItem(DISTRICTS) as string);
+// };
 
-export const SaveDistricts = (districts) => {
-  localStorage.setItem(DISTRICTS, JSON.stringify(districts));
-};
+// export const SaveDistricts = (districts) => {
+//   localStorage.setItem(DISTRICTS, JSON.stringify(districts));
+// };

@@ -18,9 +18,12 @@ import { AddToken } from "../shares/LocalStorage";
 export interface IAuthState {
   login: boolean;
   loading: boolean;
+  init: boolean;
+
   id?: string;
   username?: string;
   role?: string;
+  token?: string;
 
   users?: IUser[];
   roles?: IRole[];
@@ -103,20 +106,25 @@ export const reducer: Reducer<IAuthState> = (
   incomingAction: Action
 ): IAuthState => {
   if (state === undefined) {
-    return { login: false, loading: false };
+    return { login: false, loading: false, init: true };
   }
 
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case AuthActions.LOGIN_REQUEST:
-      return { login: false, loading: true };
+      return { login: false, loading: true, init: false };
 
     case AuthActions.LOGIN_SUCCESS:
-      const loginState = { ...state, login: true, loading: false };
-      const loginData = action.payload;
+      const loginState = {
+        ...state,
+        login: false,
+        loading: false,
+      };
+
       if (action.payload && action.payload.data) {
         const data = action.payload.data;
 
+        loginState.login = true;
         loginState.username = data.username;
         loginState.id = data.id;
         loginState.role = data.role;
@@ -143,10 +151,10 @@ export const reducer: Reducer<IAuthState> = (
       return loginState;
 
     case AuthActions.LOGIN_FAILURE:
-      return { login: false, loading: false };
+      return { login: false, loading: false, init: false };
 
     case AuthActions.LOGOUT:
-      return { login: false, loading: false };
+      return { login: false, loading: false, init: false };
 
     default:
       return state;

@@ -2,11 +2,13 @@
 // import * as Counter from './Counter';
 import * as ShopCart from "./ShopCart";
 import * as Auth from "./Auth";
+import * as Data from "./Data";
 
 // The top-level state object
 export interface ApplicationState {
   shopCart: ShopCart.IShopCartState | undefined;
   auth: Auth.IAuthState | undefined;
+  data: Data.IDataState | undefined;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
