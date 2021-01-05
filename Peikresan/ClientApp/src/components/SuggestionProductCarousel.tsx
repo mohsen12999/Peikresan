@@ -1,7 +1,9 @@
 import React from "react";
-import "./MultiProductCarousel.css";
+
 import MultiProductCarousel from "./MultiProductCarousel";
 import { IMoreBtn, IProduct } from "../shares/Interfaces";
+
+import "./MultiProductCarousel.css";
 
 interface ISuggestionProductCarouselProps {
   title: string;
