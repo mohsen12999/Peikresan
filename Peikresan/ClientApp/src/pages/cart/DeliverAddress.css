@@ -1,0 +1,31 @@
+.radioStyle {
+  display: block;
+  height: 5rem;
+  line-height: 2rem;
+  min-width: max(7rem, 100%);
+  direction: rtl;
+}
+
+.show-new-address-btn {
+  margin-bottom: 1rem;
+}
+
+.btn-row {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.btn-row button {
+  margin: 7px;
+}
+
+.address-card {
+  max-width: 600px !important;
+  margin: auto !important;
+  margin-bottom: 5px !important;
+}
+
+.address-card.address-card-selected {
+  background-color: lightgray !important;
+  border-color: darkgray !important;
+}

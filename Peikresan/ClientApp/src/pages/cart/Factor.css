@@ -1,0 +1,13 @@
+.factor-span {
+  min-width: 200px;
+  background-color: white;
+  padding: 2rem 0;
+}
+
+.factor-span > div {
+  margin-top: 1rem;
+}
+
+.factor-span h2 {
+  text-align: center;
+}

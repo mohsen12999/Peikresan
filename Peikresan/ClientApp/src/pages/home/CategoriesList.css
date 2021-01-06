@@ -1,0 +1,11 @@
+.item-link {
+  width: 100%;
+}
+
+.item-title {
+  text-align: center;
+}
+
+.ant-list-item:hover {
+  background-color: lightgray;
+}

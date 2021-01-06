@@ -1,0 +1,14 @@
+.product-img {
+  width: min(90%, 300px);
+  margin: auto;
+}
+
+.product-text {
+  direction: rtl !important;
+}
+
+.product-count {
+  color: black;
+  font-weight: bold;
+  padding: 2rem;
+}

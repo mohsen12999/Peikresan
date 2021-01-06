@@ -1,0 +1,68 @@
+.first-carousel {
+  margin-top: 1rem !important;
+}
+
+.banner-section {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.suggestion {
+  margin-top: 0.5rem;
+}
+
+.suggestion .scrollbar-title {
+  color: white;
+}
+
+.suggestion .scrollbar-title-div.suggestion-title-row {
+  background-color: #fd7f41;
+  color: white;
+}
+
+.slider-img {
+  width: 95%;
+  border-radius: 10px;
+  margin: auto;
+  margin-top: 1rem;
+}
+
+/* .banner-section .banner.big {
+  padding: 0 0.5rem;
+} */
+
+.banner-section .banner {
+  padding: 1px;
+}
+
+.banner-section .banner img {
+  border-radius: 20px;
+}
+
+.banner-section .banner.little {
+  width: 50%;
+  display: inline-block;
+}
+
+.banner-section .banner.small {
+  padding: 0.5rem 0;
+  padding: 1px;
+  width: 33%;
+  display: inline-block;
+}
+
+.banner-cover {
+  position: relative;
+}
+
+.banner-cover-title {
+  position: absolute;
+  text-align: center;
+  width: 100%;
+  bottom: 5px;
+  color: black !important;
+}
+
+.banner-thumb .ant-card-body {
+  padding: 0 !important;
+}

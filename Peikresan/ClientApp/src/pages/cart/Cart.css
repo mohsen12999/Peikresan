@@ -1,0 +1,26 @@
+table {
+  direction: rtl !important;
+}
+
+th,
+td,
+.ant-table-thead > tr > th {
+  text-align: center;
+  /* font-family: IRANSansFaNum !important; */
+}
+
+.ant-table-content {
+  overflow-x: auto !important;
+}
+
+.count-span {
+  padding-right: 4px;
+  padding-left: 4px;
+}
+
+@media screen and (max-width: 600px) {
+  .ant-list-bordered .ant-list-item {
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+}

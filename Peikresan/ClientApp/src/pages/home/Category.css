@@ -1,0 +1,5 @@
+.product-list .product-thumbnail {
+  min-width: max(15%, 150px);
+  display: inline-block;
+  padding: 5px;
+}

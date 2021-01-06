@@ -153,9 +153,6 @@ const mapStateToProps = (state: ApplicationState) => ({
   banners: state.data ? state.data.banners : [],
 });
 
-const mapDispatchToProps = {
-  // AddProduct: actionCreators.addProduct,
-  // RemoveProduct: actionCreators.removeProduct,
-};
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);

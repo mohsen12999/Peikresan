@@ -1,0 +1,29 @@
+.admin-container {
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.admin-container > div {
+  min-width: 400px;
+}
+
+.admin-container input,
+.admin-container textarea {
+  direction: rtl;
+}
+
+.ant-cascader-menu {
+  min-width: 220px !important;
+}
+
+.input-style {
+  min-width: 300px !important;
+  direction: rtl !important;
+}
+
+.float-add-btn {
+  position: fixed;
+  right: 10%;
+  bottom: 10%;
+  z-index: 10;
+}

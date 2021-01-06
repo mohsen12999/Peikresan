@@ -1,0 +1,31 @@
+.new-address-span {
+  max-width: 500px;
+  direction: rtl;
+  margin: 1rem auto;
+}
+
+.save-address-btn {
+  margin: 1rem;
+}
+
+.title {
+  margin: 1rem;
+}
+
+.address-div {
+  max-width: 600px;
+  margin: auto;
+}
+
+.address-div .address-article {
+  border: 1px solid gray;
+  margin: 1rem 0;
+  padding: 1rem 0;
+}
+
+.address-div .edit-address,
+.address-div .delete-address {
+  float: left;
+  margin: 6px;
+  border-radius: 50%;
+}
