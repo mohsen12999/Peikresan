@@ -65,15 +65,11 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
               )}
             </Button> */}
 
-        <MenuUnfoldOutlined
-          translate
-          className="open-color"
-          onClick={showDrawerBtn}
-        />
+        <MenuUnfoldOutlined className="open-color" onClick={showDrawerBtn} />
 
         <Link to="/cart" className="show-cart-btn">
           <Badge count={shopCart.filter((c) => c > 0).length}>
-            <ShoppingCartOutlined translate />
+            <ShoppingCartOutlined />
           </Badge>
         </Link>
       </div>
@@ -87,44 +83,44 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
       >
         <Menu selectedKeys={[location.pathname]}>
           <Menu.Item key="/">
-            <HomeOutlined translate />
+            <HomeOutlined />
             <Link to="/">خانه</Link>
           </Menu.Item>
           <Menu.Item key="/categories">
-            <AppstoreOutlined translate />
+            <AppstoreOutlined />
             <Link to="/categories">لیست دسته بندی محصولات</Link>
           </Menu.Item>
 
           <Divider dashed />
 
           <Menu.Item key="/cart">
-            <ShoppingCartOutlined translate />
+            <ShoppingCartOutlined />
             <Link to="/cart">سبد خرید</Link>
           </Menu.Item>
 
           <Divider dashed />
 
           <Menu.Item key="/address">
-            <BranchesOutlined translate />
+            <BranchesOutlined />
             <Link to="/address">آدرس های منتخب</Link>
           </Menu.Item>
           <Menu.Item key="/factors">
-            <MenuOutlined translate />
+            <MenuOutlined />
             <Link to="/factors">سوابق سفارش</Link>
           </Menu.Item>
 
           <Divider dashed />
           <Menu.Item key="/instagram">
-            <InstagramOutlined translate />
+            <InstagramOutlined />
             <Link to="https://instagram.com">اینستاگرام</Link>
           </Menu.Item>
 
           <Menu.Item key="/faq">
-            <WechatOutlined translate />
+            <WechatOutlined />
             <Link to="/faq">سوالات متداول</Link>
           </Menu.Item>
           <Menu.Item key="/about">
-            <SolutionOutlined translate />
+            <SolutionOutlined />
             <Link to="/about">درباره ما</Link>
           </Menu.Item>
         </Menu>
@@ -146,24 +142,24 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
         <Menu mode="horizontal" selectedKeys={[location.pathname]}>
           <Menu.Item key="/">
             <Link to="/">
-              <HomeOutlined translate />
+              <HomeOutlined />
             </Link>
           </Menu.Item>
           <Menu.Item>
             <Link to="/cart">
               <Badge count={shopCart.filter((c) => c > 0).length}>
-                <ShoppingCartOutlined translate />
+                <ShoppingCartOutlined />
               </Badge>
             </Link>
           </Menu.Item>
           <Menu.Item>
             <Link to="/coin">
-              <DollarOutlined translate />
+              <DollarOutlined />
             </Link>
           </Menu.Item>
           <Menu.Item>
             <Link to="/categories">
-              <AppstoreOutlined translate />
+              <AppstoreOutlined />
             </Link>
           </Menu.Item>
           {/* <Menu.Item>

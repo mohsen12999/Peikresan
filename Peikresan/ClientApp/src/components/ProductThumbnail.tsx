@@ -49,7 +49,6 @@ const ProductThumbnail: React.FC<IProductThumbnailProps> = ({
       shopCart[product.id] && shopCart[product.id] !== 0
         ? [
             <PlusCircleOutlined
-              translate
               style={{
                 color:
                   shopCart[product.id] === product.max ? "lightgray" : "green",
@@ -64,7 +63,6 @@ const ProductThumbnail: React.FC<IProductThumbnailProps> = ({
               )}
             </span>,
             <MinusCircleOutlined
-              translate
               style={{ color: "red" }}
               onClick={() => RemoveProduct(product.id)}
             />,
@@ -73,7 +71,7 @@ const ProductThumbnail: React.FC<IProductThumbnailProps> = ({
             <Button
               type="primary"
               className="buy-btn"
-              icon={<ShoppingCartOutlined translate />}
+              icon={<ShoppingCartOutlined />}
               onClick={() => AddProduct(product.id, product.max)}
             >
               خرید

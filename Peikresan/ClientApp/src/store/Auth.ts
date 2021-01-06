@@ -10,7 +10,7 @@ import {
   IProduct,
   ICategory,
 } from "../shares/Interfaces";
-import { AddToken } from "../shares/LocalStorage";
+import { AddToken, RemoveToken } from "../shares/LocalStorage";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -83,7 +83,6 @@ export const actionCreators = {
       });
 
     if (response && response.data && response.data.success) {
-      AddToken(response.data.token);
       dispatch({
         type: AuthActions.LOGIN_SUCCESS,
         payload: { message: "axios success get data", data: response.data },
@@ -123,6 +122,7 @@ export const reducer: Reducer<IAuthState> = (
 
       if (action.payload && action.payload.data) {
         const data = action.payload.data;
+        AddToken(data.token);
 
         loginState.login = true;
         loginState.username = data.username;
@@ -154,6 +154,7 @@ export const reducer: Reducer<IAuthState> = (
       return { login: false, loading: false, init: false };
 
     case AuthActions.LOGOUT:
+      RemoveToken();
       return { login: false, loading: false, init: false };
 
     default:

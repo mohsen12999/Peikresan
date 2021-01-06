@@ -6,43 +6,38 @@ import { ProductCount } from "../shares/Functions";
 import { actionCreators } from "../store/ShopCart";
 
 import "./ChangeableProductCount.css";
+import { IShopCartProduct } from "../shares/Interfaces";
 
 interface IChangeableProductCountProps {
-  id: number;
-  count: number;
-  max: number;
-  soldByWeight: boolean;
-  minWeight: number;
+  product: IShopCartProduct;
   AddProduct: Function;
   RemoveProduct: Function;
 }
 
 const ChangeableProductCount: React.FC<IChangeableProductCountProps> = ({
-  id,
-  count,
-  max,
-  soldByWeight,
-  minWeight,
+  product,
   AddProduct,
   RemoveProduct,
 }) => (
   <div className="product-span-count">
     <PlusCircleOutlined
-      translate
-      className={count === max ? "add-product-btn disabled" : "add-product-btn"}
-      onClick={() => AddProduct(id, max)}
+      className={
+        product.count === product.max
+          ? "add-product-btn disabled"
+          : "add-product-btn"
+      }
+      onClick={() => AddProduct(product.id, product.max)}
     />
     <span className="persian-number count-span">
-      {ProductCount(count, soldByWeight, minWeight)}
+      {ProductCount(product.count, product.soldByWeight, product.minWeight)}
     </span>
     <MinusCircleOutlined
-      translate
       className={
-        Number(count) === 0
+        Number(product.count) === 0
           ? "remove-product-btn disabled"
           : "remove-product-btn"
       }
-      onClick={() => RemoveProduct(id)}
+      onClick={() => RemoveProduct(product.id)}
     />
   </div>
 );

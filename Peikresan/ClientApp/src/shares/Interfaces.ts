@@ -18,8 +18,7 @@ export interface IProduct {
   max: number;
   soldByWeight: boolean;
   minWeight: number;
-
-  count?: number;
+  // count?: number;
 }
 
 export interface IUser {
@@ -55,4 +54,8 @@ export interface IBadge {
   id: number;
   text: string;
   url: string;
+}
+
+export interface IShopCartProduct extends IProduct {
+  count: number;
 }
