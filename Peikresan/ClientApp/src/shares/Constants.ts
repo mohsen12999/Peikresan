@@ -4,3 +4,10 @@ export enum UserRoles {
   DELIVERY = "DELIVERY",
   USER = "USER",
 }
+
+export enum HomePath {
+  Category = "/category/",
+  Suggestions = "#",
+  MostSells = "#",
+  Newest = "#",
+}

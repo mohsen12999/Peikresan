@@ -1,4 +1,4 @@
-import { IProduct, IShopCartProduct } from "./Interfaces";
+import { ICategory, IProduct, IShopCartProduct } from "./Interfaces";
 
 export const ProductCount = (
   count: number,
@@ -39,3 +39,15 @@ export const ShopCartTotalPrice = (
         accumulator + currentValue.count * (currentValue.price ?? 0),
       0
     );
+
+export const GetSubCategories = (id: number, categories: ICategory[]) =>
+  categories.filter((cat) => Number(cat.parentId) === Number(id));
+
+export const GetProductsFromList = (
+  idList: number[],
+  products: IProduct[]
+): IProduct[] =>
+  idList
+    .map((s) => products.find((p) => p.id == s))
+    .filter((p) => p !== undefined)
+    .map((p) => p as IProduct);

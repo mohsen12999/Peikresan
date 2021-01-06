@@ -8,6 +8,7 @@ export interface ICategory {
   id: number;
   title: string;
   img: string;
+  parentId: number;
 }
 
 export interface IProduct {
@@ -19,6 +20,10 @@ export interface IProduct {
   soldByWeight: boolean;
   minWeight: number;
   // count?: number;
+}
+
+export interface IShopCartProduct extends IProduct {
+  count: number;
 }
 
 export interface IUser {
@@ -50,12 +55,26 @@ export interface IAddress {
   postalCode: string;
 }
 
+export interface IDeliverTime {
+  day: string;
+  time: string;
+  express: boolean;
+}
+
 export interface IBadge {
   id: number;
   text: string;
   url: string;
 }
 
-export interface IShopCartProduct extends IProduct {
-  count: number;
+export interface ISlider {
+  id: number;
+  img: string;
+}
+export interface IBanner {
+  id: number;
+  img: string;
+  title: string;
+  url: string;
+  bannerType: number;
 }

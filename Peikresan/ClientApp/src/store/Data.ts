@@ -1,7 +1,7 @@
 import axios from "axios";
 import { Action, Reducer } from "redux";
 import { AppThunkAction } from "./";
-import { IProduct, ICategory } from "../shares/Interfaces";
+import { IProduct, ICategory, IBanner, ISlider } from "../shares/Interfaces";
 import { DATA_URL } from "../shares/URLs";
 
 // -----------------
@@ -15,8 +15,8 @@ export interface IDataState {
   suggestions: number[];
   newest: number[];
   mostSells: number[];
-  sliders: string[];
-  banners: string[];
+  sliders: ISlider[];
+  banners: IBanner[];
 }
 
 export enum DataActions {
