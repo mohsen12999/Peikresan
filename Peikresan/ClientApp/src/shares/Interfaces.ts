@@ -14,11 +14,14 @@ export interface ICategory {
 export interface IProduct {
   id: number;
   title: string;
+  description: string;
   img: string;
   price: number;
   max: number;
   soldByWeight: boolean;
   minWeight: number;
+
+  categoryId: number;
   // count?: number;
 }
 
@@ -43,6 +46,7 @@ export interface ISellerProduct {
 }
 
 export interface IAddress {
+  id?: number;
   state: string;
   city: string;
   district: string;
@@ -77,4 +81,16 @@ export interface IBanner {
   title: string;
   url: string;
   bannerType: number;
+}
+
+export interface IFactor {
+  id: number;
+  shopCart: number[];
+  total: number;
+}
+
+export interface ISellOptions {
+  minSell: number;
+  deliverPrice: number;
+  deliverAtDoor: number;
 }

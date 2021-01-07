@@ -51,3 +51,21 @@ export const GetProductsFromList = (
     .map((s) => products.find((p) => p.id == s))
     .filter((p) => p !== undefined)
     .map((p) => p as IProduct);
+
+// TODO: add price rules
+export const CalculateTotalPrice = (
+  shopCart: number[],
+  products: IProduct[]
+  // sellOptions
+): number =>
+  shopCart
+    .filter((c) => c > 0)
+    .map(
+      (c, i) =>
+        ({ ...products.find((p) => p.id == i), count: c } as IShopCartProduct)
+    )
+    .reduce(
+      (accumulator, currentValue) =>
+        accumulator + currentValue.count * (currentValue.price ?? 0),
+      0
+    );

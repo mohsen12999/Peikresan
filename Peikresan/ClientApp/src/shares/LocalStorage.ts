@@ -1,4 +1,4 @@
-import { IAddress } from "./Interfaces";
+import { IAddress, IFactor } from "./Interfaces";
 
 const TOKEN = "TOKEN";
 const ADDRESSES = "ADDRESSES";
@@ -25,14 +25,23 @@ export const RemoveToken = () => {
   return localStorage.removeItem(TOKEN);
 };
 
-export const SaveAddresses = (addresses: IAddress) => {
+export const SaveAddresses = (addresses: IAddress[]) => {
   localStorage.setItem(ADDRESSES, JSON.stringify(addresses));
 };
 
-export const GetAddresses = () => {
+export const GetAddresses = (): IAddress[] => {
   return JSON.parse(localStorage.getItem(ADDRESSES) as string);
 };
 
+export const SaveFactors = (factors: IFactor[]) => {
+  localStorage.setItem(FACTORS, JSON.stringify(factors));
+};
+
+export const GetFactors = (): IFactor[] => {
+  return JSON.parse(localStorage.getItem(FACTORS) as string);
+};
+
+/*
 export const SaveCart = (cart) => {
   localStorage.setItem(SHOP_CART, JSON.stringify(cart));
 };
@@ -117,3 +126,4 @@ export const SaveBanners = (banners) => {
 // export const SaveDistricts = (districts) => {
 //   localStorage.setItem(DISTRICTS, JSON.stringify(districts));
 // };
+*/

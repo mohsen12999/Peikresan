@@ -16,6 +16,8 @@ export enum ShopCartActions {
   ADD_PRODUCT = "ADD_PRODUCT",
   REMOVE_PRODUCT = "REMOVE_PRODUCT",
   DELETE_PRODUCT = "DELETE_PRODUCT",
+
+  RESET_SHOP_CART = "RESET_SHOP_CART",
 }
 
 // -----------------
@@ -52,6 +54,9 @@ export const actionCreators = {
       type: ShopCartActions.DELETE_PRODUCT,
       payload: { productId },
     } as IChangeShopCartItem),
+
+  resetShopCart: () =>
+    ({ type: ShopCartActions.RESET_SHOP_CART } as IChangeShopCartItem),
 };
 
 // ----------------
@@ -96,6 +101,10 @@ export const reducer: Reducer<IShopCartState> = (
         deletedShopCart[action.payload.productId] = 0;
       }
       return { ...state, shopCart: deletedShopCart };
+
+    case ShopCartActions.RESET_SHOP_CART:
+      // TODO: remove shop cart in local storage
+      return { ...state, shopCart: [] };
 
     default:
       return state;
