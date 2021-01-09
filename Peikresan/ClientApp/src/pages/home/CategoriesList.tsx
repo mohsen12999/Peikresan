@@ -13,7 +13,7 @@ interface ICategoriesListProps {
   categories: ICategory[];
 }
 
-const CategoriesList = ({ categories }) => (
+const CategoriesList: React.FC<ICategoriesListProps> = ({ categories }) => (
   <MyLayout>
     <div>
       <h1>لیست دسته بندی‌های اصلی</h1>

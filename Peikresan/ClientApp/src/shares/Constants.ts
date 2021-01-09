@@ -1,3 +1,5 @@
+import { IAddress } from "./Interfaces";
+
 export enum UserRoles {
   ADMIN = "ADMIN",
   SELLER = "SELLER",
@@ -10,4 +12,22 @@ export enum HomePath {
   Suggestions = "#",
   MostSells = "#",
   Newest = "#",
+}
+
+export const DefaultAddress: IAddress = {
+  name: "",
+  state: "مازندران",
+  city: "رامسر",
+  description: "",
+  level: "",
+  unit: "",
+  number: "",
+  mobile: "",
+  postalCode: "",
+};
+
+export enum DeliverDay {
+  TODAY = "TODAY",
+  TOMORROW = "TOMORROW",
+  EXPRESS = "EXPRESS",
 }

@@ -9,6 +9,7 @@ import {
   IAddress,
   IFactor,
   ISellOptions,
+  IDeliverTime,
 } from "../shares/Interfaces";
 import { DATA_URL } from "../shares/URLs";
 import { SaveAddresses, SaveFactors } from "../shares/LocalStorage";
@@ -26,6 +27,7 @@ export interface IDataState {
   mostSells: number[];
   sliders: ISlider[];
   banners: IBanner[];
+  deliverTimes: IDeliverTime[];
   sellOptions?: ISellOptions;
 
   // TODO: save and load from local storage
@@ -131,6 +133,7 @@ export const reducer: Reducer<IDataState> = (
       banners: [],
       addresses: [],
       factors: [],
+      deliverTimes: [],
     };
   }
 
@@ -165,6 +168,9 @@ export const reducer: Reducer<IDataState> = (
         }
         if (data.banners) {
           dataState.banners = data.banners;
+        }
+        if (data.deliverTimes) {
+          dataState.deliverTimes = data.deliverTimes;
         }
         dataState.cachedData = false;
       }

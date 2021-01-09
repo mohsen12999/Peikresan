@@ -1,34 +1,49 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Input, Row, Col, Button, AutoComplete, Popconfirm } from "antd";
+import {
+  Input,
+  Row,
+  Col,
+  Button,
+  AutoComplete,
+  Popconfirm,
+  Select,
+  Card,
+} from "antd";
+import { Link } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
 
 import MyLayout from "../../components/MyLayout";
-import { IAddress } from "../../shares/Interfaces";
 import { DefaultAddress } from "../../shares/Constants";
 import { ValidateAddress } from "../../shares/Functions";
-import { ApplicationState } from "../../store";
-import { actionCreators } from "../../store/Data";
 import AddressSpan from "../../components/AddressSpan";
+import { IAddress } from "../../shares/Interfaces";
+import { ApplicationState } from "../../store";
+import { actionCreators as dataActionCreators } from "../../store/Data";
+import { actionCreators as shopCartActionCreators } from "../../store/ShopCart";
 
-import "./Address.css";
+import "./DeliverAddress.css";
 
 const { TextArea } = Input;
+const { Option } = Select;
 
 interface IAddressProps {
   addresses: IAddress[];
   AddAddress: Function;
   RemovedAddress: Function;
+  SetDeliverAddress: Function;
 }
 
-const Address: React.FC<IAddressProps> = ({
+const DeliverAddress: React.FC<IAddressProps> = ({
   addresses,
   AddAddress,
   RemovedAddress,
+  SetDeliverAddress,
 }) => {
-  const [showNewAddress, setShowNewAddress] = React.useState<boolean>(false);
+  const [radioState, setRadioState] = React.useState<number>();
+  const [showNewAddress, setShowNewAddress] = React.useState(false);
 
-  const [newAddress, setNewAddress] = React.useState<IAddress>({
+  const [newAddress, setNewAddress] = React.useState({
     ...DefaultAddress,
   });
 
@@ -43,55 +58,15 @@ const Address: React.FC<IAddressProps> = ({
 
   return (
     <MyLayout>
-      <div className="title">آدرس های منتخب شما</div>
-      <Button
-        type="dashed"
-        className="show-new-address-btn"
-        onClick={() => setShowNewAddress(true)}
-      >
-        <PlusOutlined /> آدرس جدید
-      </Button>
-      <br />
-
-      {addresses.length === 0 ? (
-        <p>شما آدرسی ثبت نکرده اید</p>
-      ) : (
-        <div className="address-div">
-          {addresses.map((add) => (
-            <article className="address-article">
-              <Popconfirm
-                title="از حذف اطمینان دارید؟"
-                onConfirm={() => {
-                  RemovedAddress(add.id);
-                }}
-                onCancel={(e) => {
-                  console.log("cancel delete address");
-                }}
-                okText="بله"
-                cancelText="خیر"
-              >
-                <Button type="primary" className="delete-address" danger>
-                  حذف
-                </Button>
-              </Popconfirm>
-
-              <Button
-                type="primary"
-                className="edit-address"
-                onClick={() => {
-                  setNewAddress({ ...add });
-                  setShowNewAddress(true);
-                }}
-              >
-                ویرایش
-              </Button>
-
-              <AddressSpan {...add} />
-            </article>
-          ))}
-        </div>
-      )}
-      <div className="new-address-span">
+      <React.Fragment>
+        <Button
+          type="dashed"
+          className="show-new-address-btn"
+          onClick={() => setShowNewAddress(true)}
+        >
+          <PlusOutlined /> آدرس جدید
+        </Button>
+        <br />
         {showNewAddress && (
           <div className="new-address-span">
             <Row>
@@ -142,6 +117,32 @@ const Address: React.FC<IAddressProps> = ({
                 />
               </Col>
             </Row>
+
+            {/* <Row span={24}>
+              <Select
+                showSearch
+                style={{ width: "100%" }}
+                placeholder="منطقه"
+                optionFilterProp="children"
+                onChange={(value) =>
+                  setNewAddress({
+                    ...newAddress,
+                    districtId: Number(value),
+                    district: districts.find((d) => d.id == value).name,
+                  })
+                }
+                filterOption={(input, option) =>
+                  option.children.toLowerCase().indexOf(input.toLowerCase()) >=
+                  0
+                }
+              >
+                {districts.map((district) => (
+                  <Option key={district.id} value={district.id}>
+                    {district.name}
+                  </Option>
+                ))}
+              </Select>
+            </Row> */}
 
             <TextArea
               placeholder="آدرس پستی"
@@ -195,12 +196,14 @@ const Address: React.FC<IAddressProps> = ({
               <Button
                 type="primary"
                 disabled={!ValidateAddress(newAddress)}
-                onClick={() => saveAddress()}
+                onClick={() => {
+                  saveAddress();
+                }}
               >
                 ذخیره آدرس
               </Button>
               <Button
-                onClick={() => {
+                onClick={(e) => {
                   setShowNewAddress(false);
                 }}
               >
@@ -209,7 +212,62 @@ const Address: React.FC<IAddressProps> = ({
             </Row>
           </div>
         )}
-      </div>
+
+        {addresses.length === 0 ? null : (
+          <React.Fragment>
+            {addresses.map((add) => (
+              <Card
+                title="آدرس"
+                key={add.id}
+                className={
+                  radioState == add.id
+                    ? "address-card address-card-selected"
+                    : "address-card"
+                }
+                onClick={() => {
+                  setRadioState(add.id);
+                  SetDeliverAddress({ ...add });
+                }}
+              >
+                <AddressSpan {...add} />
+                <div>
+                  <Popconfirm
+                    title="از حذف اطمینان دارید؟"
+                    onConfirm={() => {
+                      RemovedAddress(add.id);
+                    }}
+                    onCancel={(e) => {
+                      console.log("cancel delete address");
+                    }}
+                    okText="بله"
+                    cancelText="خیر"
+                  >
+                    <Button type="primary" className="delete-address" danger>
+                      حذف
+                    </Button>
+                  </Popconfirm>
+                  <Button type="primary" className="edit-address">
+                    ویرایش
+                  </Button>
+                </div>
+              </Card>
+            ))}
+          </React.Fragment>
+        )}
+
+        <div>
+          <Link to="/deliver-time">
+            <Button
+              type="primary"
+              className="save-address-btn"
+              style={{ borderRadius: "16px" }}
+              disabled={radioState == null || radioState <= 0}
+            >
+              ادامه خرید
+            </Button>
+          </Link>
+        </div>
+      </React.Fragment>
     </MyLayout>
   );
 };
@@ -219,8 +277,9 @@ const mapStateToProps = (state: ApplicationState) => ({
 });
 
 const mapDispatchToProps = {
-  AddAddress: actionCreators.addAddress,
-  RemovedAddress: actionCreators.removedAddress,
+  AddAddress: dataActionCreators.addAddress,
+  RemovedAddress: dataActionCreators.removedAddress,
+  SetDeliverAddress: shopCartActionCreators.setShopCartAddress,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Address);
+export default connect(mapStateToProps, mapDispatchToProps)(DeliverAddress);

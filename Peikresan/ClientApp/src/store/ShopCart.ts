@@ -1,5 +1,8 @@
+import axios from "axios";
 import { Action, Reducer } from "redux";
-import { IAddress, IDeliverTime } from "../shares/Interfaces";
+import { AppThunkAction } from ".";
+import { IAddress, IBankData, IDeliverTime } from "../shares/Interfaces";
+import { Cart_URL } from "../shares/URLs";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -8,8 +11,11 @@ export interface IShopCartState {
   shopCart: number[];
 
   address?: IAddress;
-  time?: IDeliverTime;
-  deliverAtDoor?: boolean;
+  deliverTime?: IDeliverTime;
+  deliverAtDoor: boolean;
+
+  loading: boolean;
+  bankData?: IBankData;
 }
 
 export enum ShopCartActions {
@@ -18,6 +24,24 @@ export enum ShopCartActions {
   DELETE_PRODUCT = "DELETE_PRODUCT",
 
   RESET_SHOP_CART = "RESET_SHOP_CART",
+}
+
+export enum ShopCartAddressActions {
+  ADD_ADDRESS = "ADD_ADDRESS",
+}
+
+export enum ShopCartTimeActions {
+  ADD_TIME = "ADD_TIME",
+}
+
+export enum ShopCartFeatureActions {
+  DELIVER_AT_DOOR = "DELIVER_AT_DOOR",
+}
+
+export enum BankActions {
+  SEND_REQUEST = "SEND_REQUEST",
+  REQUEST_SUCCESS = "REQUEST_SUCCESS ",
+  REQUEST_FAILURE = "REQUEST_FAILURE ",
 }
 
 // -----------------
@@ -30,9 +54,34 @@ export interface IChangeShopCartItem {
   payload: { productId: number; count?: number };
 }
 
+export interface IShopCartAddress {
+  type: ShopCartAddressActions;
+  payload: { address: IAddress };
+}
+
+export interface IShopCartTime {
+  type: ShopCartTimeActions;
+  payload: { deliverTime: IDeliverTime };
+}
+
+export interface IShopCartFeature {
+  type: ShopCartFeatureActions;
+  payload: { value: boolean };
+}
+
+export interface IBank {
+  type: BankActions;
+  payload?: { error?: any; data?: any; message?: string };
+}
+
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-export type KnownAction = IChangeShopCartItem;
+export type KnownAction =
+  | IChangeShopCartItem
+  | IShopCartAddress
+  | IShopCartTime
+  | IShopCartFeature
+  | IBank;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -57,6 +106,56 @@ export const actionCreators = {
 
   resetShopCart: () =>
     ({ type: ShopCartActions.RESET_SHOP_CART } as IChangeShopCartItem),
+
+  setShopCartAddress: (address: IAddress) =>
+    ({
+      type: ShopCartAddressActions.ADD_ADDRESS,
+      payload: { address: address },
+    } as IShopCartAddress),
+
+  setShopCartTime: (deliverTime: IDeliverTime) =>
+    ({
+      type: ShopCartTimeActions.ADD_TIME,
+      payload: { deliverTime: deliverTime },
+    } as IShopCartTime),
+
+  setDeliverAtDoor: (value: boolean) =>
+    ({
+      type: ShopCartFeatureActions.DELIVER_AT_DOOR,
+      payload: { value: value },
+    } as IShopCartFeature),
+
+  sendCart: (
+    shopCart: number[],
+    address: IAddress,
+    deliverTime: IDeliverTime,
+    deliverAtDoor: boolean
+  ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+    dispatch({ type: BankActions.SEND_REQUEST });
+    const response = await axios
+      .post(Cart_URL, { shopCart, address, deliverTime, deliverAtDoor })
+      .catch((error) => {
+        return { ...error, success: false };
+      })
+      .catch((error) => {
+        dispatch({
+          type: BankActions.REQUEST_FAILURE,
+          payload: { message: "axios catch error", error: error },
+        });
+      });
+
+    if (response && response.data && response.data.success) {
+      dispatch({
+        type: BankActions.REQUEST_SUCCESS,
+        payload: { message: "axios success get data", data: response.data },
+      });
+    } else {
+      dispatch({
+        type: BankActions.REQUEST_FAILURE,
+        payload: { message: "axios not success", error: response },
+      });
+    }
+  },
 };
 
 // ----------------
@@ -67,7 +166,11 @@ export const reducer: Reducer<IShopCartState> = (
   incomingAction: Action
 ): IShopCartState => {
   if (state === undefined) {
-    return { shopCart: [] };
+    return {
+      shopCart: [],
+      deliverAtDoor: false,
+      loading: false,
+    };
   }
 
   const action = incomingAction as KnownAction;
@@ -81,6 +184,7 @@ export const reducer: Reducer<IShopCartState> = (
       } else {
         addedShopCart[action.payload.productId] = count;
       }
+      // TODO: update local storage shop cart
       return { ...state, shopCart: addedShopCart };
 
     case ShopCartActions.REMOVE_PRODUCT:
@@ -93,6 +197,7 @@ export const reducer: Reducer<IShopCartState> = (
           removedShopCart[action.payload.productId] = 0;
         }
       }
+      // TODO: update local storage shop cart
       return { ...state, shopCart: removedShopCart };
 
     case ShopCartActions.DELETE_PRODUCT:
@@ -100,11 +205,54 @@ export const reducer: Reducer<IShopCartState> = (
       if (deletedShopCart[action.payload.productId]) {
         deletedShopCart[action.payload.productId] = 0;
       }
+      // TODO: update local storage shop cart
       return { ...state, shopCart: deletedShopCart };
 
     case ShopCartActions.RESET_SHOP_CART:
       // TODO: remove shop cart in local storage
       return { ...state, shopCart: [] };
+
+    case ShopCartAddressActions.ADD_ADDRESS:
+      // TODO: add deliver address to local storage
+      return { ...state, address: action.payload.address };
+
+    case ShopCartTimeActions.ADD_TIME:
+      // TODO: add deliver address to local storage
+      return { ...state, deliverTime: action.payload.deliverTime };
+
+    case ShopCartFeatureActions.DELIVER_AT_DOOR:
+      // TODO: add deliver address to local storage
+      return { ...state, deliverAtDoor: action.payload.value };
+
+    case BankActions.SEND_REQUEST:
+      return { ...state, loading: true };
+
+    case BankActions.REQUEST_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        bankData: { success: false, terminalId: "", token: "", url: "" },
+      };
+
+    case BankActions.REQUEST_SUCCESS:
+      var data = action.payload?.data;
+      if (data) {
+        return {
+          ...state,
+          loading: false,
+          bankData: {
+            success: data.success,
+            terminalId: data.terminalId,
+            token: data.token,
+            url: data.url,
+          },
+        };
+      }
+      return {
+        ...state,
+        loading: false,
+        bankData: { success: false, terminalId: "", token: "", url: "" },
+      };
 
     default:
       return state;

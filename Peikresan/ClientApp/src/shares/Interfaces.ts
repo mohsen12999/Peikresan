@@ -1,3 +1,5 @@
+import { DeliverDay } from "./Constants";
+
 export interface IMoreBtn {
   show: boolean;
   title: string;
@@ -49,7 +51,8 @@ export interface IAddress {
   id?: number;
   state: string;
   city: string;
-  district: string;
+  districtId?: number;
+  district?: string;
   mobile: string;
   name: string;
   description: string;
@@ -60,9 +63,10 @@ export interface IAddress {
 }
 
 export interface IDeliverTime {
-  day: string;
-  time: string;
-  express: boolean;
+  id: string;
+  time: number;
+  title: string;
+  deliverDay?: DeliverDay;
 }
 
 export interface IBadge {
@@ -93,4 +97,11 @@ export interface ISellOptions {
   minSell: number;
   deliverPrice: number;
   deliverAtDoor: number;
+}
+
+export interface IBankData {
+  token: string;
+  terminalId: string;
+  url: string;
+  success: boolean;
 }

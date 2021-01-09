@@ -1,4 +1,4 @@
-import { ICategory, IProduct, IShopCartProduct } from "./Interfaces";
+import { ICategory, IProduct, IShopCartProduct, IAddress } from "./Interfaces";
 
 export const ProductCount = (
   count: number,
@@ -69,3 +69,16 @@ export const CalculateTotalPrice = (
         accumulator + currentValue.count * (currentValue.price ?? 0),
       0
     );
+
+export const ValidateAddress = ({
+  state,
+  city,
+  mobile,
+  name,
+  description,
+}: IAddress): boolean =>
+  name.length > 2 &&
+  state.length > 2 &&
+  city.length > 2 &&
+  description.length > 5 &&
+  mobile.length > 5;
