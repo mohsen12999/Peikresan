@@ -94,7 +94,7 @@ export interface IFactor {
 }
 
 export interface ISellOptions {
-  minSell: number;
+  minimumCart: number;
   deliverPrice: number;
   deliverAtDoor: number;
 }

@@ -1,4 +1,10 @@
-import { ICategory, IProduct, IShopCartProduct, IAddress } from "./Interfaces";
+import {
+  ICategory,
+  IProduct,
+  IShopCartProduct,
+  IAddress,
+  ISellOptions,
+} from "./Interfaces";
 
 export const ProductCount = (
   count: number,
@@ -25,21 +31,6 @@ export const GetShopCartProducts = (
         ({ ...products.find((p) => p.id == i), count: c } as IShopCartProduct)
     );
 
-export const ShopCartTotalPrice = (
-  shopCart: number[],
-  products: IProduct[]
-): number =>
-  shopCart
-    .map((c, i) => ({
-      count: c,
-      price: products.find((p) => p.id == i)?.price,
-    }))
-    .reduce(
-      (accumulator, currentValue) =>
-        accumulator + currentValue.count * (currentValue.price ?? 0),
-      0
-    );
-
 export const GetSubCategories = (id: number, categories: ICategory[]) =>
   categories.filter((cat) => Number(cat.parentId) === Number(id));
 
@@ -52,23 +43,43 @@ export const GetProductsFromList = (
     .filter((p) => p !== undefined)
     .map((p) => p as IProduct);
 
-// TODO: add price rules
-export const CalculateTotalPrice = (
+export const CalculateShopCartTotalPrice = (
   shopCart: number[],
   products: IProduct[]
-  // sellOptions
 ): number =>
   shopCart
     .filter((c) => c > 0)
-    .map(
-      (c, i) =>
-        ({ ...products.find((p) => p.id == i), count: c } as IShopCartProduct)
-    )
+    .map((c, i) => ({
+      count: c,
+      price: products.find((p) => p.id == i)?.price,
+    }))
     .reduce(
       (accumulator, currentValue) =>
         accumulator + currentValue.count * (currentValue.price ?? 0),
       0
     );
+
+export const CalculateDeliverPrice = (
+  shopCartTotalPrice: number,
+  deliverAtDoor: boolean,
+  sellOptions: ISellOptions
+) =>
+  (shopCartTotalPrice < sellOptions.minimumCart
+    ? sellOptions.deliverPrice
+    : 0) + (deliverAtDoor ? sellOptions.deliverAtDoor : 0);
+
+export const CalculateTotalPrice = (
+  shopCart: number[],
+  products: IProduct[],
+  deliverAtDoor: boolean,
+  sellOptions: ISellOptions
+) => {
+  const totalProductPrice = CalculateShopCartTotalPrice(shopCart, products);
+  return (
+    totalProductPrice +
+    CalculateDeliverPrice(totalProductPrice, deliverAtDoor, sellOptions)
+  );
+};
 
 export const ValidateAddress = ({
   state,

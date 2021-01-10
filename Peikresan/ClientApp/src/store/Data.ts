@@ -172,6 +172,12 @@ export const reducer: Reducer<IDataState> = (
         if (data.deliverTimes) {
           dataState.deliverTimes = data.deliverTimes;
         }
+        dataState.sellOptions = {
+          deliverAtDoor: data.deliverAtDoor,
+          deliverPrice: data.deliverPrice,
+          minimumCart: data.minimumCart,
+        };
+        // dataState.sellOptions. =data.deliverAtDoor;
         dataState.cachedData = false;
       }
       return dataState;

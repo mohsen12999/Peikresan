@@ -4,54 +4,55 @@ import { useHistory } from "react-router-dom";
 import { Row, Col, Button, Divider, message } from "antd";
 
 import MyLayout from "../../components/MyLayout";
-import { IAddress, IDeliverTime } from "../../shares/Interfaces";
+import {
+  IAddress,
+  IBankData,
+  IDeliverTime,
+  IProduct,
+  ISellOptions,
+} from "../../shares/Interfaces";
+import { ApplicationState } from "../../store";
+import {
+  CalculateShopCartTotalPrice,
+  CalculateDeliverPrice,
+} from "../../shares/Functions";
+import { actionCreators } from "../../store/ShopCart";
 
 import "./Factor.css";
-import { ApplicationState } from "../../store";
 
 interface IFactorProps {
+  products: IProduct[];
   shopCart: number[];
-  address: IAddress;
-  deliverTime: IDeliverTime;
+  address?: IAddress;
+  deliverTime?: IDeliverTime;
   deliverAtDoor: boolean;
+  loading: boolean;
+  sellOptions?: ISellOptions;
+  bankData?: IBankData;
+  SendCart: Function;
 }
 
 const Factor: React.FC<IFactorProps> = ({
+  products,
   shopCart,
-  address,
-  deliverTime,
   deliverAtDoor,
+  loading,
+  sellOptions,
+  bankData,
+  deliverTime,
+  address,
+  SendCart,
 }) => {
-  const [loading, setLoading] = React.useState(false);
-
-  const [token, setToken] = React.useState();
-  const [terminalID, setTerminalID] = React.useState();
-  const [url, setUrl] = React.useState("https://mabna.shaparak.ir:8080/Pay");
-  const [form, setForm] = React.useState();
-
-  const [mobileProblem, setMobileProblem] = React.useState(false);
-
+  // const [url, setUrl] = React.useState("https://mabna.shaparak.ir:8080/Pay");
   let history = useHistory();
+  const shopCartTotalPrice = CalculateShopCartTotalPrice(shopCart, products);
+  const deliverPrice = sellOptions
+    ? CalculateDeliverPrice(shopCartTotalPrice, deliverAtDoor, sellOptions)
+    : 0;
 
-  const { total } = context.GetShopCart();
   const SendToBank = () => {
     if (loading) return;
-    setLoading(true);
-
-    context.SendCart().then((res) => {
-      if (res && res.success) {
-        // history.push(res.url);
-        setToken(res.token);
-        setTerminalID(res.tid);
-        setUrl(res.url);
-        setMobileProblem(true);
-        form.dispatchEvent(new Event("submit"));
-        document.querySelector("form").submit();
-      } else {
-        message.error("اشکال در ارتباط با بانک");
-      }
-      setLoading(false);
-    });
+    SendCart(shopCart, address, deliverTime, deliverAtDoor);
   };
 
   return (
@@ -59,74 +60,57 @@ const Factor: React.FC<IFactorProps> = ({
       <div className="factor-span">
         <h2>فاکتور پرداختی</h2>
         <Row>
-          <Col span={12}>{total}</Col>
+          <Col span={12}>{shopCartTotalPrice}</Col>
           <Col span={12}>قیمت مجموع</Col>
         </Row>
         <Row>
-          <Col span={12}>
-            {context.DeliverPrice(total) !== 0
-              ? context.DeliverPrice(total)
-              : "رایگان"}
-          </Col>
+          <Col span={12}>{deliverPrice !== 0 ? deliverPrice : "رایگان"}</Col>
           <Col span={12}>هزینه ارسال</Col>
         </Row>
-        {context.deliverAtDoor && (
-          <Row>
-            <Col span={12}>2000</Col>
-            <Col span={12}>هزینه تحویل درب واحد</Col>
-          </Row>
-        )}
         <Divider />
         <Row>
-          <Col span={12}>
-            {total +
-              context.DeliverPrice(total) +
-              (context.deliverAtDoor ? 2000 : 0)}
-          </Col>
+          <Col span={12}>{shopCartTotalPrice + deliverPrice}</Col>
           <Col span={12}>هزینه کل</Col>
         </Row>
 
-        {!mobileProblem && (
-          <Button type="primary" disabled={loading} onClick={SendToBank}>
-            پرداخت
-          </Button>
-        )}
+        <Button type="primary" disabled={loading} onClick={SendToBank}>
+          پرداخت
+        </Button>
 
-        <form
-          method="post"
-          action={url}
-          ref={(ref) => {
-            setForm(ref);
-          }}
-          // style={{ display: "none" }}
-        >
-          <input
-            type="hidden"
-            name="TerminalID"
-            id="TerminalID"
-            value={terminalID}
-          />
-          <input type="hidden" name="token" id="token" value={token} />
-          <Button
-            type="primary"
-            style={{ display: mobileProblem ? "inline-block" : "none" }}
-            htmlType="submit"
-          >
-            ارسال به بانک
-          </Button>
-        </form>
+        {bankData && bankData.success && (
+          <form method="post" action={bankData.url} style={{ display: "none" }}>
+            <input
+              type="hidden"
+              name="TerminalID"
+              id="TerminalID"
+              value={bankData.terminalId}
+            />
+            <input
+              type="hidden"
+              name="token"
+              id="token"
+              value={bankData.token}
+            />
+          </form>
+        )}
       </div>
     </MyLayout>
   );
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
+  products: state.data ? state.data.products : [],
   shopCart: state.shopCart ? state.shopCart.shopCart : [],
-  address: state.shopCart ? state.shopCart.address : [],
-  deliverTime: state.shopCart ? state.shopCart.deliverTime : [],
-  deliverAtDoor: state.shopCart ? state.shopCart.deliverAtDoor : [],
+  address: state.shopCart?.address,
+  deliverTime: state.shopCart?.deliverTime,
+  deliverAtDoor: state.shopCart ? state.shopCart.deliverAtDoor : false,
+  loading: state.shopCart ? state.shopCart.loading : false,
+  sellOptions: state.data?.sellOptions,
+  bankData: state.shopCart?.bankData,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  SendCart: actionCreators.sendCart,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Factor);
