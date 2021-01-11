@@ -51,6 +51,7 @@ namespace Peikresan.Controllers
 
                     return Ok(new
                     {
+                        element= sellerProduct,
                         success = true,
                         sellerProduct,
                         product,

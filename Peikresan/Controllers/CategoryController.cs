@@ -71,6 +71,7 @@ namespace Peikresan.Controllers
 
                 return Ok(new
                 {
+                    element= cat,
                     cat = new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
                     success = true,
                     _webRootPath,

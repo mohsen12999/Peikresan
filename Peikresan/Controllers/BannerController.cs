@@ -92,6 +92,7 @@ namespace Peikresan.Controllers
 
                 return Ok(new
                 {
+                    element= banner,
                     banner,
                     success = true,
                     _webRootPath,

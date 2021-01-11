@@ -56,6 +56,7 @@ namespace Peikresan.Controllers
 
                 return Ok(new
                 {
+                    element= slider,
                     slider,
                     success = true,
                     _webRootPath,

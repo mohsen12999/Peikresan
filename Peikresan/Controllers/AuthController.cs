@@ -82,13 +82,16 @@ namespace Peikresan.Controllers
                     .Include(o => o.OrderItems)
                     .OrderByDescending(ord => ord.Id).ToListAsync();
 
+                // TODO: Send all products
+                // TODO: Send all categories
+
                 return Ok(new
                 {
                     success = true,
                     msg = "Logging successfully",
                     token = tokenString,
                     id = thisUser.Id,
-                    userName = thisUser.UserName,
+                    username = thisUser.UserName,
                     role = thisUser.Role?.Name ?? "",
                     users,
                     roles,
