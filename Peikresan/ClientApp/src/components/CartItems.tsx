@@ -9,7 +9,10 @@ import "./CartItems.css";
 import { actionCreators } from "../store/ShopCart";
 import { ApplicationState } from "../store";
 import { IProduct } from "../shares/Interfaces";
-import { GetShopCartProducts, ShopCartTotalPrice } from "../shares/Functions";
+import {
+  GetShopCartProducts,
+  CalculateShopCartTotalPrice,
+} from "../shares/Functions";
 
 interface ICartItemProps {
   shopCart: number[];
@@ -28,7 +31,7 @@ const CartItems: React.FC<ICartItemProps> = ({
       footer={
         <div>
           <div className="cart-items-footer persian-number">
-            قیمت مجموع: {ShopCartTotalPrice(shopCart, products)}
+            قیمت مجموع: {CalculateShopCartTotalPrice(shopCart, products)}
           </div>
           <Link to="/deliver-address">
             <Button style={{ borderRadius: "16px" }} type="primary">

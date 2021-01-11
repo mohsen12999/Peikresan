@@ -15,7 +15,7 @@ const CategoryThumbnail: React.FC<ICategory> = ({ id, img, title }) => (
       cover={
         <img
           className="product-image-thumb"
-          alt={"تصویر" + title}
+          alt={"تصویر " + title}
           src={img && img !== "" ? img : "/img/category/cat-0.png"}
         />
       }

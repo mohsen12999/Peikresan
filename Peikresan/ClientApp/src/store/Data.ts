@@ -13,13 +13,15 @@ import {
 } from "../shares/Interfaces";
 import { DATA_URL } from "../shares/URLs";
 import { SaveAddresses, SaveFactors } from "../shares/LocalStorage";
+import { Status } from "../shares/Constants";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface IDataState {
   cachedData: boolean;
-  loading: boolean;
+  status: Status;
+
   products: IProduct[];
   categories: ICategory[];
   suggestions: number[];
@@ -123,7 +125,7 @@ export const reducer: Reducer<IDataState> = (
   if (state === undefined) {
     return {
       cachedData: false,
-      loading: false,
+      status: Status.INIT,
       products: [],
       categories: [],
       suggestions: [],
@@ -141,11 +143,11 @@ export const reducer: Reducer<IDataState> = (
   switch (action.type) {
     case DataActions.DATA_REQUEST:
       // TODO: Loading Data from cache
-      return { ...state, loading: true, cachedData: true };
+      return { ...state, status: Status.LOADING, cachedData: true };
 
     case DataActions.DATA_SUCCESS:
       // TODO: cache data
-      const dataState = { ...state, loading: false };
+      const dataState = { ...state, status: Status.SUCCEEDED };
       if (action.payload && action.payload.data) {
         const data = action.payload.data;
         if (data.products) {
@@ -183,7 +185,7 @@ export const reducer: Reducer<IDataState> = (
       return dataState;
 
     case DataActions.DATA_FAILURE:
-      return { ...state, loading: false };
+      return { ...state, status: Status.FAILED };
 
     case AddressActions.ADD_ADDRESS:
       const address = action.payload?.address;

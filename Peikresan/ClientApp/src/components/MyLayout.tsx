@@ -21,19 +21,27 @@ import Enamad from "./Enamad";
 
 import "./MyLayout.css";
 import { ApplicationState } from "../store";
+import { Status } from "../shares/Constants";
 
 const { Search } = Input;
 
 interface IMyLayoutProps {
   shopCart: number[];
-  loadingData: boolean;
+  loadingDataStatus: Status;
 }
 
 const MyLayout: React.FC<IMyLayoutProps> = ({
   shopCart,
-  loadingData,
+  loadingDataStatus,
   children,
 }) => {
+  // TODO: Read Data from server
+  // React.useEffect(() => {
+  //   if (status === 'idle') {
+  //     dispatch(fetchPosts())
+  //   }
+  // }, [postStatus, dispatch])
+
   let history = useHistory();
   const [drawerVisible, setDrawerVisible] = React.useState(false);
 
@@ -130,7 +138,10 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
         className="main-layout"
         style={{ minHeight: window.innerHeight - 102 + "px" }}
       >
-        <Spin spinning={loadingData} tip="در حال بارگزاری ...">
+        <Spin
+          spinning={loadingDataStatus == Status.LOADING}
+          tip="در حال بارگزاری ..."
+        >
           {children}
         </Spin>
       </main>
@@ -175,7 +186,7 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
 
 const mapStateToProps = (state: ApplicationState) => ({
   shopCart: state.shopCart ? state.shopCart.shopCart : [],
-  loadingData: state.data ? state.data.loading : false,
+  loadingDataStatus: state.data ? state.data.status : Status.IDLE,
 });
 
 const mapDispatchToProps = {};

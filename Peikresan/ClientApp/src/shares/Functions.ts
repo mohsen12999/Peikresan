@@ -93,3 +93,39 @@ export const ValidateAddress = ({
   city.length > 2 &&
   description.length > 5 &&
   mobile.length > 5;
+
+export const OrderStatusDescription = (orderStatus: number) => {
+  switch (orderStatus) {
+    case 1:
+      return "ایجاد سفارش";
+    case 10:
+      return "تائید پرداخت";
+
+    case 20:
+      return "انتخاب فروشنده";
+    case 23:
+      return "فروشنده رد کرد";
+    case 27:
+      return "فروشنده تائید کرد";
+
+    case 30:
+      return "انتخاب پیک";
+    case 33:
+      return "پیک رد کرد";
+    case 37:
+      return "پیک تائید کرد";
+
+    case 40:
+      return "پیک محصول را تحویل گرفت";
+    case 45:
+      return "پیک محصول را تحویل داد";
+
+    case 50:
+      return "خریدار تحویل گرفت";
+    case 55:
+      return "خریدار امتیاز داد";
+
+    default:
+      return "";
+  }
+};

@@ -20,7 +20,7 @@ import {
 import { Link, useLocation, Redirect } from "react-router-dom";
 
 import { ApplicationState } from "../store";
-import { UserRoles } from "../shares/Constants";
+import { Status, UserRoles } from "../shares/Constants";
 import { actionCreators } from "../store/Auth";
 import "./MyLayout.css";
 
@@ -34,10 +34,9 @@ const middleCenter = {
 };
 
 interface IMyPrivateLayoutProps {
-  init: boolean;
-  loading: boolean;
+  status: Status;
   login: boolean;
-  role?: string;
+  // role?: string;
   userRole?: string;
 
   shopCart: number[];
@@ -46,14 +45,16 @@ interface IMyPrivateLayoutProps {
 }
 
 const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
-  init,
-  loading,
+  status,
   login,
   userRole,
   shopCart,
   logout,
   children,
 }) => {
+  // TODO: reset status to idle every time
+  // TODO: access data -> at start, status==init
+
   const [drawerVisible, setDrawerVisible] = React.useState(false);
 
   const showDrawerBtn = () => {
@@ -66,7 +67,7 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
 
   let location = useLocation();
 
-  return init || loading ? (
+  return status == Status.INIT ? (
     <div style={middleCenter}>
       <h1>درحال بارگذاری</h1>
     </div>
@@ -195,7 +196,7 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
         className="main-layout"
         style={{ minHeight: window.innerHeight - 102 + "px" }}
       >
-        <Spin spinning={loading} tip="در حال بارگزاری ...">
+        <Spin spinning={status == Status.LOADING} tip="در حال بارگزاری ...">
           {children}
         </Spin>
       </main>
@@ -237,8 +238,7 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  init: state.auth ? state.auth.init : false,
-  loading: state.auth ? state.auth.loading : false,
+  status: state.auth ? state.auth.status : Status.IDLE,
   login: state.auth ? state.auth.login : false,
   userRole: state.auth ? state.auth.role : undefined,
 

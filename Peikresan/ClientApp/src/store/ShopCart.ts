@@ -1,6 +1,7 @@
 import axios from "axios";
 import { Action, Reducer } from "redux";
 import { AppThunkAction } from ".";
+import { Status } from "../shares/Constants";
 import { IAddress, IBankData, IDeliverTime } from "../shares/Interfaces";
 import { Cart_URL } from "../shares/URLs";
 
@@ -14,7 +15,7 @@ export interface IShopCartState {
   deliverTime?: IDeliverTime;
   deliverAtDoor: boolean;
 
-  loading: boolean;
+  status: Status;
   bankData?: IBankData;
 }
 
@@ -135,9 +136,6 @@ export const actionCreators = {
     const response = await axios
       .post(Cart_URL, { shopCart, address, deliverTime, deliverAtDoor })
       .catch((error) => {
-        return { ...error, success: false };
-      })
-      .catch((error) => {
         dispatch({
           type: BankActions.REQUEST_FAILURE,
           payload: { message: "axios catch error", error: error },
@@ -169,7 +167,7 @@ export const reducer: Reducer<IShopCartState> = (
     return {
       shopCart: [],
       deliverAtDoor: false,
-      loading: false,
+      status: Status.INIT,
     };
   }
 
@@ -225,12 +223,12 @@ export const reducer: Reducer<IShopCartState> = (
       return { ...state, deliverAtDoor: action.payload.value };
 
     case BankActions.SEND_REQUEST:
-      return { ...state, loading: true };
+      return { ...state, status: Status.LOADING };
 
     case BankActions.REQUEST_FAILURE:
       return {
         ...state,
-        loading: false,
+        status: Status.FAILED,
         bankData: { success: false, terminalId: "", token: "", url: "" },
       };
 
@@ -239,7 +237,7 @@ export const reducer: Reducer<IShopCartState> = (
       if (data) {
         return {
           ...state,
-          loading: false,
+          status: Status.SUCCEEDED,
           bankData: {
             success: data.success,
             terminalId: data.terminalId,
@@ -250,7 +248,7 @@ export const reducer: Reducer<IShopCartState> = (
       }
       return {
         ...state,
-        loading: false,
+        status: Status.FAILED,
         bankData: { success: false, terminalId: "", token: "", url: "" },
       };
 

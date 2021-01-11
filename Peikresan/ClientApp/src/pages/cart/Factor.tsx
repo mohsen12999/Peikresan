@@ -17,6 +17,7 @@ import {
   CalculateDeliverPrice,
 } from "../../shares/Functions";
 import { actionCreators } from "../../store/ShopCart";
+import { Status } from "../../shares/Constants";
 
 import "./Factor.css";
 
@@ -26,7 +27,7 @@ interface IFactorProps {
   address?: IAddress;
   deliverTime?: IDeliverTime;
   deliverAtDoor: boolean;
-  loading: boolean;
+  status: Status;
   sellOptions?: ISellOptions;
   bankData?: IBankData;
   SendCart: Function;
@@ -36,7 +37,7 @@ const Factor: React.FC<IFactorProps> = ({
   products,
   shopCart,
   deliverAtDoor,
-  loading,
+  status,
   sellOptions,
   bankData,
   deliverTime,
@@ -51,7 +52,7 @@ const Factor: React.FC<IFactorProps> = ({
     : 0;
 
   const SendToBank = () => {
-    if (loading) return;
+    if (status == Status.LOADING) return;
     SendCart(shopCart, address, deliverTime, deliverAtDoor);
   };
 
@@ -73,7 +74,11 @@ const Factor: React.FC<IFactorProps> = ({
           <Col span={12}>هزینه کل</Col>
         </Row>
 
-        <Button type="primary" disabled={loading} onClick={SendToBank}>
+        <Button
+          type="primary"
+          disabled={status == Status.LOADING}
+          onClick={SendToBank}
+        >
           پرداخت
         </Button>
 
@@ -104,7 +109,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   address: state.shopCart?.address,
   deliverTime: state.shopCart?.deliverTime,
   deliverAtDoor: state.shopCart ? state.shopCart.deliverAtDoor : false,
-  loading: state.shopCart ? state.shopCart.loading : false,
+  status: state.shopCart ? state.shopCart.status : Status.IDLE,
   sellOptions: state.data?.sellOptions,
   bankData: state.shopCart?.bankData,
 });
