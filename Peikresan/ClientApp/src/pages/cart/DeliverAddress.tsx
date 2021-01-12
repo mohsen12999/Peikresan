@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
 
 import MyLayout from "../../components/MyLayout";
-import { DefaultAddress } from "../../shares/Constants";
+import { CartPath, DefaultAddress } from "../../shares/Constants";
 import { ValidateAddress } from "../../shares/Functions";
 import AddressSpan from "../../components/AddressSpan";
 import { IAddress } from "../../shares/Interfaces";
@@ -256,7 +256,7 @@ const DeliverAddress: React.FC<IAddressProps> = ({
         )}
 
         <div>
-          <Link to="/deliver-time">
+          <Link to={CartPath.DeliverTime}>
             <Button
               type="primary"
               className="save-address-btn"

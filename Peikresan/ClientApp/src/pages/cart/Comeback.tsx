@@ -8,11 +8,15 @@ import { ApplicationState } from "../../store";
 import { actionCreators as dataActionCreators } from "../../store/Data";
 import { actionCreators as shopCartActionCreators } from "../../store/ShopCart";
 import { CalculateTotalPrice } from "../../shares/Functions";
-import { IProduct } from "../../shares/Interfaces";
+import { IProduct, ISellOptions } from "../../shares/Interfaces";
+import { HomePath } from "../../shares/Constants";
 
 interface IComebackProps {
   shopCart: number[];
   products: IProduct[];
+  deliverAtDoor: boolean;
+  sellOptions?: ISellOptions;
+
   ArchivedFactor: Function;
   ResetShopCart: Function;
 }
@@ -24,6 +28,8 @@ interface IParamTypes {
 const Comeback: React.FC<IComebackProps> = ({
   shopCart,
   products,
+  deliverAtDoor,
+  sellOptions,
   ArchivedFactor,
   ResetShopCart,
 }) => {
@@ -35,7 +41,7 @@ const Comeback: React.FC<IComebackProps> = ({
       ArchivedFactor(
         Number(id),
         shopCart,
-        CalculateTotalPrice(shopCart, products)
+        CalculateTotalPrice(shopCart, products, deliverAtDoor, sellOptions)
       );
       ResetShopCart();
     }
@@ -53,7 +59,7 @@ const Comeback: React.FC<IComebackProps> = ({
           <h1>پرداخت موفق بود</h1>
           <p>شماره سفارش: {id}</p>
           <p>شماره پیگیری: {query.get("trace_number")}</p>
-          <Link to="/">
+          <Link to={HomePath.Home}>
             <Button type="primary">بازگشت به صفحه اصلی</Button>
           </Link>
         </div>
@@ -65,6 +71,8 @@ const Comeback: React.FC<IComebackProps> = ({
 const mapStateToProps = (state: ApplicationState) => ({
   shopCart: state.shopCart ? state.shopCart.shopCart : [],
   products: state.data ? state.data.products : [],
+  deliverAtDoor: state.shopCart ? state.shopCart.deliverAtDoor : false,
+  sellOptions: state.data?.sellOptions,
 });
 
 const mapDispatchToProps = {

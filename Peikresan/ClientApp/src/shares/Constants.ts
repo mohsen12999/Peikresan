@@ -1,6 +1,6 @@
 import { IAddress } from "./Interfaces";
 
-export enum UserRoles {
+export enum UserRole {
   ADMIN = "ADMIN",
   SELLER = "SELLER",
   DELIVERY = "DELIVERY",
@@ -27,13 +27,25 @@ export enum AdminPath {
   Admin = "/admin",
   Login = "/admin",
   Dashboard = "/admin/dashboard",
+
   Categories = "/admin/categories",
+  Category = "/admin/category/",
+
   Products = "/admin/products",
+  Product = "/admin/product/",
+
   AwesomeProducts = "/admin/awesome_products",
+
   Sliders = "/admin/sliders",
+  Slider = "/admin/slider/",
+
   Banners = "/admin/banners",
+  Banner = "/admin/banner",
+
   Users = "/admin/users",
-  ActiveOrders = "/admin/active-orders",
+  User = "/admin/user",
+
+  Orders = "/admin/orders",
   SellerProducts = "/admin/seller-products",
   SellerOrders = "/admin/seller-orders",
   DeliverOrders = "/admin/deliver-orders",
@@ -43,6 +55,9 @@ export enum AdminPath {
 
 export enum CartPath {
   Cart = "/cart",
+  DeliverAddress = "/deliver-address",
+  DeliverTime = "/deliver-time",
+  Factor = "/factor",
 }
 
 export const DefaultAddress: IAddress = {

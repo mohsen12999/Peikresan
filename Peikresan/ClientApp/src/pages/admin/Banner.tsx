@@ -9,15 +9,15 @@ import { ApplicationState } from "../../store";
 import { IBanner } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
 import { AdminDataModel, AdminDataUrl, LOGIN_URL } from "../../shares/URLs";
-import { Status } from "../../shares/Constants";
+import { AdminPath, Status } from "../../shares/Constants";
 
 interface IBannerProps {
   banners: IBanner[];
   status: Status;
+
   AddOrChangeElement: Function;
   ResetStatus: Function;
 }
-
 interface IParamTypes {
   id: string;
 }
@@ -33,7 +33,7 @@ const Banner: React.FC<IBannerProps> = ({
   React.useEffect(() => {
     if (status == Status.SUCCEEDED) {
       const history = useHistory();
-      history.push("/admin/categories");
+      history.push(AdminPath.Categories);
       message.success("با موفقیت ذخیره شد.");
     } else if (status == Status.FAILED) {
       message.error("اشکال در ذخیره");
@@ -58,7 +58,7 @@ const Banner: React.FC<IBannerProps> = ({
   }
 
   const sendData = () => {
-    if (!validateInputs()) return;
+    if (!validateInputs() || status == Status.LOADING) return;
 
     var formData = new FormData();
     formData.append("id", id);

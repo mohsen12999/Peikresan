@@ -25,7 +25,7 @@ import {
   CartPath,
   HomePath,
   Status,
-  UserRoles,
+  UserRole,
 } from "../shares/Constants";
 import { actionCreators } from "../store/Auth";
 import "./MyLayout.css";
@@ -112,7 +112,7 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
             <Link to={AdminPath.Dashboard}>داشبورد</Link>
           </Menu.Item>
 
-          {userRole && userRole.toUpperCase() == UserRoles.ADMIN && (
+          {userRole && userRole.toUpperCase() == UserRole.ADMIN && (
             <React.Fragment>
               <Divider dashed />
 
@@ -150,14 +150,14 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
                 <Link to={AdminPath.Users}>لیست کاربرها</Link>
               </Menu.Item>
 
-              <Menu.Item key={AdminPath.ActiveOrders}>
+              <Menu.Item key={AdminPath.Orders}>
                 <ShopOutlined />
-                <Link to={AdminPath.ActiveOrders}>سفارش های فعال</Link>
+                <Link to={AdminPath.Orders}>سفارش‌ها</Link>
               </Menu.Item>
             </React.Fragment>
           )}
 
-          {userRole && userRole.toUpperCase() == UserRoles.SELLER && (
+          {userRole && userRole.toUpperCase() == UserRole.SELLER && (
             <React.Fragment>
               <Menu.Item key={AdminPath.SellerProducts}>
                 <ShopOutlined />
@@ -170,7 +170,7 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
             </React.Fragment>
           )}
 
-          {userRole && userRole.toUpperCase() == UserRoles.DELIVERY && (
+          {userRole && userRole.toUpperCase() == UserRole.DELIVERY && (
             <React.Fragment>
               <Menu.Item key={AdminPath.DeliverOrders}>
                 <ShopOutlined />
@@ -178,11 +178,6 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
               </Menu.Item>
             </React.Fragment>
           )}
-
-          {/* <Menu.Item key="/admin/orders">
-                  <ShopOutlined />
-                  <Link to="/admin/orders">سفارش ها</Link>
-                </Menu.Item> */}
 
           <Menu.Item key={AdminPath.Factors}>
             <ContainerOutlined />

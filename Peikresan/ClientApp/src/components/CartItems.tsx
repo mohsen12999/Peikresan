@@ -13,6 +13,7 @@ import {
   GetShopCartProducts,
   CalculateShopCartTotalPrice,
 } from "../shares/Functions";
+import { CartPath } from "../shares/Constants";
 
 interface ICartItemProps {
   shopCart: number[];
@@ -33,7 +34,7 @@ const CartItems: React.FC<ICartItemProps> = ({
           <div className="cart-items-footer persian-number">
             قیمت مجموع: {CalculateShopCartTotalPrice(shopCart, products)}
           </div>
-          <Link to="/deliver-address">
+          <Link to={CartPath.DeliverAddress}>
             <Button style={{ borderRadius: "16px" }} type="primary">
               ادامه خرید
             </Button>

@@ -8,12 +8,12 @@ import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { IBanner } from "../../shares/Interfaces";
 import { ApplicationState } from "../../store";
 import { actionCreators } from "../../store/Auth";
-import { Status } from "../../shares/Constants";
+import { AdminPath, Status } from "../../shares/Constants";
 import { AdminDataModel, AdminDataUrl } from "../../shares/URLs";
 
 import "./Admin.css";
 
-interface IBannerProps {
+interface IBannersProps {
   banners: IBanner[];
   status: Status;
 
@@ -21,7 +21,7 @@ interface IBannerProps {
   ResetStatus: Function;
 }
 
-const Banners: React.FC<IBannerProps> = ({
+const Banners: React.FC<IBannersProps> = ({
   banners,
   status,
   RemoveElement,
@@ -52,7 +52,7 @@ const Banners: React.FC<IBannerProps> = ({
       title: "تصویر",
       dataIndex: "img",
       key: "img",
-      render: (img, record) => (
+      render: (img: string, record: IBanner) => (
         <Space size="middle">
           <img style={{ maxWidth: "75px" }} src={img} alt={record.title} />
         </Space>
@@ -61,7 +61,7 @@ const Banners: React.FC<IBannerProps> = ({
     {
       title: "عملیات",
       key: "action",
-      render: (text, record) => (
+      render: (_: any, record: IBanner) => (
         <Space size="middle">
           <Popconfirm
             title="از حذف اطمینان دارید؟"
@@ -95,7 +95,7 @@ const Banners: React.FC<IBannerProps> = ({
         <h1>لیست بنرها</h1>
 
         <Tooltip title="بنر جدید">
-          <Link to="/admin/banner" className="float-add-btn">
+          <Link to={AdminPath.Banner} className="float-add-btn">
             <Button type="primary" shape="circle" icon={<PlusOutlined />} />
           </Link>
         </Tooltip>

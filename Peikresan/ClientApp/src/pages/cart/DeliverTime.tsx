@@ -9,7 +9,7 @@ import MyLayout from "../../components/MyLayout";
 import "./DeliverTime.css";
 import { ApplicationState } from "../../store";
 import { IDeliverTime } from "../../shares/Interfaces";
-import { DeliverDay } from "../../shares/Constants";
+import { CartPath, DeliverDay } from "../../shares/Constants";
 
 const { TabPane } = Tabs;
 
@@ -26,7 +26,7 @@ const DeliverTime: React.FC<IDeliverTimeProps> = ({
   SetDeliverAtDoor,
 }) => {
   const currentHour = new Date().getHours();
-  const [radioValue, setRadioValue] = React.useState<number>(undefined);
+  const [radioValue, setRadioValue] = React.useState<number>();
 
   return (
     <MyLayout>
@@ -112,7 +112,7 @@ const DeliverTime: React.FC<IDeliverTimeProps> = ({
         </Checkbox>
 
         <div className="btnStyle">
-          <Link to="/factor">
+          <Link to={CartPath.Factor}>
             <Button
               style={{ borderRadius: "16px" }}
               disabled={radioValue === undefined}
