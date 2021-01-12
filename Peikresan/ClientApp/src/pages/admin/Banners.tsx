@@ -9,7 +9,7 @@ import { IBanner } from "../../shares/Interfaces";
 import { ApplicationState } from "../../store";
 import { actionCreators } from "../../store/Auth";
 import { Status } from "../../shares/Constants";
-import { AdminDataModel, AdminDataUrl, LOGIN_URL } from "../../shares/URLs";
+import { AdminDataModel, AdminDataUrl } from "../../shares/URLs";
 
 import "./Admin.css";
 
@@ -18,13 +18,25 @@ interface IBannerProps {
   status: Status;
 
   RemoveElement: Function;
+  ResetStatus: Function;
 }
 
 const Banners: React.FC<IBannerProps> = ({
   banners,
   status,
   RemoveElement,
+  ResetStatus,
 }) => {
+  React.useEffect(() => {
+    if (status == Status.SUCCEEDED) {
+      message.success("با موفقیت حذف شد.");
+      ResetStatus();
+    } else if (status == Status.FAILED) {
+      message.error("اشکال در حذف");
+      ResetStatus();
+    }
+  }, [status]);
+
   const columns = [
     {
       title: "شماره",
@@ -101,6 +113,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = {
   RemoveElement: actionCreators.removeElement,
+  ResetStatus: actionCreators.resetStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Banners);

@@ -1,25 +1,45 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useParams, useHistory } from "react-router-dom";
-import { Input, Space, Button } from "antd";
+import { Input, Space, Button, message } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
 import { IBanner } from "../../shares/Interfaces";
+import { actionCreators } from "../../store/Auth";
+import { AdminDataModel, AdminDataUrl, LOGIN_URL } from "../../shares/URLs";
+import { Status } from "../../shares/Constants";
 
 interface IBannerProps {
   banners: IBanner[];
+  status: Status;
+  AddOrChangeElement: Function;
+  ResetStatus: Function;
 }
 
 interface IParamTypes {
   id: string;
 }
 
-const Banner: React.FC<IBannerProps> = ({ banners }) => {
+const Banner: React.FC<IBannerProps> = ({
+  banners,
+  status,
+  AddOrChangeElement,
+  ResetStatus,
+}) => {
   const { id } = useParams<IParamTypes>();
 
-  let history = useHistory();
+  React.useEffect(() => {
+    if (status == Status.SUCCEEDED) {
+      const history = useHistory();
+      history.push("/admin/categories");
+      message.success("با موفقیت ذخیره شد.");
+    } else if (status == Status.FAILED) {
+      message.error("اشکال در ذخیره");
+    }
+    return ResetStatus();
+  }, [status]);
 
   const [file, setFile] = React.useState<File>();
   const [title, setTitle] = React.useState<string>();
@@ -46,11 +66,11 @@ const Banner: React.FC<IBannerProps> = ({ banners }) => {
     formData.append("title", title ?? "");
     formData.append("url", url ?? "");
 
-    context.SendingBanner(formData).then((res) => {
-      if (res && res.success) {
-        history.push("/admin/banners");
-      }
-    });
+    AddOrChangeElement(
+      AdminDataUrl.ADD_CHANGE_BANNER_URL,
+      AdminDataModel.Banners,
+      formData
+    );
   };
 
   return (
@@ -124,8 +144,12 @@ const Banner: React.FC<IBannerProps> = ({ banners }) => {
 
 const mapStateToProps = (state: ApplicationState) => ({
   banners: state.auth?.banners ?? [],
+  status: state.auth?.status ?? Status.INIT,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  AddOrChangeElement: actionCreators.addOrChangeElement,
+  ResetStatus: actionCreators.resetStatus,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Banner);
