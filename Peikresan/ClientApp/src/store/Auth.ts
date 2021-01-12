@@ -10,6 +10,7 @@ import {
   IProduct,
   ICategory,
   IBanner,
+  ISubOrder,
 } from "../shares/Interfaces";
 import { AddToken, RemoveToken } from "../shares/LocalStorage";
 import { Status } from "../shares/Constants";
@@ -30,6 +31,7 @@ export interface IAuthState {
   users: IUser[];
   roles: IRole[];
   orders: IOrder[];
+  subOrders: ISubOrder[];
   sellerProducts: ISellerProduct[];
   products: IProduct[];
   categories: ICategory[];
@@ -202,6 +204,7 @@ export const reducer: Reducer<IAuthState> = (
       users: [],
       roles: [],
       orders: [],
+      subOrders: [],
       sellerProducts: [],
       products: [],
       categories: [],
@@ -244,6 +247,9 @@ export const reducer: Reducer<IAuthState> = (
         }
         if (data.orders) {
           loginState.orders = data.orders;
+        }
+        if (data.subOrders) {
+          loginState.subOrders = data.subOrders;
         }
         if (data.sellerProducts) {
           loginState.sellerProducts = data.sellerProducts;

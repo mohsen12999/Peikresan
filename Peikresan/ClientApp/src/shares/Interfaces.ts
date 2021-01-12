@@ -9,6 +9,7 @@ export interface IMoreBtn {
 export interface ICategory {
   id: number;
   title: string;
+  description: string;
   img: string;
   parentId: number;
 }
@@ -40,6 +41,11 @@ export interface IRole {
 }
 
 export interface IOrder {
+  id: number;
+  orderStatus: number;
+}
+
+export interface ISubOrder {
   id: number;
 }
 
