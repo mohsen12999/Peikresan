@@ -1,3 +1,4 @@
+import { UserRole } from "./Constants";
 import {
   ICategory,
   IProduct,
@@ -72,12 +73,14 @@ export const CalculateTotalPrice = (
   shopCart: number[],
   products: IProduct[],
   deliverAtDoor: boolean,
-  sellOptions: ISellOptions
+  sellOptions?: ISellOptions
 ) => {
   const totalProductPrice = CalculateShopCartTotalPrice(shopCart, products);
   return (
     totalProductPrice +
-    CalculateDeliverPrice(totalProductPrice, deliverAtDoor, sellOptions)
+    (sellOptions
+      ? CalculateDeliverPrice(totalProductPrice, deliverAtDoor, sellOptions)
+      : 0)
   );
 };
 
@@ -124,6 +127,23 @@ export const OrderStatusDescription = (orderStatus: number) => {
       return "خریدار تحویل گرفت";
     case 55:
       return "خریدار امتیاز داد";
+
+    default:
+      return "";
+  }
+};
+
+export const GetUsersRoleName = (role: string) => {
+  role = role.toUpperCase();
+  switch (role) {
+    case UserRole.ADMIN:
+      return "مدیریت";
+
+    case UserRole.SELLER:
+      return "فروشندگان";
+
+    case UserRole.DELIVERY:
+      return "پیک‌ها";
 
     default:
       return "";
