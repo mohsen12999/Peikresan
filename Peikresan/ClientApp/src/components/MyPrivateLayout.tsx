@@ -20,7 +20,13 @@ import {
 import { Link, useLocation, Redirect } from "react-router-dom";
 
 import { ApplicationState } from "../store";
-import { Status, UserRoles } from "../shares/Constants";
+import {
+  AdminPath,
+  CartPath,
+  HomePath,
+  Status,
+  UserRoles,
+} from "../shares/Constants";
 import { actionCreators } from "../store/Auth";
 import "./MyLayout.css";
 
@@ -52,8 +58,9 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
   logout,
   children,
 }) => {
-  // TODO: reset status to idle every time
-  // TODO: access data -> at start, status==init
+  React.useEffect(() => {
+    // TODO: access data -> at start, status==init
+  }, []);
 
   const [drawerVisible, setDrawerVisible] = React.useState(false);
 
@@ -67,12 +74,13 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
 
   let location = useLocation();
 
-  return status == Status.INIT ? (
+  return status == Status.INIT ||
+    (status == Status.LOADING && login == false) ? (
     <div style={middleCenter}>
-      <h1>درحال بارگذاری</h1>
+      <h1>در حال بارگزاری</h1>
     </div>
   ) : login == false ? (
-    <Redirect to={"/admin"} />
+    <Redirect to={AdminPath.Admin} />
   ) : (
     <div>
       <div className="my-header">
@@ -84,7 +92,7 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
 
         <MenuUnfoldOutlined className="open-color" onClick={showDrawerBtn} />
 
-        <Link to="/cart" className="show-cart-btn">
+        <Link to={CartPath.Cart} className="show-cart-btn">
           <Badge count={shopCart.filter((c) => c > 0).length}>
             <ShoppingCartOutlined />
           </Badge>
@@ -99,74 +107,74 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
         className="drawer-padding"
       >
         <Menu selectedKeys={[location.pathname]}>
-          <Menu.Item key="/admin/dashboard">
+          <Menu.Item key={AdminPath.Dashboard}>
             <DashboardOutlined />
-            <Link to="/admin/dashboard">داشبورد</Link>
+            <Link to={AdminPath.Dashboard}>داشبورد</Link>
           </Menu.Item>
 
           {userRole && userRole.toUpperCase() == UserRoles.ADMIN && (
             <React.Fragment>
               <Divider dashed />
 
-              <Menu.Item key="/admin/categories">
+              <Menu.Item key={AdminPath.Categories}>
                 <AppstoreOutlined />
-                <Link to="/admin/categories">مدیریت دسته‌بندی</Link>
+                <Link to={AdminPath.Categories}>مدیریت دسته‌بندی</Link>
               </Menu.Item>
 
-              <Menu.Item key="/admin/products">
+              <Menu.Item key={AdminPath.Products}>
                 <ReconciliationOutlined />
-                <Link to="/admin/products">مدیریت محصولات</Link>
+                <Link to={AdminPath.Products}>مدیریت محصولات</Link>
               </Menu.Item>
 
               <Divider dashed />
 
-              <Menu.Item key="/admin/awesome_products">
+              <Menu.Item key={AdminPath.AwesomeProducts}>
                 <SketchOutlined />
-                <Link to="/admin/awesome_products">محصولات شگفت‌انگیز</Link>
+                <Link to={AdminPath.AwesomeProducts}>محصولات شگفت‌انگیز</Link>
               </Menu.Item>
 
-              <Menu.Item key="/admin/sliders">
+              <Menu.Item key={AdminPath.Sliders}>
                 <FundOutlined />
-                <Link to="/admin/sliders">مدیریت اسلایدرها</Link>
+                <Link to={AdminPath.Sliders}>مدیریت اسلایدرها</Link>
               </Menu.Item>
 
-              <Menu.Item key="/admin/banners">
+              <Menu.Item key={AdminPath.Banners}>
                 <AppstoreOutlined />
-                <Link to="/admin/banners">مدیریت بنرها</Link>
+                <Link to={AdminPath.Banners}>مدیریت بنرها</Link>
               </Menu.Item>
 
               <Divider dashed />
 
-              <Menu.Item key="/admin/users">
+              <Menu.Item key={AdminPath.Users}>
                 <UsergroupAddOutlined />
-                <Link to="/admin/users">لیست کاربرها</Link>
+                <Link to={AdminPath.Users}>لیست کاربرها</Link>
               </Menu.Item>
 
-              <Menu.Item key="/admin/active-orders">
+              <Menu.Item key={AdminPath.ActiveOrders}>
                 <ShopOutlined />
-                <Link to="/admin/active-orders">سفارش های فعال</Link>
+                <Link to={AdminPath.ActiveOrders}>سفارش های فعال</Link>
               </Menu.Item>
             </React.Fragment>
           )}
 
           {userRole && userRole.toUpperCase() == UserRoles.SELLER && (
             <React.Fragment>
-              <Menu.Item key="/admin/seller-Products">
+              <Menu.Item key={AdminPath.SellerProducts}>
                 <ShopOutlined />
-                <Link to="/admin/seller-Products">محصولات شما</Link>
+                <Link to={AdminPath.SellerProducts}>محصولات شما</Link>
               </Menu.Item>
-              <Menu.Item key="/admin/seller-orders">
+              <Menu.Item key={AdminPath.SellerOrders}>
                 <ShopOutlined />
-                <Link to="/admin/seller-orders">سفارش‌های شما</Link>
+                <Link to={AdminPath.SellerOrders}>سفارش‌های شما</Link>
               </Menu.Item>
             </React.Fragment>
           )}
 
           {userRole && userRole.toUpperCase() == UserRoles.DELIVERY && (
             <React.Fragment>
-              <Menu.Item key="/admin/deliver-orders">
+              <Menu.Item key={AdminPath.DeliverOrders}>
                 <ShopOutlined />
-                <Link to="/admin/deliver-orders">سفارش‌های شما</Link>
+                <Link to={AdminPath.DeliverOrders}>سفارش‌های شما</Link>
               </Menu.Item>
             </React.Fragment>
           )}
@@ -176,14 +184,14 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
                   <Link to="/admin/orders">سفارش ها</Link>
                 </Menu.Item> */}
 
-          <Menu.Item key="/admin/factors">
+          <Menu.Item key={AdminPath.Factors}>
             <ContainerOutlined />
-            <Link to="/admin/factors">فاکتورها</Link>
+            <Link to={AdminPath.Factors}>فاکتورها</Link>
           </Menu.Item>
 
           <Divider dashed />
 
-          <Menu.Item key="/admin/logout">
+          <Menu.Item>
             <LogoutOutlined />
             <a href="#" onClick={() => logout()}>
               خروج
@@ -204,30 +212,30 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
 
       <div className="bottom-menu">
         <Menu mode="horizontal" selectedKeys={[location.pathname]}>
-          <Menu.Item key="/">
-            <Link to="/">
+          <Menu.Item key={HomePath.Home}>
+            <Link to={HomePath.Home}>
               <HomeOutlined />
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link to="/cart">
+            <Link to={CartPath.Cart}>
               <Badge count={shopCart.filter((c) => c > 0).length}>
                 <ShoppingCartOutlined />
               </Badge>
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link to="/coin">
+            <Link to={CartPath.Cart}>
               <DollarOutlined />
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link to="/categories">
+            <Link to={HomePath.Categories}>
               <AppstoreOutlined />
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link to="/profile">
+            <Link to={HomePath.Profile}>
               <UserOutlined />
             </Link>
           </Menu.Item>

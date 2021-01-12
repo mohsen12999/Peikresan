@@ -21,7 +21,7 @@ import Enamad from "./Enamad";
 
 import "./MyLayout.css";
 import { ApplicationState } from "../store";
-import { Status } from "../shares/Constants";
+import { Status, HomePath, CartPath } from "../shares/Constants";
 
 const { Search } = Input;
 
@@ -75,7 +75,7 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
 
         <MenuUnfoldOutlined className="open-color" onClick={showDrawerBtn} />
 
-        <Link to="/cart" className="show-cart-btn">
+        <Link to={CartPath.Cart} className="show-cart-btn">
           <Badge count={shopCart.filter((c) => c > 0).length}>
             <ShoppingCartOutlined />
           </Badge>
@@ -90,31 +90,31 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
         className="drawer-padding"
       >
         <Menu selectedKeys={[location.pathname]}>
-          <Menu.Item key="/">
+          <Menu.Item key={HomePath.Home}>
             <HomeOutlined />
-            <Link to="/">خانه</Link>
+            <Link to={HomePath.Home}>خانه</Link>
           </Menu.Item>
-          <Menu.Item key="/categories">
+          <Menu.Item key={HomePath.Categories}>
             <AppstoreOutlined />
-            <Link to="/categories">لیست دسته بندی محصولات</Link>
+            <Link to={HomePath.Categories}>لیست دسته بندی محصولات</Link>
           </Menu.Item>
 
           <Divider dashed />
 
-          <Menu.Item key="/cart">
+          <Menu.Item key={CartPath.Cart}>
             <ShoppingCartOutlined />
-            <Link to="/cart">سبد خرید</Link>
+            <Link to={CartPath.Cart}>سبد خرید</Link>
           </Menu.Item>
 
           <Divider dashed />
 
-          <Menu.Item key="/address">
+          <Menu.Item key={HomePath.Addresses}>
             <BranchesOutlined />
-            <Link to="/address">آدرس های منتخب</Link>
+            <Link to={HomePath.Addresses}>آدرس های منتخب</Link>
           </Menu.Item>
-          <Menu.Item key="/factors">
+          <Menu.Item key={HomePath.Factors}>
             <MenuOutlined />
-            <Link to="/factors">سوابق سفارش</Link>
+            <Link to={HomePath.Factors}>سوابق سفارش</Link>
           </Menu.Item>
 
           <Divider dashed />
@@ -123,13 +123,13 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
             <Link to="https://instagram.com">اینستاگرام</Link>
           </Menu.Item>
 
-          <Menu.Item key="/faq">
+          <Menu.Item key={HomePath.FAQ}>
             <WechatOutlined />
-            <Link to="/faq">سوالات متداول</Link>
+            <Link to={HomePath.FAQ}>سوالات متداول</Link>
           </Menu.Item>
-          <Menu.Item key="/about">
+          <Menu.Item key={HomePath.About}>
             <SolutionOutlined />
-            <Link to="/about">درباره ما</Link>
+            <Link to={HomePath.About}>درباره ما</Link>
           </Menu.Item>
         </Menu>
       </Drawer>
@@ -151,30 +151,30 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
 
       <div className="bottom-menu">
         <Menu mode="horizontal" selectedKeys={[location.pathname]}>
-          <Menu.Item key="/">
-            <Link to="/">
+          <Menu.Item key={HomePath.Home}>
+            <Link to={HomePath.Home}>
               <HomeOutlined />
             </Link>
           </Menu.Item>
           <Menu.Item>
-            <Link to="/cart">
+            <Link to={CartPath.Cart}>
               <Badge count={shopCart.filter((c) => c > 0).length}>
                 <ShoppingCartOutlined />
               </Badge>
             </Link>
           </Menu.Item>
-          <Menu.Item>
-            <Link to="/coin">
+          {/* <Menu.Item>
+            <Link to={HomePath.Coin}>
               <DollarOutlined />
             </Link>
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item>
-            <Link to="/categories">
+            <Link to={HomePath.Profile}>
               <AppstoreOutlined />
             </Link>
           </Menu.Item>
           {/* <Menu.Item>
-                <Link to="/profile">
+                <Link to={HomePath.Categories}>
                   <UserOutlined />
                 </Link>
               </Menu.Item> */}
