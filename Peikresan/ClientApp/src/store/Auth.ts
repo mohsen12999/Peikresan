@@ -26,13 +26,14 @@ export interface IAuthState {
   role?: string;
   token?: string;
 
-  users?: IUser[];
-  roles?: IRole[];
-  orders?: IOrder[];
-  sellerProducts?: ISellerProduct[];
-  products?: IProduct[]; // all products
-  categories?: ICategory[]; // all categories
-  banners?: IBanner[]; // all banners
+  // all of a data
+  users: IUser[];
+  roles: IRole[];
+  orders: IOrder[];
+  sellerProducts: ISellerProduct[];
+  products: IProduct[];
+  categories: ICategory[];
+  banners: IBanner[];
 }
 
 export enum AuthActions {
@@ -57,6 +58,8 @@ export enum AdminDataActions {
   REMOVE_FAILURE = "REMOVE_FAILURE ",
 }
 
+export const RESET_STATUS = "RESET_STATUS";
+
 // -----------------
 // ACTIONS - These are serializable (hence replayable) descriptions of state transitions.
 // They do not themselves have any side-effects; they just describe something that is going to happen.
@@ -77,9 +80,13 @@ export interface IAdminDataActions {
   };
 }
 
+export interface IResetStatus {
+  type: typeof RESET_STATUS;
+}
+
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-export type KnownAction = IAuthActions | IAdminDataActions;
+export type KnownAction = IAuthActions | IAdminDataActions | IResetStatus;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -177,6 +184,8 @@ export const actionCreators = {
       });
     }
   },
+
+  resetStatus: () => ({ type: RESET_STATUS } as IResetStatus),
 };
 
 // ----------------
@@ -187,13 +196,23 @@ export const reducer: Reducer<IAuthState> = (
   incomingAction: Action
 ): IAuthState => {
   if (state === undefined) {
-    return { login: false, status: Status.INIT };
+    return {
+      login: false,
+      status: Status.INIT,
+      users: [],
+      roles: [],
+      orders: [],
+      sellerProducts: [],
+      products: [],
+      categories: [],
+      banners: [],
+    };
   }
 
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case AuthActions.LOGIN_REQUEST:
-      return { login: false, status: Status.LOADING };
+      return { ...state, login: false, status: Status.LOADING };
 
     case AuthActions.LOGIN_SUCCESS:
       const loginState = {
@@ -239,11 +258,11 @@ export const reducer: Reducer<IAuthState> = (
       return loginState;
 
     case AuthActions.LOGIN_FAILURE:
-      return { login: false, status: Status.FAILED };
+      return { ...state, login: false, status: Status.FAILED };
 
     case AuthActions.LOGOUT:
       RemoveToken();
-      return { login: false, status: Status.IDLE };
+      return { ...state, login: false, status: Status.IDLE };
 
     case AdminDataActions.ADD_CHANGE_REQUEST:
       return { ...state, status: Status.LOADING };
@@ -286,6 +305,9 @@ export const reducer: Reducer<IAuthState> = (
 
     case AdminDataActions.REMOVE_FAILURE:
       return { ...state, status: Status.FAILED };
+
+    case RESET_STATUS:
+      return { ...state, status: Status.IDLE };
 
     default:
       return state;
