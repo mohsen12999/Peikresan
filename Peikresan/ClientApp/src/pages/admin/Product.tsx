@@ -51,7 +51,7 @@ const Product: React.FC<IProductProps> = ({
   React.useEffect(() => {
     if (status == Status.SUCCEEDED) {
       const history = useHistory();
-      history.push(AdminPath.Categories);
+      history.push(AdminPath.Products);
       message.success("با موفقیت ذخیره شد.");
     } else if (status == Status.FAILED) {
       message.error("اشکال در ذخیره");
