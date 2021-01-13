@@ -1,4 +1,4 @@
-import { IAddress, IFactor } from "./Interfaces";
+import { IAddress, IUserFactor } from "./Interfaces";
 
 const TOKEN = "TOKEN";
 const ADDRESSES = "ADDRESSES";
@@ -33,11 +33,11 @@ export const GetAddresses = (): IAddress[] => {
   return JSON.parse(localStorage.getItem(ADDRESSES) as string);
 };
 
-export const SaveFactors = (factors: IFactor[]) => {
+export const SaveFactors = (factors: IUserFactor[]) => {
   localStorage.setItem(FACTORS, JSON.stringify(factors));
 };
 
-export const GetFactors = (): IFactor[] => {
+export const GetFactors = (): IUserFactor[] => {
   return JSON.parse(localStorage.getItem(FACTORS) as string);
 };
 

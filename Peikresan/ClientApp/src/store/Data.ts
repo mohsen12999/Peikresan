@@ -7,7 +7,7 @@ import {
   IBanner,
   ISlider,
   IAddress,
-  IFactor,
+  IUserFactor,
   ISellOptions,
   IDeliverTime,
 } from "../shares/Interfaces";
@@ -34,7 +34,7 @@ export interface IDataState {
 
   // TODO: save and load from local storage
   addresses: IAddress[];
-  factors: IFactor[];
+  factors: IUserFactor[];
 }
 
 export enum DataActions {
@@ -217,7 +217,7 @@ export const reducer: Reducer<IDataState> = (
       return { ...state, addresses: removedAddress };
 
     case DataActions.ARCHIVED_FACTOR:
-      const newFactors = [...state.factors, action.payload as IFactor];
+      const newFactors = [...state.factors, action.payload as IUserFactor];
       SaveFactors(newFactors);
       return state;
 

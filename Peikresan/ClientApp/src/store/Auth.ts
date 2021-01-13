@@ -16,6 +16,7 @@ import {
   ICategory,
   IBanner,
   ISubOrder,
+  IAdminFactor,
 } from "../shares/Interfaces";
 import { AddToken, GetToken, RemoveToken } from "../shares/LocalStorage";
 import { Status } from "../shares/Constants";
@@ -37,6 +38,7 @@ export interface IAuthState {
   users: IUser[];
   roles: IRole[];
   orders: IOrder[];
+  factors: IAdminFactor[];
   subOrders: ISubOrder[];
   sellerProducts: ISellerProduct[];
   products: IProduct[];
@@ -278,6 +280,7 @@ export const reducer: Reducer<IAuthState> = (
       users: [],
       roles: [],
       orders: [],
+      factors: [],
       subOrders: [],
       sellerProducts: [],
       products: [],
@@ -354,9 +357,11 @@ export const reducer: Reducer<IAuthState> = (
         action.payload.data.success
       ) {
         const modelName = action.payload.model as AdminDataModel;
-        const stateModelData = state[modelName];
+        const stateModelData = state[modelName] as Array<any>;
         const element = action.payload.data.element;
-        const filterData = stateModelData?.filter((m) => m.id == element.id);
+        const filterData = stateModelData.filter(
+          (m: any) => m.id == element.id
+        );
         if (filterData) {
           return { ...state, [modelName]: [...filterData, element] };
         }

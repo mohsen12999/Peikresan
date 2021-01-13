@@ -2,11 +2,11 @@ import React from "react";
 import { connect } from "react-redux";
 
 import MyLayout from "../../components/MyLayout";
-import { IFactor } from "../../shares/Interfaces";
+import { IUserFactor } from "../../shares/Interfaces";
 import { ApplicationState } from "../../store";
 
 interface IFactorsProps {
-  factors: IFactor[];
+  factors: IUserFactor[];
 }
 
 const factors: React.FC<IFactorsProps> = ({ factors }) => (
