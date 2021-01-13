@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { Statistic, Row, Col, Button, Card, Divider } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
-import { FilterOrders } from "../../shares/services/OrderFunctions";
 import { Link } from "react-router-dom";
 import { ApplicationState } from "../../store";
 import { GetUsersRoleName } from "../../shares/Functions";
