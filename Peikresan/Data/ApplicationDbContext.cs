@@ -28,6 +28,18 @@ namespace Peikresan.Data
                 .WithOne(i => i.Order)
                 .HasForeignKey(p => p.OrderId);
 
+            // Order & SubOrder
+            modelBuilder.Entity<Order>()
+                .HasMany(o => o.SubOrder)
+                .WithOne(i => i.Order)
+                .HasForeignKey(p => p.OrderId);
+
+            // SubOrder & SubOrderItem
+            modelBuilder.Entity<SubOrder>()
+                .HasMany(o => o.SubOrderItems)
+                .WithOne(i => i.SubOrder)
+                .HasForeignKey(p => p.SubOrderId);
+
             // Seller Product
             modelBuilder.Entity<SellerProduct>()
                 .HasKey(sp => new { sp.ProductId, sp.UserId });
@@ -40,9 +52,11 @@ namespace Peikresan.Data
                 .WithMany(p => p.SellerProducts)
                 .HasForeignKey(sp => sp.ProductId);
 
-            modelBuilder.Entity<Order>().HasOne(o => o.Seller).WithMany(u => u.SellOrders).HasForeignKey(or => or.SellerId).OnDelete(DeleteBehavior.NoAction);
             modelBuilder.Entity<Order>().HasOne(o => o.Deliver).WithMany(u => u.DeliverOrders).HasForeignKey(or => or.DeliverId).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<SubOrder>().HasOne(o => o.Seller).WithMany(u => u.SellOrders).HasForeignKey(or => or.SellerId).OnDelete(DeleteBehavior.NoAction);
 
+            modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+            modelBuilder.Entity<Product>().HasIndex(p => p.Barcode).IsUnique();
         }
 
         public DbSet<Product> Products { get; set; }
@@ -50,8 +64,12 @@ namespace Peikresan.Data
         public DbSet<Banner> Banners { get; set; }
         public DbSet<Slider> Sliders { get; set; }
         public DbSet<Factor> Factors { get; set; }
+
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
+
+        public DbSet<SubOrder> SubOrders { get; set; }
+        public DbSet<SubOrderItem> SubOrderItems { get; set; }
 
         public DbSet<SellerProduct> SellerProducts { get; set; }
         public DbSet<AwesomeProduct> AwesomeProducts { get; set; }

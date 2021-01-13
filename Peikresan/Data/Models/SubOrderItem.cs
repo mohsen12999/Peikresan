@@ -1,0 +1,29 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+
+namespace Peikresan.Data.Models
+{
+    public class SubOrder
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+
+        [Column(TypeName = "decimal(10,3)")]
+        public decimal Price { get; set; }
+        public int Count { get; set; }
+
+        public int? ProductId { get; set; }
+        public virtual Product Product { get; set; }
+
+        public virtual int SubOrderId { get; set; }
+        public virtual Order SubOrder { get; set; }
+
+        [NotMapped]
+        public decimal ItemsPrice => Count * Price;
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+    }
+    
+}

@@ -59,9 +59,10 @@ namespace Peikresan.Data.Models
         public string OrderStatusDescription => Enum.GetName(typeof(OrderStatus), OrderStatus);
 
         public virtual IList<OrderItem> OrderItems { get; set; }
+        public virtual IList<SubOrder> SubOrders { get; set; }
 
-        public virtual User Seller { get; set; }
-        public virtual Guid? SellerId { get; set; }
+        // public virtual User Seller { get; set; }
+        // public virtual Guid? SellerId { get; set; }
 
         public virtual User Deliver { get; set; }
         public virtual Guid? DeliverId { get; set; }
