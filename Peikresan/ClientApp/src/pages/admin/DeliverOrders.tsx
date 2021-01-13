@@ -4,10 +4,9 @@ import { Table, Tag, Space, Button, Modal } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { OrderStatusDescription } from "../../shares/services/OrderFunctions";
-
 import { ApplicationState } from "../../store";
 import { IOrder, ISubOrder } from "../../shares/Interfaces";
-import { AdminPath, UserRole, OrderStatus } from "../../shares/Constants";
+import { UserRole, OrderStatus } from "../../shares/Constants";
 import AddressSpan from "../../components/AddressSpan";
 import { OrderUrl } from "../../shares/URLs";
 
