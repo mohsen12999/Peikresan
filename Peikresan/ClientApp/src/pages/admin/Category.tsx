@@ -69,10 +69,10 @@ const Category: React.FC<ICategoryProps> = ({
 
     var formData = new FormData();
     formData.append("id", id);
-    formData.append("file", file);
-    formData.append("title", title);
-    formData.append("description", description);
-    formData.append("category", category);
+    formData.append("file", file ?? "");
+    formData.append("title", title ?? "");
+    formData.append("description", description ?? "");
+    formData.append("category", category ?? "");
 
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_CATEGORY_URL,
@@ -111,7 +111,10 @@ const Category: React.FC<ICategoryProps> = ({
             style={{ minWidth: "350px" }}
             icon={<UploadOutlined />}
             onClick={() => {
-              document.getElementById("product-img").click();
+              const productImage = document.getElementById("product-img");
+              if (productImage) {
+                productImage.click();
+              }
             }}
           >
             بارگزاری عکس
@@ -140,7 +143,7 @@ const Category: React.FC<ICategoryProps> = ({
             }))}
             placeholder=" نام دسته بندی والد"
             filterOption={(inputValue, option) =>
-              option.value.indexOf(inputValue) !== -1
+              option?.value.indexOf(inputValue) !== -1
             }
             onChange={(value) => {
               setCategory(value);

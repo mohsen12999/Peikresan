@@ -66,8 +66,8 @@ const Categories: React.FC<ICategoriesProps> = ({
             onConfirm={(e) => {
               if (status == Status.LOADING) return;
               RemoveElement(
-                AdminDataUrl.REMOVE_BANNER_URL,
-                AdminDataModel.Banners,
+                AdminDataUrl.REMOVE_CATEGORY_URL,
+                AdminDataModel.Categories,
                 record.id
               );
             }}
