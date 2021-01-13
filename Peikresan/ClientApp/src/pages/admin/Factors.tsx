@@ -5,12 +5,12 @@ import { Table, Space } from "antd";
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { OrderStatusDescription } from "../../shares/services/OrderFunctions";
 import { ApplicationState } from "../../store";
-import { IFactor } from "../../shares/Interfaces";
+import { IAdminFactor } from "../../shares/Interfaces";
 
 import "./Admin.css";
 
 interface IFactorsProps {
-  factors: IFactor[];
+  factors: IAdminFactor[];
 }
 
 const Factors: React.FC<IFactorsProps> = ({ factors }) => {
@@ -28,7 +28,7 @@ const Factors: React.FC<IFactorsProps> = ({ factors }) => {
     {
       title: "وضعیت سفارش",
       key: "orderStatus",
-      render: (_: any, record: IFactor) => (
+      render: (_: any, record: IAdminFactor) => (
         <Space size="middle">
           {OrderStatusDescription(record.factorStatusDescription)}
         </Space>

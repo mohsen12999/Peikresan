@@ -24,7 +24,11 @@ export interface IProduct {
   soldByWeight: boolean;
   minWeight: number;
 
+  barcode: number;
+  order: number;
+
   categoryId: number;
+  category: string;
   // count?: number;
 }
 
@@ -34,6 +38,8 @@ export interface IShopCartProduct extends IProduct {
 
 export interface IUser {
   id: number;
+  fullName: string;
+  role: string;
 }
 
 export interface IRole {
@@ -108,7 +114,7 @@ export interface IBanner {
   bannerType: number;
 }
 
-export interface IFactor {
+export interface IUserFactor {
   id: number;
   shopCart: number[];
   total: number;
@@ -125,4 +131,21 @@ export interface IBankData {
   terminalId: string;
   url: string;
   success: boolean;
+}
+
+export interface IAdminFactor {
+  id: number;
+  title: string;
+  price: number;
+  traceNumber: number;
+
+  factorStatus: number;
+  factorStatusDescription: number;
+}
+
+export interface ITreeNode {
+  id: number;
+  value: string;
+  label: string;
+  children: ITreeNode[];
 }
