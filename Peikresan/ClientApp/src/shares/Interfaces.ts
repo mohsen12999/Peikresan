@@ -37,13 +37,25 @@ export interface IShopCartProduct extends IProduct {
 }
 
 export interface IUser {
-  id: number;
+  id: string;
   fullName: string;
+
+  userName: string;
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  mobile: string;
+  Address: string;
+
   role: string;
+  roleId: string;
 }
 
 export interface IRole {
-  id: number;
+  id: string;
+  name: string;
+  description: string;
 }
 
 export interface IOrder extends IAddress {
