@@ -5,6 +5,7 @@ import {
   IShopCartProduct,
   IAddress,
   ISellOptions,
+  ITreeNode,
 } from "./Interfaces";
 
 export const ProductCount = (
@@ -148,4 +149,21 @@ export const GetUsersRoleName = (role: string) => {
     default:
       return "";
   }
+};
+
+export const MakeCategoryTree = (
+  id: number,
+  categories: ICategory[]
+): ITreeNode[] => {
+  return categories
+    .filter((cat) => cat.parentId === id)
+    .map(
+      (cat1) =>
+        ({
+          id: cat1.id,
+          value: cat1.title,
+          label: cat1.title,
+          children: MakeCategoryTree(cat1.id, categories),
+        } as ITreeNode)
+    );
 };
