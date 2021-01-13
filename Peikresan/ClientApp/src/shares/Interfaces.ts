@@ -40,13 +40,28 @@ export interface IRole {
   id: number;
 }
 
-export interface IOrder {
-  id: number;
+export interface IOrder extends IAddress {
   orderStatus: number;
+
+  deliverAtDoor: boolean;
 }
 
 export interface ISubOrder {
   id: number;
+
+  sellerName: string;
+  address: string;
+
+  orderId: number;
+  items: IOrderItem[];
+}
+
+export interface IOrderItem {
+  id: number;
+  title: string;
+  count: number;
+  soldByWeight: boolean;
+  minWeight: number;
 }
 
 export interface ISellerProduct {
