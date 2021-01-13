@@ -85,3 +85,26 @@ export enum Status {
   SUCCEEDED = "SUCCEEDED",
   FAILED = "FAILED",
 }
+
+export enum OrderStatus {
+  Init = 1,
+  Verified = 10,
+
+  // Choose Market
+  AssignToSeller = 20,
+  SellerDeny = 23,
+  SellerAccepted = 27,
+
+  // Choose Deliver
+  AssignToDeliver = 30,
+  DeliverDeny = 33,
+  DeliverAccepted = 37,
+
+  // Deliver Action
+  DeliveryGetProduct = 40,
+  DeliveredProduct = 45,
+
+  // Customer
+  CustomerDelivered = 50,
+  CustomerVote = 55,
+}
