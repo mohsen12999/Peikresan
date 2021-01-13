@@ -36,12 +36,58 @@ export enum OrderUrl {
   DELIVER_PRODUCT = "/api/order/deliver-product",
 }
 
-export enum AdminDataModel {
-  Users = "users",
-  Roles = "roles",
-  Orders = "orders",
-  SellerProducts = "sellerProducts",
-  Products = "products",
-  Categories = "categories",
-  Banners = "banners",
+export enum HomePath {
+  Home = "/",
+  Categories = "/categories",
+  Addresses = "/addresses",
+  Factors = "/factors",
+  FAQ = "/faq",
+  About = "/about",
+  Coin = "/coin",
+  Profile = "/profile",
+
+  Category = "/category/",
+  Suggestions = "#",
+  MostSells = "#",
+  Newest = "#",
+}
+
+export enum AdminPath {
+  Admin = "/admin",
+  Login = "/admin",
+  Dashboard = "/admin/dashboard",
+
+  Categories = "/admin/categories",
+  Category = "/admin/category/",
+
+  Products = "/admin/products",
+  Product = "/admin/product/",
+
+  AwesomeProducts = "/admin/awesome_products",
+
+  Sliders = "/admin/sliders",
+  Slider = "/admin/slider/",
+
+  Banners = "/admin/banners",
+  Banner = "/admin/banner/",
+
+  Users = "/admin/users",
+  User = "/admin/user/",
+
+  SellerProducts = "/admin/seller-products",
+  SellerProduct = "/admin/seller-product/",
+
+  Orders = "/admin/orders",
+  SellerOrders = "/admin/seller-orders",
+  DeliverOrders = "/admin/deliver-orders",
+
+  Factors = "/admin/factors",
+  // Logout = "/admin/logout",
+}
+
+export enum CartPath {
+  Cart = "/cart",
+  DeliverAddress = "/deliver-address",
+  DeliverTime = "/deliver-time",
+  Factor = "/factor",
 }

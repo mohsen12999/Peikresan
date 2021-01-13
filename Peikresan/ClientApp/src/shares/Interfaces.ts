@@ -70,6 +70,8 @@ export interface ISubOrder {
   sellerName: string;
   address: string;
 
+  requestStatus: number;
+
   orderId: number;
   items: IOrderItem[];
 }
@@ -84,6 +86,11 @@ export interface IOrderItem {
 
 export interface ISellerProduct {
   id: number;
+
+  productId: number;
+  productTitle: string;
+
+  count: number;
 }
 
 export interface IAddress {

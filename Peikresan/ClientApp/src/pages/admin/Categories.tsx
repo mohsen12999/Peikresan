@@ -8,8 +8,8 @@ import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ICategory } from "../../shares/Interfaces";
 import { ApplicationState } from "../../store";
 import { actionCreators } from "../../store/Auth";
-import { AdminPath, Status } from "../../shares/Constants";
-import { AdminDataModel, AdminDataUrl } from "../../shares/URLs";
+import { AdminDataModel, Status } from "../../shares/Constants";
+import { AdminPath, AdminDataUrl } from "../../shares/URLs";
 
 interface ICategoriesProps {
   categories: ICategory[];

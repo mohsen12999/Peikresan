@@ -7,8 +7,8 @@ import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
 import { IRole, IUser } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
-import { AdminDataModel, AdminDataUrl, LOGIN_URL } from "../../shares/URLs";
-import { AdminPath, Status } from "../../shares/Constants";
+import { AdminDataUrl, AdminPath } from "../../shares/URLs";
+import { AdminDataModel, Status } from "../../shares/Constants";
 
 const { Option } = Select;
 

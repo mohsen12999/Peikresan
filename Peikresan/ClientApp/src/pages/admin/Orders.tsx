@@ -10,12 +10,12 @@ import AddressSpan from "../../components/AddressSpan";
 
 import "./Admin.css";
 
-interface IDeliverOrdersProps {
+interface IOrdersProps {
   orders: IOrder[];
   subOrders: ISubOrder[];
 }
 
-const Orders: React.FC<IDeliverOrdersProps> = ({ orders, subOrders }) => {
+const Orders: React.FC<IOrdersProps> = ({ orders, subOrders }) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalOrder, setModalOrder] = React.useState<IOrder>();
   const [modalBtn, setModalBtn] = React.useState<JSX.Element[]>();

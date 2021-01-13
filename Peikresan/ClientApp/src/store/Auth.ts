@@ -17,6 +17,7 @@ import {
   IBanner,
   ISubOrder,
   IAdminFactor,
+  ISlider,
 } from "../shares/Interfaces";
 import { AddToken, GetToken, RemoveToken } from "../shares/LocalStorage";
 import { Status } from "../shares/Constants";
@@ -44,6 +45,7 @@ export interface IAuthState {
   products: IProduct[];
   categories: ICategory[];
   banners: IBanner[];
+  sliders: ISlider[];
 }
 
 export enum AuthActions {
@@ -286,6 +288,7 @@ export const reducer: Reducer<IAuthState> = (
       products: [],
       categories: [],
       banners: [],
+      sliders: [],
     };
   }
 

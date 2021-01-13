@@ -7,59 +7,6 @@ export enum UserRole {
   USER = "USER",
 }
 
-export enum HomePath {
-  Home = "/",
-  Categories = "/categories",
-  Addresses = "/addresses",
-  Factors = "/factors",
-  FAQ = "/faq",
-  About = "/about",
-  Coin = "/coin",
-  Profile = "/profile",
-
-  Category = "/category/",
-  Suggestions = "#",
-  MostSells = "#",
-  Newest = "#",
-}
-
-export enum AdminPath {
-  Admin = "/admin",
-  Login = "/admin",
-  Dashboard = "/admin/dashboard",
-
-  Categories = "/admin/categories",
-  Category = "/admin/category/",
-
-  Products = "/admin/products",
-  Product = "/admin/product/",
-
-  AwesomeProducts = "/admin/awesome_products",
-
-  Sliders = "/admin/sliders",
-  Slider = "/admin/slider/",
-
-  Banners = "/admin/banners",
-  Banner = "/admin/banner",
-
-  Users = "/admin/users",
-  User = "/admin/user",
-
-  Orders = "/admin/orders",
-  SellerProducts = "/admin/seller-products",
-  SellerOrders = "/admin/seller-orders",
-  DeliverOrders = "/admin/deliver-orders",
-  Factors = "/admin/factors",
-  // Logout = "/admin/logout",
-}
-
-export enum CartPath {
-  Cart = "/cart",
-  DeliverAddress = "/deliver-address",
-  DeliverTime = "/deliver-time",
-  Factor = "/factor",
-}
-
 export const DefaultAddress: IAddress = {
   name: "",
   state: "مازندران",
@@ -107,4 +54,22 @@ export enum OrderStatus {
   // Customer
   CustomerDelivered = 50,
   CustomerVote = 55,
+}
+
+export enum RequestStatus {
+  Pending = 0,
+  Accept = 10,
+  Deny = 20,
+  DenyByAdmin = 40,
+}
+
+export enum AdminDataModel {
+  Users = "users",
+  Roles = "roles",
+  Orders = "orders",
+  SellerProducts = "sellerProducts",
+  Products = "products",
+  Categories = "categories",
+  Banners = "banners",
+  Sliders = "sliders",
 }

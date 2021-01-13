@@ -8,8 +8,8 @@ import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
 import { IUser } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
-import { AdminDataModel, AdminDataUrl, LOGIN_URL } from "../../shares/URLs";
-import { AdminPath, Status } from "../../shares/Constants";
+import { AdminDataUrl, AdminPath } from "../../shares/URLs";
+import { AdminDataModel, Status } from "../../shares/Constants";
 
 import "./Admin.css";
 
@@ -78,7 +78,7 @@ const Users: React.FC<IUsersProps> = ({
         <h1>لیست کاربران</h1>
 
         <Tooltip title="کاربر جدید">
-          <Link to="/admin/user" className="float-add-btn">
+          <Link to={AdminPath.User} className="float-add-btn">
             <Button type="primary" shape="circle" icon={<PlusOutlined />} />
           </Link>
         </Tooltip>
