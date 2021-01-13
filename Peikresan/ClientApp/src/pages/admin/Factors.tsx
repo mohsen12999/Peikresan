@@ -3,9 +3,9 @@ import { connect } from "react-redux";
 import { Table, Space } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
-import { OrderStatusDescription } from "../../shares/services/OrderFunctions";
 import { ApplicationState } from "../../store";
 import { IAdminFactor } from "../../shares/Interfaces";
+import { OrderStatusDescription } from "../../shares/Functions";
 
 import "./Admin.css";
 

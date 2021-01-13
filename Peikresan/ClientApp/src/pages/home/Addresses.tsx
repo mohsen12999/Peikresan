@@ -11,17 +11,17 @@ import { ApplicationState } from "../../store";
 import { actionCreators } from "../../store/Data";
 import AddressSpan from "../../components/AddressSpan";
 
-import "./Address.css";
+import "./Addresses.css";
 
 const { TextArea } = Input;
 
-interface IAddressProps {
+interface IAddressesProps {
   addresses: IAddress[];
   AddAddress: Function;
   RemovedAddress: Function;
 }
 
-const Address: React.FC<IAddressProps> = ({
+const Addresses: React.FC<IAddressesProps> = ({
   addresses,
   AddAddress,
   RemovedAddress,
@@ -223,4 +223,4 @@ const mapDispatchToProps = {
   RemovedAddress: actionCreators.removedAddress,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Address);
+export default connect(mapStateToProps, mapDispatchToProps)(Addresses);

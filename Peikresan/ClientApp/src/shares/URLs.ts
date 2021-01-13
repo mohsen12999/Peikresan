@@ -47,9 +47,20 @@ export enum HomePath {
   Profile = "/profile",
 
   Category = "/category/",
+  Product = "/product/",
+  Search = "/search/",
+
   Suggestions = "#",
   MostSells = "#",
   Newest = "#",
+}
+
+export enum CartPath {
+  Cart = "/cart",
+  DeliverAddress = "/deliver-address",
+  DeliverTime = "/deliver-time",
+  Factor = "/factor",
+  Comeback = "/comeback/",
 }
 
 export enum AdminPath {
@@ -64,6 +75,7 @@ export enum AdminPath {
   Product = "/admin/product/",
 
   AwesomeProducts = "/admin/awesome_products",
+  AwesomeProduct = "/admin/awesome_product/",
 
   Sliders = "/admin/sliders",
   Slider = "/admin/slider/",
@@ -83,11 +95,4 @@ export enum AdminPath {
 
   Factors = "/admin/factors",
   // Logout = "/admin/logout",
-}
-
-export enum CartPath {
-  Cart = "/cart",
-  DeliverAddress = "/deliver-address",
-  DeliverTime = "/deliver-time",
-  Factor = "/factor",
 }
