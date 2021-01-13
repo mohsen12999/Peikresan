@@ -1,7 +1,12 @@
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { Action, Reducer } from "redux";
 import { AppThunkAction } from "./";
-import { AdminDataModel, AdminDataUrl, LOGIN_URL } from "../shares/URLs";
+import {
+  AdminDataModel,
+  AdminDataUrl,
+  LOGIN_URL,
+  OrderUrl,
+} from "../shares/URLs";
 import {
   IUser,
   IRole,
@@ -12,7 +17,7 @@ import {
   IBanner,
   ISubOrder,
 } from "../shares/Interfaces";
-import { AddToken, RemoveToken } from "../shares/LocalStorage";
+import { AddToken, GetToken, RemoveToken } from "../shares/LocalStorage";
 import { Status } from "../shares/Constants";
 
 // -----------------
@@ -21,11 +26,12 @@ import { Status } from "../shares/Constants";
 export interface IAuthState {
   login: boolean;
   status: Status;
+  message: string;
 
-  id?: string;
-  username?: string;
-  role?: string;
-  token?: string;
+  id: string;
+  username: string;
+  role: string;
+  token: string;
 
   // all of a data
   users: IUser[];
@@ -60,6 +66,12 @@ export enum AdminDataActions {
   REMOVE_FAILURE = "REMOVE_FAILURE ",
 }
 
+export enum OrderAction {
+  ORDER_REQUEST = "ORDER_REQUEST",
+  ORDER_SUCCESS = "ORDER_SUCCESS ",
+  ORDER_FAILURE = "ORDER_FAILURE ",
+}
+
 export const RESET_STATUS = "RESET_STATUS";
 
 // -----------------
@@ -82,13 +94,33 @@ export interface IAdminDataActions {
   };
 }
 
+export interface IOrderAction {
+  type: OrderAction;
+  payload?: {
+    message?: string;
+    data?: any;
+    error?: any;
+  };
+}
+
 export interface IResetStatus {
   type: typeof RESET_STATUS;
 }
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-export type KnownAction = IAuthActions | IAdminDataActions | IResetStatus;
+export type KnownAction =
+  | IAuthActions
+  | IAdminDataActions
+  | IOrderAction
+  | IResetStatus;
+
+const requestConfig: AxiosRequestConfig = {
+  headers: {
+    Authorization: "Bearer " + GetToken(),
+    "content-type": "application/json",
+  },
+};
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -132,12 +164,14 @@ export const actionCreators = {
   ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
     dispatch({ type: AdminDataActions.ADD_CHANGE_REQUEST });
 
-    const response = await axios.post(url, data).catch((error) => {
-      dispatch({
-        type: AdminDataActions.ADD_CHANGE_FAILURE,
-        payload: { message: "axios catch error", error: error },
+    const response = await axios
+      .post(url, data, requestConfig)
+      .catch((error) => {
+        dispatch({
+          type: AdminDataActions.ADD_CHANGE_FAILURE,
+          payload: { message: "axios catch error", error: error },
+        });
       });
-    });
 
     if (response && response.data && response.data.success) {
       dispatch({
@@ -163,7 +197,7 @@ export const actionCreators = {
   ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
     dispatch({ type: AdminDataActions.REMOVE_REQUEST });
 
-    const response = await axios.post(url, id).catch((error) => {
+    const response = await axios.post(url, id, requestConfig).catch((error) => {
       dispatch({
         type: AdminDataActions.REMOVE_FAILURE,
         payload: { message: "axios catch error", error: error },
@@ -188,6 +222,39 @@ export const actionCreators = {
   },
 
   resetStatus: () => ({ type: RESET_STATUS } as IResetStatus),
+
+  answerOrder: (
+    url: OrderUrl,
+    userId: string,
+    orderId: number,
+    answer: boolean
+  ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+    dispatch({ type: OrderAction.ORDER_REQUEST });
+
+    const response = await axios
+      .post(url, { orderId, answer, userId }, requestConfig)
+      .catch((error) => {
+        dispatch({
+          type: OrderAction.ORDER_FAILURE,
+          payload: { message: "axios catch error", error: error },
+        });
+      });
+
+    if (response && response.data && response.data.success) {
+      dispatch({
+        type: OrderAction.ORDER_SUCCESS,
+        payload: {
+          message: "axios success get data",
+          data: response.data,
+        },
+      });
+    } else {
+      dispatch({
+        type: OrderAction.ORDER_FAILURE,
+        payload: { message: "axios not success", error: response },
+      });
+    }
+  },
 };
 
 // ----------------
@@ -200,6 +267,13 @@ export const reducer: Reducer<IAuthState> = (
   if (state === undefined) {
     return {
       login: false,
+      message: "",
+
+      id: "",
+      username: "",
+      role: "",
+      token: "",
+
       status: Status.INIT,
       users: [],
       roles: [],
@@ -314,6 +388,31 @@ export const reducer: Reducer<IAuthState> = (
 
     case RESET_STATUS:
       return { ...state, status: Status.IDLE };
+
+    case OrderAction.ORDER_REQUEST:
+      return { ...state, status: Status.LOADING };
+
+    case OrderAction.ORDER_SUCCESS:
+      // ----
+      if (
+        action.payload &&
+        action.payload.data &&
+        action.payload.data.success
+      ) {
+        const data = action.payload.data;
+        const newState = { ...state, status: Status.SUCCEEDED };
+        if (data.orders) {
+          newState.orders = data.orders;
+        }
+        if (data.subOrders) {
+          newState.subOrders = data.subOrders;
+        }
+        return newState;
+      }
+      return { ...state, status: Status.FAILED };
+
+    case OrderAction.ORDER_FAILURE:
+      return { ...state, status: Status.FAILED };
 
     default:
       return state;
