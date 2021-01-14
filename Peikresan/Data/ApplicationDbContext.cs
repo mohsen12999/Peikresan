@@ -30,7 +30,7 @@ namespace Peikresan.Data
 
             // Order & SubOrder
             modelBuilder.Entity<Order>()
-                .HasMany(o => o.SubOrder)
+                .HasMany(o => o.SubOrders)
                 .WithOne(i => i.Order)
                 .HasForeignKey(p => p.OrderId);
 
@@ -53,7 +53,7 @@ namespace Peikresan.Data
                 .HasForeignKey(sp => sp.ProductId);
 
             modelBuilder.Entity<Order>().HasOne(o => o.Deliver).WithMany(u => u.DeliverOrders).HasForeignKey(or => or.DeliverId).OnDelete(DeleteBehavior.NoAction);
-            modelBuilder.Entity<SubOrder>().HasOne(o => o.Seller).WithMany(u => u.SellOrders).HasForeignKey(or => or.SellerId).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<SubOrder>().HasOne(o => o.Seller).WithMany(u => u.SellSubOrders).HasForeignKey(or => or.SellerId).OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => p.Barcode).IsUnique();

@@ -2,7 +2,8 @@ namespace Peikresan.Data.ViewModels
 {
     public class TimeModel
     {
-        public int id { get; set; }
-        public string title { get; set; }
+        public int Id { get; set; }
+        public int Time { get; set; }
+        public string Title { get; set; }
     }
 }

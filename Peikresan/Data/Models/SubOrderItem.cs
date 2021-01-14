@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Peikresan.Data.Models
 {
-    public class SubOrder
+    public class SubOrderItem
     {
         public int Id { get; set; }
         public string Title { get; set; }
@@ -18,7 +18,7 @@ namespace Peikresan.Data.Models
         public virtual Product Product { get; set; }
 
         public virtual int SubOrderId { get; set; }
-        public virtual Order SubOrder { get; set; }
+        public virtual SubOrder SubOrder { get; set; }
 
         [NotMapped]
         public decimal ItemsPrice => Count * Price;

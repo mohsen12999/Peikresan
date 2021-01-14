@@ -18,7 +18,7 @@ namespace Peikresan.Data.Models
         public RequestStatus RequestStatus { get; set; } = RequestStatus.Pending;
         [NotMapped] public string RequestStatusDescription => Enum.GetName(typeof(RequestStatus), RequestStatus);
 
-        public virtual IList<OrderItem> OrderItems { get; set; }
+        public virtual IList<SubOrderItem> SubOrderItems { get; set; }
     }
 
     public enum RequestStatus

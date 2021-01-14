@@ -25,7 +25,8 @@ namespace Peikresan.Data.Models
         public virtual IList<SellerProduct> SellerProducts { get; set; }
 
         // for seller user
-        public virtual IList<Order> SellOrders { get; set; }
+        // public virtual IList<Order> SellOrders { get; set; }
+        public virtual IList<SubOrder> SellSubOrders { get; set; }
 
         // for deliver user
         public virtual IList<Order> DeliverOrders { get; set; }

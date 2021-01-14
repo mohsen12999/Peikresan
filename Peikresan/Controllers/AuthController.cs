@@ -107,7 +107,8 @@ namespace Peikresan.Controllers
             }
 
             var userOrders = await _context.Orders
-                .Where(ord => ord.DeliverId == thisUser.Id || ord.SellerId == thisUser.Id)
+                .Where(ord => ord.DeliverId == thisUser.Id )
+                //.Where(ord => ord.DeliverId == thisUser.Id || ord.SellerId == thisUser.Id)
                 .Include(o => o.OrderItems).ToListAsync();
             var sellerProducts = await _context.SellerProducts
                 .Where(sp => sp.UserId == thisUser.Id)

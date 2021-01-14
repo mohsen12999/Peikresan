@@ -25,73 +25,73 @@ namespace Peikresan.Controllers
             _context = context;
         }
 
-        [Authorize]
-        [HttpPost("choose-seller")]
-        public async Task<IActionResult> ChooseSellerAsync([FromBody] ChooseUser chooseUser)
-        {
-            var thisUser = await _context.Users
-                .Include(u => u.Role).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+        //[Authorize]
+        //[HttpPost("choose-seller")]
+        //public async Task<IActionResult> ChooseSellerAsync([FromBody] ChooseUser chooseUser)
+        //{
+        //    var thisUser = await _context.Users
+        //        .Include(u => u.Role).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
-            if (thisUser.Role == null || thisUser.Role.Name.ToLower() != "admin")
-            {
-                return Unauthorized("Only Admin Can Remove Category");
-            }
+        //    if (thisUser.Role == null || thisUser.Role.Name.ToLower() != "admin")
+        //    {
+        //        return Unauthorized("Only Admin Can Remove Category");
+        //    }
 
-            var seller = await _context.Users
-                .Include(u => u.Role).FirstAsync(us => us.Id == Guid.Parse(chooseUser.userId));
-            if (seller == null)
-            {
-                return BadRequest("Can not find user");
-            }
+        //    var seller = await _context.Users
+        //        .Include(u => u.Role).FirstAsync(us => us.Id == Guid.Parse(chooseUser.userId));
+        //    if (seller == null)
+        //    {
+        //        return BadRequest("Can not find user");
+        //    }
 
-            //if(seller.Role==null || seller.Role.Name.ToLower() != "seller")
-            //{
-            //    return BadRequest("user is not seller");
-            //}
+        //    //if(seller.Role==null || seller.Role.Name.ToLower() != "seller")
+        //    //{
+        //    //    return BadRequest("user is not seller");
+        //    //}
 
-            var order = await _context.Orders
-                .Where(ord => ord.Id == chooseUser.orderId).Include(o => o.OrderItems)
-                .FirstOrDefaultAsync();
+        //    var order = await _context.Orders
+        //        .Where(ord => ord.Id == chooseUser.orderId).Include(o => o.OrderItems)
+        //        .FirstOrDefaultAsync();
 
-            if (order == null)
-            {
-                return BadRequest("Can not find order");
-            }
+        //    if (order == null)
+        //    {
+        //        return BadRequest("Can not find order");
+        //    }
 
-            if (order.OrderStatus != OrderStatus.Verified && order.OrderStatus != OrderStatus.SellerDeny)
-            {
-                return BadRequest("Can not chooser " + order.OrderStatus + " - " + order.OrderStatusDescription);
-            }
+        //    if (order.OrderStatus != OrderStatus.Verified && order.OrderStatus != OrderStatus.SellerDeny)
+        //    {
+        //        return BadRequest("Can not chooser " + order.OrderStatus + " - " + order.OrderStatusDescription);
+        //    }
 
-            order.Seller = seller;
-            order.OrderStatus = OrderStatus.AssignToSeller;
-            order.AssignToSellerDateTime = DateTime.Now;
+        //    // order.Seller = seller;
+        //    order.OrderStatus = OrderStatus.AssignToSeller;
+        //    order.AssignToSellerDateTime = DateTime.Now;
 
-            try
-            {
-                _context.Orders.Update(order);
-                await _context.SaveChangesAsync();
+        //    try
+        //    {
+        //        _context.Orders.Update(order);
+        //        await _context.SaveChangesAsync();
 
-                return Ok(new
-                {
-                    element= order,
-                    order,
-                    success = true,
-                    EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
-                    {
-                        WebsiteModel = WebsiteModel.Order,
-                        WebsiteEventType = WebsiteEventType.Update,
-                        ObjectId = order.Id,
-                        Description = "AssignToSeller " + seller.FullName,
-                        UserId = seller.Id.ToString()
-                    })
-                });
-            }
-            catch (Exception e)
-            {
-                return BadRequest("error in save order " + e.Message);
-            }
-        }
+        //        return Ok(new
+        //        {
+        //            element= order,
+        //            order,
+        //            success = true,
+        //            EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+        //            {
+        //                WebsiteModel = WebsiteModel.Order,
+        //                WebsiteEventType = WebsiteEventType.Update,
+        //                ObjectId = order.Id,
+        //                Description = "AssignToSeller " + seller.FullName,
+        //                UserId = seller.Id.ToString()
+        //            })
+        //        });
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest("error in save order " + e.Message);
+        //    }
+        //}
 
         [Authorize]
         [HttpPost("seller-answer")]

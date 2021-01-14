@@ -62,15 +62,15 @@ namespace Peikresan.Controllers
             }
 
             var times = new[]{
-                new TimeModel(){id=8,time=8, title="8-10"},
-                new TimeModel(){id=10,time=10, title="10-12"},
-                new TimeModel(){id=12,time=12, title="12-14"},
-                new TimeModel(){id=14,time=14, title="14-16"},
+                new TimeModel(){Id=8,Time=8, Title="8-10"},
+                new TimeModel(){Id=10,Time=10, Title="10-12"},
+                new TimeModel(){Id=12,Time=12, Title="12-14"},
+                new TimeModel(){Id=14,Time=14, Title="14-16"},
 
-                new TimeModel(){id=16,time=16, title="16-18"},
-                new TimeModel(){id=18,time=18, title="18-20"},
-                new TimeModel(){id=20,time=20, title="20-22"},
-                new TimeModel(){id=22,time=22, title="22-24"},
+                new TimeModel(){Id=16,Time=16, Title="16-18"},
+                new TimeModel(){Id=18,Time=18, Title="18-20"},
+                new TimeModel(){Id=20,Time=20, Title="20-22"},
+                new TimeModel(){Id=22,Time=22, Title="22-24"},
             };
 
             return Ok(new
