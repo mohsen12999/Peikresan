@@ -101,8 +101,8 @@ const Users: React.FC<IUsersProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  users: state.auth?.users ?? [],
-  status: state.auth?.status ?? Status.INIT,
+  users: state.auth ? state.auth.users : [],
+  status: state.auth ? state.auth.status : Status.INIT,
 });
 
 const mapDispatchToProps = {

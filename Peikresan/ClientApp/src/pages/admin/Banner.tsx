@@ -63,9 +63,9 @@ const Banner: React.FC<IBannerProps> = ({
 
     var formData = new FormData();
     formData.append("id", id);
-    formData.append("file", file ?? "");
-    formData.append("title", title ?? "");
-    formData.append("url", url ?? "");
+    formData.append("file", file ? file : "");
+    formData.append("title", title ? title : "");
+    formData.append("url", url ? url : "");
 
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_BANNER_URL,
@@ -91,7 +91,7 @@ const Banner: React.FC<IBannerProps> = ({
                 setFile(file);
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                  const result = e.target?.result;
+                  const result = e.target ? e.target.result : undefined;
                   if (result) {
                     setShowImage(result as string);
                   }
@@ -144,8 +144,8 @@ const Banner: React.FC<IBannerProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  banners: state.auth?.banners ?? [],
-  status: state.auth?.status ?? Status.INIT,
+  banners: state.auth ? state.auth.banners : [],
+  status: state.auth ? state.auth.status : Status.INIT,
 });
 
 const mapDispatchToProps = {

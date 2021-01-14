@@ -95,14 +95,14 @@ const Product: React.FC<IProductProps> = ({
 
     var formData = new FormData();
     formData.append("id", id);
-    formData.append("file", file ?? "");
-    formData.append("title", title ?? "");
+    formData.append("file", file ? file : "");
+    formData.append("title", title ? title : "");
     formData.append("barcode", String(barcode));
     formData.append("price", String(price));
     formData.append("max", String(max));
-    formData.append("description", description ?? "");
+    formData.append("description", description ? description : "");
     formData.append("order", String(order));
-    formData.append("category", category ?? "");
+    formData.append("category", category ? category : "");
     formData.append("soldByWeight", soldByWeight ? "1" : "0");
     formData.append("minWeight", String(minWeight));
 
@@ -130,7 +130,7 @@ const Product: React.FC<IProductProps> = ({
                 setFile(file);
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                  const result = e.target?.result;
+                  const result = e.target ? e.target.result : undefined;
                   if (result) {
                     setShowImage(result as string);
                   }
@@ -254,9 +254,9 @@ const Product: React.FC<IProductProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  products: state.auth?.products ?? [],
-  categories: state.auth?.categories ?? [],
-  status: state.auth?.status ?? Status.INIT,
+  products: state.auth ? state.auth.products : [],
+  categories: state.auth ? state.auth.categories : [],
+  status: state.auth ? state.auth.status : Status.INIT,
 });
 
 const mapDispatchToProps = {

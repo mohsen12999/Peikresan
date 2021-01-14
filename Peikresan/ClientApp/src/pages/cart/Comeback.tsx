@@ -72,7 +72,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   shopCart: state.shopCart ? state.shopCart.shopCart : [],
   products: state.data ? state.data.products : [],
   deliverAtDoor: state.shopCart ? state.shopCart.deliverAtDoor : false,
-  sellOptions: state.data?.sellOptions,
+  sellOptions: state.data ? state.data.sellOptions : undefined,
 });
 
 const mapDispatchToProps = {

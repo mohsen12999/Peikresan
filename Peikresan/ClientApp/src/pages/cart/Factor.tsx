@@ -106,12 +106,12 @@ const Factor: React.FC<IFactorProps> = ({
 const mapStateToProps = (state: ApplicationState) => ({
   products: state.data ? state.data.products : [],
   shopCart: state.shopCart ? state.shopCart.shopCart : [],
-  address: state.shopCart?.address,
-  deliverTime: state.shopCart?.deliverTime,
+  address: state.shopCart ? state.shopCart.address : undefined,
+  deliverTime: state.shopCart ? state.shopCart.deliverTime : undefined,
   deliverAtDoor: state.shopCart ? state.shopCart.deliverAtDoor : false,
   status: state.shopCart ? state.shopCart.status : Status.IDLE,
-  sellOptions: state.data?.sellOptions,
-  bankData: state.shopCart?.bankData,
+  sellOptions: state.data ? state.data.sellOptions : undefined,
+  bankData: state.shopCart ? state.shopCart.bankData : undefined,
 });
 
 const mapDispatchToProps = {

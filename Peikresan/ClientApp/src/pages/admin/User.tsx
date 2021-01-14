@@ -83,14 +83,14 @@ const User: React.FC<IUserProps> = ({
 
     var formData = new FormData();
     formData.append("id", id);
-    formData.append("userName", userName ?? "");
-    formData.append("email", email ?? "");
-    formData.append("password", password ?? "");
-    formData.append("roleId", roleId ?? "");
-    formData.append("firstName", firstName ?? "");
-    formData.append("lastName", lastName ?? "");
-    formData.append("mobile", mobile ?? "");
-    formData.append("address", address ?? "");
+    formData.append("userName", userName ? userName : "");
+    formData.append("email", email ? email : "");
+    formData.append("password", password ? password : "");
+    formData.append("roleId", roleId ? roleId : "");
+    formData.append("firstName", firstName ? firstName : "");
+    formData.append("lastName", lastName ? lastName : "");
+    formData.append("mobile", mobile ? mobile : "");
+    formData.append("address", address ? address : "");
 
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_USER_URL,
@@ -208,9 +208,9 @@ const User: React.FC<IUserProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  users: state.auth?.users ?? [],
-  roles: state.auth?.roles ?? [],
-  status: state.auth?.status ?? Status.INIT,
+  users: state.auth ? state.auth.users : [],
+  roles: state.auth ? state.auth.roles : [],
+  status: state.auth ? state.auth.status : Status.INIT,
 });
 
 const mapDispatchToProps = {

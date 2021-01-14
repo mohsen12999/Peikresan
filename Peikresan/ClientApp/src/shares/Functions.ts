@@ -51,13 +51,15 @@ export const CalculateShopCartTotalPrice = (
 ): number =>
   shopCart
     .filter((c) => c > 0)
-    .map((c, i) => ({
-      count: c,
-      price: products.find((p) => p.id == i)?.price,
-    }))
+    .map((c, i) => {
+      const product = products.find((p) => p.id == i);
+      return product
+        ? { count: c, price: product.price }
+        : { count: c, price: 0 };
+    })
     .reduce(
       (accumulator, currentValue) =>
-        accumulator + currentValue.count * (currentValue.price ?? 0),
+        accumulator + currentValue.count * currentValue.price,
       0
     );
 

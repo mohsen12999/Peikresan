@@ -149,8 +149,8 @@ const SellerOrders: React.FC<ISellerOrdersProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  role: state.auth?.role ?? "",
-  userId: state.auth?.id ?? "",
+  role: state.auth ? state.auth.role : "",
+  userId: state.auth ? state.auth.id : "",
   orders: state.auth ? state.auth.orders : [],
   subOrders: state.auth ? state.auth.subOrders : [],
 });

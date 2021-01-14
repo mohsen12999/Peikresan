@@ -69,7 +69,7 @@ const dashboard: React.FC<IDashboardProps> = ({ role, orders, subOrders }) => (
 );
 
 const mapStateToProps = (state: ApplicationState) => ({
-  role: state.auth?.role ?? "",
+  role: state.auth ? state.auth.role : "",
   orders: state.auth ? state.auth.orders : [],
   subOrders: state.auth ? state.auth.subOrders : [],
 });

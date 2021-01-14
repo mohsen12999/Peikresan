@@ -64,7 +64,7 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
 
     var formData = new FormData();
     formData.append("id", id);
-    formData.append("product", product ?? "");
+    formData.append("product", product ? product : "");
     formData.append("count", String(count));
 
     AddOrChangeElement(
@@ -86,7 +86,7 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
             }))}
             placeholder=" نام محصول"
             filterOption={(inputValue, option) =>
-              option?.value.indexOf(inputValue) !== -1
+              option !== undefined && option.value.indexOf(inputValue) !== -1
             }
             onChange={(value) => {
               setProduct(value);
@@ -118,9 +118,9 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  sellerProducts: state.auth?.sellerProducts ?? [],
-  products: state.auth?.products ?? [],
-  status: state.auth?.status ?? Status.INIT,
+  sellerProducts: state.auth ? state.auth.sellerProducts : [],
+  products: state.auth ? state.auth.products : [],
+  status: state.auth ? state.auth.status : Status.INIT,
 });
 
 const mapDispatchToProps = {

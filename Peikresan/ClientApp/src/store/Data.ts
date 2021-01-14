@@ -188,7 +188,7 @@ export const reducer: Reducer<IDataState> = (
       return { ...state, status: Status.FAILED };
 
     case AddressActions.ADD_ADDRESS:
-      const address = action.payload?.address;
+      const address = action.payload ? action.payload.address : undefined;
       if (address) {
         if (address.id && state.addresses.find((ad) => ad.id == address.id)) {
           const thisAddress = state.addresses.find(
@@ -201,7 +201,7 @@ export const reducer: Reducer<IDataState> = (
           return { ...state, addresses: changedAddresses };
         } else {
           const newId =
-            Math.max(...state.addresses.map((ad) => ad.id ?? 0)) + 1;
+            Math.max(...state.addresses.map((ad) => (ad.id ? ad.id : 0))) + 1;
           const addedAddress = state.addresses;
           addedAddress.push({ ...address, id: newId });
           SaveAddresses(addedAddress);
@@ -211,7 +211,7 @@ export const reducer: Reducer<IDataState> = (
       return state;
 
     case AddressActions.REMOVE_ADDRESS:
-      const id = action.payload?.id;
+      const id = action.payload ? action.payload.id : undefined;
       const removedAddress = state.addresses.filter((ad) => ad.id != id);
       SaveAddresses(removedAddress);
       return { ...state, addresses: removedAddress };

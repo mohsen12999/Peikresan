@@ -233,7 +233,7 @@ export const reducer: Reducer<IShopCartState> = (
       };
 
     case BankActions.REQUEST_SUCCESS:
-      var data = action.payload?.data;
+      var data = action.payload ? action.payload.data : undefined;
       if (data) {
         return {
           ...state,

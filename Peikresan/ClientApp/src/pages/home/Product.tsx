@@ -36,7 +36,12 @@ const Product: React.FC<IProductProps> = ({
 }) => {
   const { id } = useParams<IParamTypes>();
   const product = products.find((p) => p.id === Number(id));
-  const count = product?.id ? shopCart[product.id] ?? 0 : 0;
+  const count =
+    product && product.id
+      ? shopCart[product.id]
+        ? shopCart[product.id]
+        : 0
+      : 0;
 
   return (
     <MyLayout>

@@ -70,10 +70,10 @@ const Category: React.FC<ICategoryProps> = ({
 
     var formData = new FormData();
     formData.append("id", id);
-    formData.append("file", file ?? "");
-    formData.append("title", title ?? "");
-    formData.append("description", description ?? "");
-    formData.append("category", category ?? "");
+    formData.append("file", file ? file : "");
+    formData.append("title", title ? title : "");
+    formData.append("description", description ? description : "");
+    formData.append("category", category ? category : "");
 
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_CATEGORY_URL,
@@ -99,7 +99,7 @@ const Category: React.FC<ICategoryProps> = ({
                 setFile(file);
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                  const result = e.target?.result;
+                  const result = e.target ? e.target.result : undefined;
                   if (result) {
                     setShowImage(result as string);
                   }
@@ -144,7 +144,7 @@ const Category: React.FC<ICategoryProps> = ({
             }))}
             placeholder=" نام دسته بندی والد"
             filterOption={(inputValue, option) =>
-              option?.value.indexOf(inputValue) !== -1
+              option !== undefined && option.value.indexOf(inputValue) !== -1
             }
             onChange={(value) => {
               setCategory(value);
@@ -165,8 +165,8 @@ const Category: React.FC<ICategoryProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  categories: state.auth?.categories ?? [],
-  status: state.auth?.status ?? Status.INIT,
+  categories: state.auth ? state.auth.categories : [],
+  status: state.auth ? state.auth.status : Status.INIT,
 });
 
 const mapDispatchToProps = {
