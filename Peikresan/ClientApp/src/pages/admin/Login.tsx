@@ -9,21 +9,22 @@ import { ApplicationState } from "../../store";
 import { actionCreators } from "../../store/Auth";
 
 import "./Login.css";
+import { Status } from "../../shares/Constants";
 
 interface ILoginProps {
-  loading: boolean;
+  status: Status;
   login: boolean;
 
   TryLogin: Function;
 }
 
-const Login: React.FC<ILoginProps> = ({ loading, login, TryLogin }) => {
+const Login: React.FC<ILoginProps> = ({ status, login, TryLogin }) => {
   // TODO: remove MyLayout
   const [email, setEmail] = React.useState<string>();
   const [password, setPassword] = React.useState<string>();
 
   const validate = () =>
-    !loading && email && email.length > 3 && password && password.length > 3;
+    email && email.length > 3 && password && password.length > 3;
 
   return login ? (
     <Redirect to={"/admin/dashboard"} />
@@ -42,7 +43,7 @@ const Login: React.FC<ILoginProps> = ({ loading, login, TryLogin }) => {
         />
         <Button
           type="primary"
-          disabled={!validate() || loading}
+          disabled={!validate() || status == Status.LOADING}
           onClick={() => {
             TryLogin(email, password);
           }}
@@ -55,7 +56,7 @@ const Login: React.FC<ILoginProps> = ({ loading, login, TryLogin }) => {
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  loading: state.auth ? state.auth.loading : false,
+  status: state.auth ? state.auth.status : Status.INIT,
   login: state.auth ? state.auth.login : false,
 });
 

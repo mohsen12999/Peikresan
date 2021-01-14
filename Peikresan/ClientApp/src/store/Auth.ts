@@ -1,12 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { Action, Reducer } from "redux";
 import { AppThunkAction } from "./";
-import {
-  AdminDataModel,
-  AdminDataUrl,
-  LOGIN_URL,
-  OrderUrl,
-} from "../shares/URLs";
+import { AdminDataUrl, LOGIN_URL, OrderUrl } from "../shares/URLs";
 import {
   IUser,
   IRole,
@@ -20,7 +15,7 @@ import {
   ISlider,
 } from "../shares/Interfaces";
 import { AddToken, GetToken, RemoveToken } from "../shares/LocalStorage";
-import { Status } from "../shares/Constants";
+import { AdminDataModel, Status } from "../shares/Constants";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
