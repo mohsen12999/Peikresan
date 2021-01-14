@@ -14,7 +14,8 @@ import { Link } from "react-router-dom";
 import { PlusOutlined } from "@ant-design/icons";
 
 import MyLayout from "../../components/MyLayout";
-import { CartPath, DefaultAddress } from "../../shares/Constants";
+import { DefaultAddress } from "../../shares/Constants";
+import { CartPath } from "../../shares/URLs";
 import { ValidateAddress } from "../../shares/Functions";
 import AddressSpan from "../../components/AddressSpan";
 import { IAddress } from "../../shares/Interfaces";

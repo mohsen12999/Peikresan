@@ -21,7 +21,8 @@ import Enamad from "./Enamad";
 
 import "./MyLayout.css";
 import { ApplicationState } from "../store";
-import { Status, HomePath, CartPath } from "../shares/Constants";
+import { Status } from "../shares/Constants";
+import { HomePath, CartPath } from "../shares/URLs";
 
 const { Search } = Input;
 

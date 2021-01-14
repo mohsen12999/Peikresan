@@ -13,7 +13,7 @@ import {
   GetShopCartProducts,
   CalculateShopCartTotalPrice,
 } from "../shares/Functions";
-import { CartPath } from "../shares/Constants";
+import { CartPath } from "../shares/URLs";
 
 interface ICartItemProps {
   shopCart: number[];

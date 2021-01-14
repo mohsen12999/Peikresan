@@ -3,10 +3,8 @@ import { connect } from "react-redux";
 import { Table, Tag, Space, Button, Modal } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
-import { OrderStatusDescription } from "../../shares/services/OrderFunctions";
 import { ApplicationState } from "../../store";
 import { IOrder, ISubOrder } from "../../shares/Interfaces";
-import AddressSpan from "../../components/AddressSpan";
 
 import "./Admin.css";
 import { RequestStatus } from "../../shares/Constants";
@@ -22,7 +20,13 @@ interface ISellerOrdersProps {
   AnswerOrder: Function;
 }
 
-const SellerOrders = ({ role, userId, orders, subOrders, AnswerOrder }) => {
+const SellerOrders: React.FC<ISellerOrdersProps> = ({
+  role,
+  userId,
+  orders,
+  subOrders,
+  AnswerOrder,
+}) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalOrder, setModalOrder] = React.useState<ISubOrder>();
   const [modalBtn, setModalBtn] = React.useState<JSX.Element[]>();
@@ -59,12 +63,10 @@ const SellerOrders = ({ role, userId, orders, subOrders, AnswerOrder }) => {
                   بستن
                 </Button>,
               ];
-              {
-                console.log(record);
-              }
+
               if (
                 // userRole == "seller" &&
-                record.requestStatus == RequestStatus.Pending //  &&
+                record.requestStatus === RequestStatus.Pending //  &&
                 // record.sellerId == context.admin.id
                 // record.SubOrders.filter(
                 //   (sb) => sb.id == context.admin.id

@@ -20,13 +20,8 @@ import {
 import { Link, useLocation, Redirect } from "react-router-dom";
 
 import { ApplicationState } from "../store";
-import {
-  AdminPath,
-  CartPath,
-  HomePath,
-  Status,
-  UserRole,
-} from "../shares/Constants";
+import { Status, UserRole } from "../shares/Constants";
+import { AdminPath, CartPath, HomePath } from "../shares/URLs";
 import { actionCreators } from "../store/Auth";
 import "./MyLayout.css";
 

@@ -47,17 +47,7 @@ const Product: React.FC<IProductProps> = ({
   ResetStatus,
 }) => {
   const { id } = useParams<IParamTypes>();
-
-  React.useEffect(() => {
-    if (status == Status.SUCCEEDED) {
-      const history = useHistory();
-      history.push(AdminPath.Products);
-      message.success("با موفقیت ذخیره شد.");
-    } else if (status == Status.FAILED) {
-      message.error("اشکال در ذخیره");
-    }
-    return ResetStatus();
-  }, [status]);
+  const history = useHistory();
 
   const [file, setFile] = React.useState<File>();
   const [title, setTitle] = React.useState<string>();
@@ -70,6 +60,17 @@ const Product: React.FC<IProductProps> = ({
   const [soldByWeight, setSoldByWeight] = React.useState(false);
   const [minWeight, setMinWeight] = React.useState<number>();
   const [showImage, setShowImage] = React.useState<string>();
+
+  //React.useEffect(() => {
+  if (status === Status.SUCCEEDED) {
+    history.push(AdminPath.Products);
+    message.success("با موفقیت ذخیره شد.");
+    return ResetStatus();
+  } else if (status === Status.FAILED) {
+    message.error("اشکال در ذخیره");
+    return ResetStatus();
+  }
+  //}, [status]);
 
   const validateInputs = () => title && title.length > 1 && price;
 
@@ -99,9 +100,9 @@ const Product: React.FC<IProductProps> = ({
     formData.append("barcode", String(barcode));
     formData.append("price", String(price));
     formData.append("max", String(max));
-    formData.append("description", description);
+    formData.append("description", description ?? "");
     formData.append("order", String(order));
-    formData.append("category", category);
+    formData.append("category", category ?? "");
     formData.append("soldByWeight", soldByWeight ? "1" : "0");
     formData.append("minWeight", String(minWeight));
 
@@ -123,21 +124,28 @@ const Product: React.FC<IProductProps> = ({
             type="file"
             style={{ display: "none" }}
             onChange={(e) => {
-              setFile(e.target.files[0]);
-              let reader = new FileReader();
-              reader.onload = (e) => {
-                const result = e.target?.result;
-                if (result) {
-                  setShowImage(result as string);
-                }
-              };
-              reader.readAsDataURL(file);
+              const files = e.target.files;
+              if (files) {
+                const file = files[0];
+                setFile(file);
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                  const result = e.target?.result;
+                  if (result) {
+                    setShowImage(result as string);
+                  }
+                };
+                reader.readAsDataURL(file);
+              }
             }}
           />
           <Button
             icon={<UploadOutlined />}
             onClick={() => {
-              document.getElementById("product-img").click();
+              const productImage = document.getElementById("product-img");
+              if (productImage) {
+                productImage.click();
+              }
             }}
           >
             بارگزاری عکس

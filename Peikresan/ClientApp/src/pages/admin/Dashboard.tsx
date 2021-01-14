@@ -7,7 +7,8 @@ import { Link } from "react-router-dom";
 import { ApplicationState } from "../../store";
 import { GetUsersRoleName } from "../../shares/Functions";
 import { IOrder, ISubOrder } from "../../shares/Interfaces";
-import { AdminPath, UserRole } from "../../shares/Constants";
+import { UserRole } from "../../shares/Constants";
+import { AdminPath } from "../../shares/URLs";
 
 interface IDashboardProps {
   role: string;
@@ -28,18 +29,18 @@ const dashboard: React.FC<IDashboardProps> = ({ role, orders, subOrders }) => (
           <Statistic
             title="تعداد سفارش"
             value={
-              role.toLocaleUpperCase() == UserRole.SELLER
+              role.toLocaleUpperCase() === UserRole.SELLER
                 ? subOrders.length
                 : orders.length
             }
           />
           <Link
             to={
-              role.toLocaleUpperCase() == UserRole.ADMIN
+              role.toLocaleUpperCase() === UserRole.ADMIN
                 ? AdminPath.Orders
-                : role.toLocaleUpperCase() == UserRole.SELLER
+                : role.toLocaleUpperCase() === UserRole.SELLER
                 ? AdminPath.SellerOrders
-                : role.toLocaleUpperCase() == UserRole.DELIVERY
+                : role.toLocaleUpperCase() === UserRole.DELIVERY
                 ? AdminPath.DeliverOrders
                 : ""
             }

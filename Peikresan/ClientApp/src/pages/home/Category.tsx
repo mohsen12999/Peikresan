@@ -6,7 +6,7 @@ import MyLayout from "../../components/MyLayout";
 import ProductThumbnail from "../../components/ProductThumbnail";
 import ScrollbarsList from "../../components/ScrollbarsList";
 import { ICategory, IProduct } from "../../shares/Interfaces";
-import { HomePath } from "../../shares/Constants";
+import { HomePath } from "../../shares/URLs";
 import { ApplicationState } from "../../store";
 
 import "./Category.css";

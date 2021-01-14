@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Table, Tag, Space, Popconfirm, Tooltip, Button } from "antd";
+import { Table, Tag, Space, Popconfirm, Tooltip, Button, message } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
@@ -24,32 +24,43 @@ interface IUsersProps {
 const Users: React.FC<IUsersProps> = ({
   users,
   status,
-
   RemoveElement,
   ResetStatus,
 }) => {
+  if (status === Status.SUCCEEDED) {
+    message.success("با موفقیت حذف شد.");
+    ResetStatus();
+  } else if (status === Status.FAILED) {
+    message.error("اشکال در حذف");
+    ResetStatus();
+  }
+
   const columns = [
     {
       title: "نام و نام خانوادگی",
       key: "fullName",
       dataIndex: "fullName",
-      render: (fullName, record) => <Space size="middle">{fullName}</Space>,
+      render: (fullName: string, record: IUser) => (
+        <Space size="middle">{fullName}</Space>
+      ),
     },
     {
       title: "نقش",
       key: "role",
       dataIndex: "role",
-      render: (role, record) => <Space size="middle">{role}</Space>,
+      render: (role: string, record: IUser) => (
+        <Space size="middle">{role}</Space>
+      ),
     },
     {
       title: "عملیات",
       key: "action",
-      render: (text, record) => (
+      render: (text: any, record: IUser) => (
         <Space size="middle">
           <Popconfirm
             title="از حذف اطمینان دارید؟"
             onConfirm={(e) => {
-              if (status == Status.LOADING) return;
+              if (status === Status.LOADING) return;
               RemoveElement(
                 AdminDataUrl.REMOVE_USER_URL,
                 AdminDataModel.Users,

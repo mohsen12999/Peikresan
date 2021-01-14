@@ -7,7 +7,7 @@ import CategoryScrollbarsList from "../../components/CategoryScrollbarsList";
 import "./CategoriesList.css";
 import { ApplicationState } from "../../store";
 import { ICategory } from "../../shares/Interfaces";
-import { HomePath } from "../../shares/Constants";
+import { HomePath } from "../../shares/URLs";
 
 interface ICategoriesListProps {
   categories: ICategory[];
@@ -31,9 +31,9 @@ const CategoriesList: React.FC<ICategoriesListProps> = ({ categories }) => (
           /> */}
 
       {categories
-        .filter((c) => c.parentId == 0)
+        .filter((c) => c.parentId === 0)
         .map((cat) => {
-          let subCats = categories.filter((c) => c.parentId == c.id);
+          let subCats = categories.filter((c) => c.parentId === c.id);
           const more = {
             show: false,
             title: "دسته‌بندی های بیشتر",

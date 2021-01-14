@@ -27,15 +27,15 @@ const SellerProducts: React.FC<ISellerProductsProps> = ({
   RemoveElement,
   ResetStatus,
 }) => {
-  React.useEffect(() => {
-    if (status == Status.SUCCEEDED) {
-      message.success("با موفقیت حذف شد.");
-      ResetStatus();
-    } else if (status == Status.FAILED) {
-      message.error("اشکال در حذف");
-      ResetStatus();
-    }
-  }, [status]);
+  //React.useEffect(() => {
+  if (status === Status.SUCCEEDED) {
+    message.success("با موفقیت حذف شد.");
+    ResetStatus();
+  } else if (status === Status.FAILED) {
+    message.error("اشکال در حذف");
+    ResetStatus();
+  }
+  //}, [status]);
 
   const columns = [
     {
@@ -55,12 +55,12 @@ const SellerProducts: React.FC<ISellerProductsProps> = ({
     {
       title: "عملیات",
       key: "action",
-      render: (text, record) => (
+      render: (text: any, record: ISellerProduct) => (
         <Space size="middle">
           <Popconfirm
             title="از حذف اطمینان دارید؟"
             onConfirm={(e) => {
-              if (status == Status.LOADING) return;
+              if (status === Status.LOADING) return;
               RemoveElement(
                 AdminDataUrl.REMOVE_SELLER_PRODUCT_URL,
                 AdminDataModel.SellerProducts,

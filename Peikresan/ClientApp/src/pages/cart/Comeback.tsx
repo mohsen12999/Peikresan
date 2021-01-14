@@ -9,7 +9,7 @@ import { actionCreators as dataActionCreators } from "../../store/Data";
 import { actionCreators as shopCartActionCreators } from "../../store/ShopCart";
 import { CalculateTotalPrice } from "../../shares/Functions";
 import { IProduct, ISellOptions } from "../../shares/Interfaces";
-import { HomePath } from "../../shares/Constants";
+import { HomePath } from "../../shares/URLs";
 
 interface IComebackProps {
   shopCart: number[];

@@ -9,7 +9,8 @@ import MyLayout from "../../components/MyLayout";
 import "./DeliverTime.css";
 import { ApplicationState } from "../../store";
 import { IDeliverTime } from "../../shares/Interfaces";
-import { CartPath, DeliverDay } from "../../shares/Constants";
+import { DeliverDay } from "../../shares/Constants";
+import { CartPath } from "../../shares/URLs";
 
 const { TabPane } = Tabs;
 

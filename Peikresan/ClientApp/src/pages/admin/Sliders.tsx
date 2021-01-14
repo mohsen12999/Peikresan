@@ -27,15 +27,15 @@ const Sliders: React.FC<ISlidersProps> = ({
   RemoveElement,
   ResetStatus,
 }) => {
-  React.useEffect(() => {
-    if (status == Status.SUCCEEDED) {
-      message.success("با موفقیت حذف شد.");
-      ResetStatus();
-    } else if (status == Status.FAILED) {
-      message.error("اشکال در حذف");
-      ResetStatus();
-    }
-  }, [status]);
+  //React.useEffect(() => {
+  if (status === Status.SUCCEEDED) {
+    message.success("با موفقیت حذف شد.");
+    ResetStatus();
+  } else if (status === Status.FAILED) {
+    message.error("اشکال در حذف");
+    ResetStatus();
+  }
+  //}, [status]);
 
   const columns = [
     {
@@ -65,7 +65,7 @@ const Sliders: React.FC<ISlidersProps> = ({
           <Popconfirm
             title="از حذف اطمینان دارید؟"
             onConfirm={() => {
-              if (status == Status.LOADING) return;
+              if (status === Status.LOADING) return;
               RemoveElement(
                 AdminDataUrl.REMOVE_SLIDER_URL,
                 AdminDataModel.Sliders,

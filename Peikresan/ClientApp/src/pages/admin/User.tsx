@@ -34,17 +34,7 @@ const User: React.FC<IUserProps> = ({
   ResetStatus,
 }) => {
   const { id } = useParams<IParamTypes>();
-
-  React.useEffect(() => {
-    if (status == Status.SUCCEEDED) {
-      const history = useHistory();
-      history.push(AdminPath.Categories);
-      message.success("با موفقیت ذخیره شد.");
-    } else if (status == Status.FAILED) {
-      message.error("اشکال در ذخیره");
-    }
-    return ResetStatus();
-  }, [status]);
+  const history = useHistory();
 
   const [userName, setUserName] = React.useState<string>();
   const [email, setEmail] = React.useState<string>();
@@ -54,6 +44,17 @@ const User: React.FC<IUserProps> = ({
   const [lastName, setLastName] = React.useState<string>();
   const [mobile, setMobile] = React.useState<string>();
   const [address, setAddress] = React.useState<string>();
+
+  //React.useEffect(() => {
+  if (status === Status.SUCCEEDED) {
+    history.push(AdminPath.Categories);
+    message.success("با موفقیت ذخیره شد.");
+    return ResetStatus();
+  } else if (status === Status.FAILED) {
+    message.error("اشکال در ذخیره");
+    return ResetStatus();
+  }
+  //}, [status]);
 
   const validateInputs = () =>
     userName &&
@@ -78,18 +79,18 @@ const User: React.FC<IUserProps> = ({
   }
 
   const sendData = () => {
-    if (!validateInputs() || status == Status.LOADING) return;
+    if (!validateInputs() || status === Status.LOADING) return;
 
     var formData = new FormData();
     formData.append("id", id);
-    formData.append("userName", userName);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("roleId", roleId);
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
-    formData.append("mobile", mobile);
-    formData.append("address", address);
+    formData.append("userName", userName ?? "");
+    formData.append("email", email ?? "");
+    formData.append("password", password ?? "");
+    formData.append("roleId", roleId ?? "");
+    formData.append("firstName", firstName ?? "");
+    formData.append("lastName", lastName ?? "");
+    formData.append("mobile", mobile ?? "");
+    formData.append("address", address ?? "");
 
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_USER_URL,
@@ -186,7 +187,7 @@ const User: React.FC<IUserProps> = ({
           >
             {roles.map((role) => (
               <Option value={role.id}>
-                {role.description && role.description != ""
+                {role.description && role.description !== ""
                   ? role.description
                   : role.name}
               </Option>

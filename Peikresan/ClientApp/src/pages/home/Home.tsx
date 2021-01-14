@@ -14,7 +14,7 @@ import {
   ISlider,
   IBadge,
 } from "../../shares/Interfaces";
-import { HomePath } from "../../shares/Constants";
+import { HomePath } from "../../shares/URLs";
 import { GetProductsFromList } from "../../shares/Functions";
 import { ApplicationState } from "../../store";
 

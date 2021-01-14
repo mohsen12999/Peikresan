@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 import { Table, Tag, Space, Button, Modal } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
-import { OrderStatusDescription } from "../../shares/services/OrderFunctions";
 import { ApplicationState } from "../../store";
 import { IOrder, ISubOrder } from "../../shares/Interfaces";
 import { UserRole, OrderStatus } from "../../shares/Constants";
@@ -12,6 +11,7 @@ import { OrderUrl } from "../../shares/URLs";
 
 import "./Admin.css";
 import { actionCreators } from "../../store/Auth";
+import { OrderStatusDescription } from "../../shares/Functions";
 
 // only for delivery
 
@@ -74,8 +74,8 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
                 </Button>,
               ];
               if (
-                role == UserRole.DELIVERY &&
-                record.orderStatus == OrderStatus.AssignToDeliver
+                role.toUpperCase() === UserRole.DELIVERY &&
+                record.orderStatus === OrderStatus.AssignToDeliver
               ) {
                 buttons = [
                   <Button
@@ -109,8 +109,8 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
                   </Button>,
                 ];
               } else if (
-                role == UserRole.DELIVERY &&
-                record.orderStatus == OrderStatus.DeliverAccepted
+                role.toUpperCase() === UserRole.DELIVERY &&
+                record.orderStatus === OrderStatus.DeliverAccepted
               ) {
                 buttons = [
                   <Button
@@ -130,8 +130,8 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
                   </Button>,
                 ];
               } else if (
-                role == UserRole.DELIVERY &&
-                record.orderStatus == OrderStatus.DeliveryGetProduct
+                role === UserRole.DELIVERY &&
+                record.orderStatus === OrderStatus.DeliveryGetProduct
               ) {
                 buttons = [
                   <Button
@@ -167,7 +167,7 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
     orders.length > 0
       ? orders.filter(
           (o) =>
-            o.orderStatus == 30 || o.orderStatus == 37 || o.orderStatus == 40
+            o.orderStatus === 30 || o.orderStatus === 37 || o.orderStatus === 40
         )
       : [];
 
@@ -200,7 +200,7 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
           {modalOrder &&
             subOrders &&
             subOrders
-              .filter((so) => so.orderId == modalOrder.id)
+              .filter((so) => so.orderId === modalOrder.id)
               .map((so) => (
                 <div>
                   <h4>نام فروشنده: </h4>

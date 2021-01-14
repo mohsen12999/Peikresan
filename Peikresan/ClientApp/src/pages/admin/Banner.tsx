@@ -29,22 +29,23 @@ const Banner: React.FC<IBannerProps> = ({
   ResetStatus,
 }) => {
   const { id } = useParams<IParamTypes>();
-
-  React.useEffect(() => {
-    if (status == Status.SUCCEEDED) {
-      const history = useHistory();
-      history.push(AdminPath.Categories);
-      message.success("با موفقیت ذخیره شد.");
-    } else if (status == Status.FAILED) {
-      message.error("اشکال در ذخیره");
-    }
-    return ResetStatus();
-  }, [status]);
+  const history = useHistory();
 
   const [file, setFile] = React.useState<File>();
   const [title, setTitle] = React.useState<string>();
   const [url, setUrl] = React.useState<string>();
   const [showImage, setShowImage] = React.useState<string>();
+
+  //React.useEffect(() => {
+  if (status === Status.SUCCEEDED) {
+    message.success("با موفقیت ذخیره شد.");
+    history.push(AdminPath.Categories);
+    return ResetStatus();
+  } else if (status === Status.FAILED) {
+    message.error("اشکال در ذخیره");
+    return ResetStatus();
+  }
+  //}, [status]);
 
   const validateInputs = () => title && title.length > 1 && url;
 

@@ -33,20 +33,21 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
   ResetStatus,
 }) => {
   const { id } = useParams<IParamTypes>();
-
-  React.useEffect(() => {
-    if (status == Status.SUCCEEDED) {
-      const history = useHistory();
-      history.push(AdminPath.SellerProducts);
-      message.success("با موفقیت ذخیره شد.");
-    } else if (status == Status.FAILED) {
-      message.error("اشکال در ذخیره");
-    }
-    return ResetStatus();
-  }, [status]);
+  const history = useHistory();
 
   const [product, setProduct] = React.useState<string>();
   const [count, setCount] = React.useState<number>();
+
+  //React.useEffect(() => {
+  if (status === Status.SUCCEEDED) {
+    history.push(AdminPath.SellerProducts);
+    message.success("با موفقیت ذخیره شد.");
+    return ResetStatus();
+  } else if (status === Status.FAILED) {
+    message.error("اشکال در ذخیره");
+    return ResetStatus();
+  }
+  //}, [status]);
 
   const validateInputs = () => product && product.length > 1 && count;
 
@@ -59,7 +60,7 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
   }
 
   const sendData = () => {
-    if (!validateInputs() || status == Status.LOADING) return;
+    if (!validateInputs() || status === Status.LOADING) return;
 
     var formData = new FormData();
     formData.append("id", id);
@@ -85,7 +86,7 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
             }))}
             placeholder=" نام محصول"
             filterOption={(inputValue, option) =>
-              option.value.indexOf(inputValue) !== -1
+              option?.value.indexOf(inputValue) !== -1
             }
             onChange={(value) => {
               setProduct(value);

@@ -34,23 +34,24 @@ const Category: React.FC<ICategoryProps> = ({
   ResetStatus,
 }) => {
   const { id } = useParams<IParamTypes>();
-
-  React.useEffect(() => {
-    if (status == Status.SUCCEEDED) {
-      const history = useHistory();
-      history.push(AdminPath.Categories);
-      message.success("با موفقیت ذخیره شد.");
-    } else if (status == Status.FAILED) {
-      message.error("اشکال در ذخیره");
-    }
-    return ResetStatus();
-  }, [status]);
+  const history = useHistory();
 
   const [file, setFile] = React.useState<File>();
   const [title, setTitle] = React.useState<string>();
   const [category, setCategory] = React.useState<string>();
   const [description, setDescription] = React.useState<string>();
   const [showImage, setShowImage] = React.useState<string>();
+
+  // React.useEffect(() => {
+  if (status === Status.SUCCEEDED) {
+    message.success("با موفقیت ذخیره شد.");
+    history.push(AdminPath.Categories);
+    return ResetStatus();
+  } else if (status === Status.FAILED) {
+    message.error("اشکال در ذخیره");
+    return ResetStatus();
+  }
+  //}, [status]);
 
   const validateInputs = () => title && title.length > 1;
 
@@ -65,7 +66,7 @@ const Category: React.FC<ICategoryProps> = ({
   }
 
   const sendData = () => {
-    if (!validateInputs() || status == Status.LOADING) return;
+    if (!validateInputs() || status === Status.LOADING) return;
 
     var formData = new FormData();
     formData.append("id", id);

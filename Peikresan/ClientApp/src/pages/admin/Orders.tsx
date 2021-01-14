@@ -3,10 +3,10 @@ import { connect } from "react-redux";
 import { Table, Tag, Space, Button, Menu, Dropdown, Modal } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
-import { OrderStatusDescription } from "../../shares/services/OrderFunctions";
 import { ApplicationState } from "../../store";
 import { IOrder, ISubOrder } from "../../shares/Interfaces";
 import AddressSpan from "../../components/AddressSpan";
+import { OrderStatusDescription } from "../../shares/Functions";
 
 import "./Admin.css";
 
@@ -141,7 +141,7 @@ const Orders: React.FC<IOrdersProps> = ({ orders, subOrders }) => {
           {modalOrder &&
             subOrders &&
             subOrders
-              .filter((so) => so.orderId == modalOrder.id)
+              .filter((so) => so.orderId === modalOrder.id)
               .map((so) => (
                 <div>
                   <h4>نام فروشنده: </h4>
