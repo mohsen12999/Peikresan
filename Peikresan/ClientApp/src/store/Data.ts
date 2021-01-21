@@ -12,14 +12,19 @@ import {
   IDeliverTime,
 } from "../shares/Interfaces";
 import { DATA_URL } from "../shares/URLs";
-import { SaveAddresses, SaveFactors } from "../shares/LocalStorage";
+import {
+  GetCacheData,
+  CacheData,
+  SaveAddresses,
+  SaveFactors,
+} from "../shares/LocalStorage";
 import { Status } from "../shares/Constants";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
 
 export interface IDataState {
-  cachedData: boolean;
+  readFromCachedData: boolean;
   status: Status;
 
   products: IProduct[];
@@ -57,7 +62,7 @@ export enum AddressActions {
 // They do not themselves have any side-effects; they just describe something that is going to happen.
 // Use @typeName and isActionType for type detection that works even after serialization/deserialization.
 
-export interface IChangeShopCartItem {
+export interface ILoadData {
   type: DataActions;
   payload?: { message?: string; data?: any; error?: any };
 }
@@ -69,7 +74,7 @@ export interface IChangeAddress {
 
 // Declare a 'discriminated union' type. This guarantees that all references to 'type' properties contain one of the
 // declared type strings (and not any other arbitrary string).
-export type KnownAction = IChangeShopCartItem | IChangeAddress;
+export type KnownAction = ILoadData | IChangeAddress;
 
 // ----------------
 // ACTION CREATORS - These are functions exposed to UI components that will trigger a state transition.
@@ -77,7 +82,7 @@ export type KnownAction = IChangeShopCartItem | IChangeAddress;
 
 export const actionCreators = {
   loadData: (): AppThunkAction<KnownAction> => async (dispatch, getState) => {
-    dispatch({ type: DataActions.DATA_REQUEST } as IChangeShopCartItem);
+    dispatch({ type: DataActions.DATA_REQUEST } as ILoadData);
     const response = await axios.get(DATA_URL).catch((error) => {
       dispatch({
         type: DataActions.DATA_FAILURE,
@@ -124,7 +129,7 @@ export const reducer: Reducer<IDataState> = (
 ): IDataState => {
   if (state === undefined) {
     return {
-      cachedData: false,
+      readFromCachedData: false,
       status: Status.INIT,
       products: [],
       categories: [],
@@ -143,7 +148,12 @@ export const reducer: Reducer<IDataState> = (
   switch (action.type) {
     case DataActions.DATA_REQUEST:
       // TODO: Loading Data from cache
-      return { ...state, status: Status.LOADING, cachedData: true };
+      // return { ...state, status: Status.LOADING, cachedData: true };
+      const cacheData = GetCacheData();
+      if (cacheData) {
+        return { ...cacheData, readFromCachedData: true };
+      }
+      return { ...state, readFromCachedData: false };
 
     case DataActions.DATA_SUCCESS:
       // TODO: cache data
@@ -180,8 +190,10 @@ export const reducer: Reducer<IDataState> = (
           minimumCart: data.minimumCart,
         };
         // dataState.sellOptions. =data.deliverAtDoor;
-        dataState.cachedData = false;
+        CacheData(dataState);
+        dataState.readFromCachedData = false;
       }
+
       return dataState;
 
     case DataActions.DATA_FAILURE:
