@@ -1,5 +1,3 @@
-// import * as WeatherForecasts from './WeatherForecasts';
-// import * as Counter from './Counter';
 import * as ShopCart from "./ShopCart";
 import * as Auth from "./Auth";
 import * as Data from "./Data";
@@ -17,6 +15,7 @@ export interface ApplicationState {
 export const reducers = {
   shopCart: ShopCart.reducer,
   auth: Auth.reducer,
+  data: Data.reducer,
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
