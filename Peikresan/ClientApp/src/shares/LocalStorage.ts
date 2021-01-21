@@ -1,9 +1,12 @@
 import { IAddress, IUserFactor } from "./Interfaces";
+import { IDataState } from "../store/Data";
 
 const TOKEN = "TOKEN";
 const ADDRESSES = "ADDRESSES";
-const SHOP_CART = "SHOP_CART";
 const FACTORS = "FACTORS";
+const DATA = "DATA";
+
+const SHOP_CART = "SHOP_CART";
 const PRODUCTS = "PRODUCTS";
 const CATEGORIES = "CATEGORIES";
 const SUGGESTIONS = "SUGGESTIONS";
@@ -39,6 +42,14 @@ export const SaveFactors = (factors: IUserFactor[]) => {
 
 export const GetFactors = (): IUserFactor[] => {
   return JSON.parse(localStorage.getItem(FACTORS) as string);
+};
+
+export const CacheData = (data: IDataState) => {
+  localStorage.setItem(DATA, JSON.stringify(data));
+};
+
+export const GetCacheData = (): IDataState => {
+  return JSON.parse(localStorage.getItem(DATA) as string);
 };
 
 /*
