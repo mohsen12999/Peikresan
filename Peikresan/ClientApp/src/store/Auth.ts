@@ -16,6 +16,9 @@ import {
 } from "../shares/Interfaces";
 import { AddToken, GetToken, RemoveToken } from "../shares/LocalStorage";
 import { AdminDataModel, Status } from "../shares/Constants";
+import { AdminPath } from "../shares/URLs";
+import { useHistory } from "react-router-dom";
+import { message } from "antd";
 
 // -----------------
 // STATE - This defines the type of data maintained in the Redux store.
@@ -129,28 +132,39 @@ export const actionCreators = {
   tryLogin: (
     username: string,
     password: string
-  ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
-    dispatch({ type: AuthActions.LOGIN_REQUEST });
-
-    const response = await axios
-      .post(LOGIN_URL, { username, password })
-      .catch((error) => {
-        dispatch({
-          type: AuthActions.LOGIN_FAILURE,
-          payload: { message: "axios catch error", error: error },
-        });
-      });
-
-    if (response && response.data && response.data.success) {
-      dispatch({
-        type: AuthActions.LOGIN_SUCCESS,
-        payload: { message: "axios success get data", data: response.data },
-      });
-    } else {
+  ): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    const status = getState().auth?.status;
+    if (status === Status.LOADING) {
       dispatch({
         type: AuthActions.LOGIN_FAILURE,
-        payload: { message: "axios not success", error: response },
+        payload: { message: "we have another fetch " },
       });
+      return false;
+    }
+
+    dispatch({ type: AuthActions.LOGIN_REQUEST });
+
+    try {
+      axios.post(LOGIN_URL, { username, password }).then((response) => {
+        if (response && response.data && response.data.success) {
+          dispatch({
+            type: AuthActions.LOGIN_SUCCESS,
+            payload: { message: "axios success get data", data: response.data },
+          });
+        } else {
+          dispatch({
+            type: AuthActions.LOGIN_FAILURE,
+            payload: { message: "axios not success", error: response },
+          });
+        }
+      });
+      return true;
+    } catch (error) {
+      dispatch({
+        type: AuthActions.LOGIN_FAILURE,
+        payload: { message: "axios catch error", error: error },
+      });
+      return false;
     }
   },
 
@@ -159,33 +173,53 @@ export const actionCreators = {
   addOrChangeElement: (
     url: AdminDataUrl,
     model: AdminDataModel,
-    data: FormData
+    data: FormData,
+    newPageUrl?: AdminPath
   ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+    const status = getState().auth?.status;
+    if (status === Status.LOADING) {
+      dispatch({
+        type: AuthActions.LOGIN_FAILURE,
+        payload: { message: "we have another fetch " },
+      });
+      return false;
+    }
+
     dispatch({ type: AdminDataActions.ADD_CHANGE_REQUEST });
 
-    const response = await axios
-      .post(url, data, requestConfig)
-      .catch((error) => {
-        dispatch({
-          type: AdminDataActions.ADD_CHANGE_FAILURE,
-          payload: { message: "axios catch error", error: error },
-        });
+    try {
+      axios.post(url, data, requestConfig).then((response) => {
+        if (response && response.data && response.data.success) {
+          dispatch({
+            type: AdminDataActions.ADD_CHANGE_SUCCESS,
+            payload: {
+              message: "axios success get data",
+              data: response.data,
+              model: model,
+            },
+          });
+          message.success("با موفقیت ذخیره شد.");
+          if (newPageUrl) {
+            const history = useHistory();
+            history.push(newPageUrl);
+          }
+          return true;
+        } else {
+          dispatch({
+            type: AdminDataActions.ADD_CHANGE_FAILURE,
+            payload: { message: "axios not success", error: response },
+          });
+          message.error("اشکال در ذخیره");
+          return false;
+        }
       });
-
-    if (response && response.data && response.data.success) {
-      dispatch({
-        type: AdminDataActions.ADD_CHANGE_SUCCESS,
-        payload: {
-          message: "axios success get data",
-          data: response.data,
-          model: model,
-        },
-      });
-    } else {
+    } catch (error) {
       dispatch({
         type: AdminDataActions.ADD_CHANGE_FAILURE,
-        payload: { message: "axios not success", error: response },
+        payload: { message: "axios catch error", error: error },
       });
+      message.error("اشکال در ذخیره");
+      return false;
     }
   },
 
@@ -194,29 +228,46 @@ export const actionCreators = {
     model: AdminDataModel,
     id: number | string
   ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+    const status = getState().auth?.status;
+    if (status === Status.LOADING) {
+      dispatch({
+        type: AuthActions.LOGIN_FAILURE,
+        payload: { message: "we have another fetch " },
+      });
+      return false;
+    }
+
     dispatch({ type: AdminDataActions.REMOVE_REQUEST });
 
-    const response = await axios.post(url, id, requestConfig).catch((error) => {
+    try {
+      axios.post(url, { id }, requestConfig).then((response) => {
+        if (response && response.data && response.data.success) {
+          dispatch({
+            type: AdminDataActions.REMOVE_SUCCESS,
+            payload: {
+              message: "axios success get data",
+              data: response.data,
+              model: model,
+            },
+          });
+          message.success("با موفقیت حذف شد.");
+          return true;
+        } else {
+          dispatch({
+            type: AdminDataActions.REMOVE_FAILURE,
+            payload: { message: "axios not success", error: response },
+          });
+          message.error("اشکال در حذف");
+          return false;
+        }
+      });
+    } catch (error) {
       dispatch({
         type: AdminDataActions.REMOVE_FAILURE,
         payload: { message: "axios catch error", error: error },
       });
-    });
-
-    if (response && response.data && response.data.success) {
-      dispatch({
-        type: AdminDataActions.REMOVE_SUCCESS,
-        payload: {
-          message: "axios success get data",
-          data: response.data,
-          model: model,
-        },
-      });
-    } else {
-      dispatch({
-        type: AdminDataActions.REMOVE_FAILURE,
-        payload: { message: "axios not success", error: response },
-      });
+      message.error("اشکال در حذف");
+      return false;
     }
   },
 
@@ -228,30 +279,44 @@ export const actionCreators = {
     orderId: number,
     answer: boolean
   ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+    const status = getState().auth?.status;
+    if (status === Status.LOADING) {
+      dispatch({
+        type: AuthActions.LOGIN_FAILURE,
+        payload: { message: "we have another fetch " },
+      });
+      return false;
+    }
+
     dispatch({ type: OrderAction.ORDER_REQUEST });
 
-    const response = await axios
-      .post(url, { orderId, answer, userId }, requestConfig)
-      .catch((error) => {
-        dispatch({
-          type: OrderAction.ORDER_FAILURE,
-          payload: { message: "axios catch error", error: error },
+    try {
+      axios
+        .post(url, { orderId, answer, userId }, requestConfig)
+        .then((response) => {
+          if (response && response.data && response.data.success) {
+            dispatch({
+              type: OrderAction.ORDER_SUCCESS,
+              payload: {
+                message: "axios success get data",
+                data: response.data,
+              },
+            });
+            return true;
+          } else {
+            dispatch({
+              type: OrderAction.ORDER_FAILURE,
+              payload: { message: "axios not success", error: response },
+            });
+            return false;
+          }
         });
-      });
-
-    if (response && response.data && response.data.success) {
-      dispatch({
-        type: OrderAction.ORDER_SUCCESS,
-        payload: {
-          message: "axios success get data",
-          data: response.data,
-        },
-      });
-    } else {
+    } catch (error) {
       dispatch({
         type: OrderAction.ORDER_FAILURE,
-        payload: { message: "axios not success", error: response },
+        payload: { message: "axios catch error", error: error },
       });
+      return false;
     }
   },
 };
