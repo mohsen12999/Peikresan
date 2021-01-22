@@ -57,6 +57,7 @@ export enum HomePath {
 
 export enum CartPath {
   Cart = "/cart",
+  Map = "/map",
   DeliverAddress = "/deliver-address",
   DeliverTime = "/deliver-time",
   Factor = "/factor",
