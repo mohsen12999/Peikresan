@@ -3,6 +3,7 @@ import { Action, Reducer } from "redux";
 import { AppThunkAction } from ".";
 import { Status } from "../shares/Constants";
 import { IAddress, IBankData, IDeliverTime } from "../shares/Interfaces";
+import { CacheShopCart, GetShopCartCache } from "../shares/LocalStorage";
 import { Cart_URL } from "../shares/URLs";
 
 // -----------------
@@ -52,7 +53,7 @@ export enum BankActions {
 
 export interface IChangeShopCartItem {
   type: ShopCartActions;
-  payload: { productId: number; count?: number };
+  payload: { productId: number; max: number; count?: number };
 }
 
 export interface IShopCartAddress {
@@ -89,10 +90,10 @@ export type KnownAction =
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-  addProduct: (productId: number, count = 1) =>
+  addProduct: (productId: number, max: number, count: number = 1) =>
     ({
       type: ShopCartActions.ADD_PRODUCT,
-      payload: { productId, count },
+      payload: { productId, max, count },
     } as IChangeShopCartItem),
   removeProduct: (productId: number, count = 1) =>
     ({
@@ -164,6 +165,11 @@ export const reducer: Reducer<IShopCartState> = (
   incomingAction: Action
 ): IShopCartState => {
   if (state === undefined) {
+    const cachedShopCart = GetShopCartCache();
+    if (cachedShopCart) {
+      return cachedShopCart;
+    }
+
     return {
       shopCart: [],
       deliverAtDoor: false,
@@ -175,6 +181,7 @@ export const reducer: Reducer<IShopCartState> = (
   switch (action.type) {
     case ShopCartActions.ADD_PRODUCT:
       const addedShopCart = [...state.shopCart];
+      const max = action.payload.max ? action.payload.max : 0;
       const count = action.payload.count ? action.payload.count : 0;
 
       if (addedShopCart[action.payload.productId]) {
@@ -182,8 +189,12 @@ export const reducer: Reducer<IShopCartState> = (
       } else {
         addedShopCart[action.payload.productId] = count;
       }
-      // TODO: update local storage shop cart
-      return { ...state, shopCart: addedShopCart };
+      if (addedShopCart[action.payload.productId] > max) {
+        addedShopCart[action.payload.productId] = max;
+      }
+      const addedShopCartState = { ...state, shopCart: addedShopCart };
+      CacheShopCart(addedShopCartState);
+      return addedShopCartState;
 
     case ShopCartActions.REMOVE_PRODUCT:
       const removedShopCart = [...state.shopCart];
@@ -195,32 +206,44 @@ export const reducer: Reducer<IShopCartState> = (
           removedShopCart[action.payload.productId] = 0;
         }
       }
-      // TODO: update local storage shop cart
-      return { ...state, shopCart: removedShopCart };
+      const removedShopCartState = { ...state, shopCart: removedShopCart };
+      CacheShopCart(removedShopCartState);
+      return removedShopCartState;
 
     case ShopCartActions.DELETE_PRODUCT:
       const deletedShopCart = [...state.shopCart];
       if (deletedShopCart[action.payload.productId]) {
         deletedShopCart[action.payload.productId] = 0;
       }
-      // TODO: update local storage shop cart
-      return { ...state, shopCart: deletedShopCart };
+      const deletedShopCartState = { ...state, shopCart: deletedShopCart };
+      CacheShopCart(deletedShopCartState);
+      return deletedShopCartState;
 
     case ShopCartActions.RESET_SHOP_CART:
-      // TODO: remove shop cart in local storage
-      return { ...state, shopCart: [] };
+      const resetShopCartState = { ...state, shopCart: [] };
+      CacheShopCart(resetShopCartState);
+      return resetShopCartState;
 
     case ShopCartAddressActions.ADD_ADDRESS:
-      // TODO: add deliver address to local storage
-      return { ...state, address: action.payload.address };
+      const addedAddressState = { ...state, address: action.payload.address };
+      CacheShopCart(addedAddressState);
+      return addedAddressState;
 
     case ShopCartTimeActions.ADD_TIME:
-      // TODO: add deliver address to local storage
-      return { ...state, deliverTime: action.payload.deliverTime };
+      const addedTimeState = {
+        ...state,
+        deliverTime: action.payload.deliverTime,
+      };
+      CacheShopCart(addedTimeState);
+      return addedTimeState;
 
     case ShopCartFeatureActions.DELIVER_AT_DOOR:
-      // TODO: add deliver address to local storage
-      return { ...state, deliverAtDoor: action.payload.value };
+      const deliverAtDoorState = {
+        ...state,
+        deliverAtDoor: action.payload.value,
+      };
+      CacheShopCart(deliverAtDoorState);
+      return deliverAtDoorState;
 
     case BankActions.SEND_REQUEST:
       return { ...state, status: Status.LOADING };
