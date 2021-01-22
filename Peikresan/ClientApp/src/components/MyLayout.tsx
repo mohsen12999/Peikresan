@@ -40,13 +40,6 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
   children,
   LoadData,
 }) => {
-  // TODO: Read Data from server
-  // React.useEffect(() => {
-  //   if (status === 'idle') {
-  //     dispatch(fetchPosts())
-  //   }
-  // }, [postStatus, dispatch])
-
   if (loadingDataStatus == Status.INIT) {
     LoadData();
   }
