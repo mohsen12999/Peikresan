@@ -30,9 +30,11 @@ const { Option } = Select;
 
 interface IAddressProps {
   addresses: IAddress[];
+
   AddAddress: Function;
   RemovedAddress: Function;
   SetDeliverAddress: Function;
+  GetAddressFromLocation: Function;
 }
 
 const DeliverAddress: React.FC<IAddressProps> = ({
@@ -40,6 +42,7 @@ const DeliverAddress: React.FC<IAddressProps> = ({
   AddAddress,
   RemovedAddress,
   SetDeliverAddress,
+  GetAddressFromLocation,
 }) => {
   const [radioState, setRadioState] = React.useState<number>();
   const [showNewAddress, setShowNewAddress] = React.useState(false);
@@ -47,6 +50,11 @@ const DeliverAddress: React.FC<IAddressProps> = ({
   const [newAddress, setNewAddress] = React.useState({
     ...DefaultAddress,
   });
+
+  React.useEffect(() => {
+    // https://developers.neshan.org/api/reverse-geocoding/
+    GetAddressFromLocation();
+  }, []);
 
   const states = [{ value: "مازندران" }, { value: "گیلان" }];
   const cities = [{ value: "رامسر" }];
@@ -281,6 +289,7 @@ const mapDispatchToProps = {
   AddAddress: dataActionCreators.addAddress,
   RemovedAddress: dataActionCreators.removedAddress,
   SetDeliverAddress: shopCartActionCreators.setShopCartAddress,
+  GetAddressFromLocation: shopCartActionCreators.getAddressFromLocation,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeliverAddress);
