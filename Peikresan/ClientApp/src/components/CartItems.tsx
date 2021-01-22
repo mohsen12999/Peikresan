@@ -34,7 +34,7 @@ const CartItems: React.FC<ICartItemProps> = ({
           <div className="cart-items-footer persian-number">
             قیمت مجموع: {CalculateShopCartTotalPrice(shopCart, products)}
           </div>
-          <Link to={CartPath.DeliverAddress}>
+          <Link to={CartPath.Map}>
             <Button style={{ borderRadius: "16px" }} type="primary">
               ادامه خرید
             </Button>
