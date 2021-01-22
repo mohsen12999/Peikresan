@@ -105,7 +105,7 @@ export const actionCreators = {
         type: DataActions.DATA_FAILURE,
         payload: { message: "axios catch error", error: error },
       });
-      return true;
+      return false;
     }
   },
 
