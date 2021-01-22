@@ -20,6 +20,7 @@ import DeliverAddress from "./pages/cart/DeliverAddress";
 import DeliverTime from "./pages/cart/DeliverTime";
 import Factor from "./pages/cart/Factor";
 import Comeback from "./pages/cart/Comeback";
+import DeliverMap from "./pages/cart/DeliverMap";
 
 import Login from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -59,6 +60,7 @@ export default () => (
       <Route path={HomePath.Search + ":text?"} component={Search} />
 
       <Route path={CartPath.Cart} component={Cart} />
+      <Route path={CartPath.Map} component={DeliverMap} />
       <Route path={CartPath.DeliverAddress} component={DeliverAddress} />
       <Route path={CartPath.DeliverTime} component={DeliverTime} />
       <Route path={CartPath.Factor} component={Factor} />
