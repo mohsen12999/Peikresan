@@ -23,18 +23,22 @@ import "./MyLayout.css";
 import { ApplicationState } from "../store";
 import { Status } from "../shares/Constants";
 import { HomePath, CartPath } from "../shares/URLs";
+import { actionCreators } from "../store/Data";
 
 const { Search } = Input;
 
 interface IMyLayoutProps {
   shopCart: number[];
   loadingDataStatus: Status;
+
+  LoadData: Function;
 }
 
 const MyLayout: React.FC<IMyLayoutProps> = ({
   shopCart,
   loadingDataStatus,
   children,
+  LoadData,
 }) => {
   // TODO: Read Data from server
   // React.useEffect(() => {
@@ -42,6 +46,10 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
   //     dispatch(fetchPosts())
   //   }
   // }, [postStatus, dispatch])
+
+  if (loadingDataStatus == Status.INIT) {
+    LoadData();
+  }
 
   let history = useHistory();
   const [drawerVisible, setDrawerVisible] = React.useState(false);
@@ -190,6 +198,8 @@ const mapStateToProps = (state: ApplicationState) => ({
   loadingDataStatus: state.data ? state.data.status : Status.IDLE,
 });
 
-const mapDispatchToProps = {};
+const mapDispatchToProps = {
+  LoadData: actionCreators.loadData,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyLayout);
