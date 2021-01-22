@@ -12,6 +12,9 @@ import { Cart_URL } from "../shares/URLs";
 export interface IShopCartState {
   shopCart: number[];
 
+  latitude?: number;
+  longitude?: number;
+
   address?: IAddress;
   deliverTime?: IDeliverTime;
   deliverAtDoor: boolean;
@@ -28,17 +31,19 @@ export enum ShopCartActions {
   RESET_SHOP_CART = "RESET_SHOP_CART",
 }
 
-export enum ShopCartAddressActions {
-  ADD_ADDRESS = "ADD_ADDRESS",
+export const ADD_LOCATION_ON_MAP = "ADD_LOCATION_ON_MAP";
+
+export enum GetLocationToAddressAction {
+  GET_ADDRESS_FROM_LOCATION_REQUEST = "GET_ADDRESS_FROM_LOCATION_REQUEST",
+  GET_ADDRESS_FROM_LOCATION_SUCCESS = "GET_ADDRESS_FROM_LOCATION_SUCCESS ",
+  GET_ADDRESS_FROM_LOCATION_FAILURE = "GET_ADDRESS_FROM_LOCATION_FAILURE ",
 }
 
-export enum ShopCartTimeActions {
-  ADD_TIME = "ADD_TIME",
-}
+export const ADD_ADDRESS = "ADD_ADDRESS";
 
-export enum ShopCartFeatureActions {
-  DELIVER_AT_DOOR = "DELIVER_AT_DOOR",
-}
+export const ADD_TIME = "ADD_TIME";
+
+export const DELIVER_AT_DOOR = "DELIVER_AT_DOOR";
 
 export enum BankActions {
   SEND_REQUEST = "SEND_REQUEST",
@@ -55,19 +60,28 @@ export interface IChangeShopCartItem {
   type: ShopCartActions;
   payload: { productId: number; max: number; count?: number };
 }
+export interface IAddLocationOnMap {
+  type: typeof ADD_LOCATION_ON_MAP;
+  payload: { lang: number; lat: number };
+}
+
+export interface IGetLocationFromAddress {
+  type: GetLocationToAddressAction;
+  payload?: { message?: string; data?: any; error?: any };
+}
 
 export interface IShopCartAddress {
-  type: ShopCartAddressActions;
+  type: typeof ADD_ADDRESS;
   payload: { address: IAddress };
 }
 
 export interface IShopCartTime {
-  type: ShopCartTimeActions;
+  type: typeof ADD_TIME;
   payload: { deliverTime: IDeliverTime };
 }
 
 export interface IShopCartFeature {
-  type: ShopCartFeatureActions;
+  type: typeof DELIVER_AT_DOOR;
   payload: { value: boolean };
 }
 
@@ -80,6 +94,8 @@ export interface IBank {
 // declared type strings (and not any other arbitrary string).
 export type KnownAction =
   | IChangeShopCartItem
+  | IAddLocationOnMap
+  | IGetLocationFromAddress
   | IShopCartAddress
   | IShopCartTime
   | IShopCartFeature
@@ -111,19 +127,19 @@ export const actionCreators = {
 
   setShopCartAddress: (address: IAddress) =>
     ({
-      type: ShopCartAddressActions.ADD_ADDRESS,
+      type: ADD_ADDRESS,
       payload: { address: address },
     } as IShopCartAddress),
 
   setShopCartTime: (deliverTime: IDeliverTime) =>
     ({
-      type: ShopCartTimeActions.ADD_TIME,
+      type: ADD_TIME,
       payload: { deliverTime: deliverTime },
     } as IShopCartTime),
 
   setDeliverAtDoor: (value: boolean) =>
     ({
-      type: ShopCartFeatureActions.DELIVER_AT_DOOR,
+      type: DELIVER_AT_DOOR,
       payload: { value: value },
     } as IShopCartFeature),
 
@@ -153,6 +169,75 @@ export const actionCreators = {
         type: BankActions.REQUEST_FAILURE,
         payload: { message: "axios not success", error: response },
       });
+    }
+  },
+
+  chooseLocationOnMap: (lat: number, lang: number) => ({
+    type: ADD_LOCATION_ON_MAP,
+    payload: { lat, lang },
+  }),
+
+  getAddressFromLocation: (): AppThunkAction<KnownAction> => (
+    dispatch,
+    getState
+  ) => {
+    dispatch({
+      type: GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_REQUEST,
+    });
+
+    const latitude = getState().shopCart?.latitude;
+    const longitude = getState().shopCart?.longitude;
+
+    if (!latitude || !longitude) {
+      dispatch({
+        type: GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_FAILURE,
+        payload: {
+          message: "latitude or longitude problem",
+          error: { latitude, longitude },
+        },
+      });
+      return false;
+    }
+
+    try {
+      axios
+        .get(
+          "https://api.neshan.org/v2/reverse?lat=" +
+            latitude +
+            "&lng=" +
+            longitude,
+          {
+            headers: {
+              "Api-Key": "web.KJN3LZa0jk1B2bGAInWR8snqjPfHMr1JoJTADpxc",
+            },
+          }
+        )
+        .then((response) => {
+          if (response.data && response.data.status == "OK") {
+            dispatch({
+              type:
+                GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_FAILURE,
+              payload: {
+                message: "get data successfully",
+                data: response.data,
+              },
+            });
+            return true;
+          } else {
+            dispatch({
+              type:
+                GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_FAILURE,
+              payload: { message: "status not ok", error: response },
+            });
+            return false;
+          }
+        });
+    } catch (error) {
+      dispatch({
+        type: GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_FAILURE,
+        payload: { message: "axios catch error", error: error },
+      });
+      return false;
     }
   },
 };
@@ -224,12 +309,19 @@ export const reducer: Reducer<IShopCartState> = (
       CacheShopCart(resetShopCartState);
       return resetShopCartState;
 
-    case ShopCartAddressActions.ADD_ADDRESS:
+    case ADD_LOCATION_ON_MAP:
+      const lang = action.payload.lang;
+      const lat = action.payload.lat;
+      const addLocationState = { ...state, latitude: lat, longitude: lang };
+      CacheShopCart(addLocationState);
+      return addLocationState;
+
+    case ADD_ADDRESS:
       const addedAddressState = { ...state, address: action.payload.address };
       CacheShopCart(addedAddressState);
       return addedAddressState;
 
-    case ShopCartTimeActions.ADD_TIME:
+    case ADD_TIME:
       const addedTimeState = {
         ...state,
         deliverTime: action.payload.deliverTime,
@@ -237,7 +329,7 @@ export const reducer: Reducer<IShopCartState> = (
       CacheShopCart(addedTimeState);
       return addedTimeState;
 
-    case ShopCartFeatureActions.DELIVER_AT_DOOR:
+    case DELIVER_AT_DOOR:
       const deliverAtDoorState = {
         ...state,
         deliverAtDoor: action.payload.value,
@@ -256,16 +348,16 @@ export const reducer: Reducer<IShopCartState> = (
       };
 
     case BankActions.REQUEST_SUCCESS:
-      var data = action.payload ? action.payload.data : undefined;
-      if (data) {
+      const bankReceivedData = action.payload?.data;
+      if (bankReceivedData) {
         return {
           ...state,
           status: Status.SUCCEEDED,
           bankData: {
-            success: data.success,
-            terminalId: data.terminalId,
-            token: data.token,
-            url: data.url,
+            success: bankReceivedData.success,
+            terminalId: bankReceivedData.terminalId,
+            token: bankReceivedData.token,
+            url: bankReceivedData.url,
           },
         };
       }
@@ -274,6 +366,22 @@ export const reducer: Reducer<IShopCartState> = (
         status: Status.FAILED,
         bankData: { success: false, terminalId: "", token: "", url: "" },
       };
+
+    case GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_REQUEST:
+      return { ...state, status: Status.LOADING };
+
+    case GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_SUCCESS:
+      const currentAddress = { ...state.address };
+      const addressData = action.payload?.data;
+      if (addressData) {
+        currentAddress.state = addressData.state;
+        currentAddress.state = addressData.state;
+        currentAddress.description = addressData.formatted_address;
+      }
+      return state;
+
+    case GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_FAILURE:
+      return { ...state, status: Status.FAILED };
 
     default:
       return state;
