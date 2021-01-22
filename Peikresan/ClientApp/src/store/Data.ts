@@ -81,25 +81,32 @@ export type KnownAction = ILoadData | IChangeAddress;
 // They don't directly mutate state, but they can have external side-effects (such as loading data).
 
 export const actionCreators = {
-  loadData: (): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+  loadData: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
     dispatch({ type: DataActions.DATA_REQUEST } as ILoadData);
-    const response = await axios.get(DATA_URL).catch((error) => {
+
+    try {
+      axios.get(DATA_URL).then((response) => {
+        if (response && response.data && response.data.success) {
+          dispatch({
+            type: DataActions.DATA_SUCCESS,
+            payload: { message: "axios success get data", data: response.data },
+          });
+          return true;
+        } else {
+          dispatch({
+            type: DataActions.DATA_FAILURE,
+            payload: { message: "axios not success", error: response },
+          });
+          return false;
+        }
+      });
+    } catch (error) {
       dispatch({
         type: DataActions.DATA_FAILURE,
         payload: { message: "axios catch error", error: error },
       });
-      if (response && response.data && response.data.success) {
-        dispatch({
-          type: DataActions.DATA_SUCCESS,
-          payload: { message: "axios success get data", data: response.data },
-        });
-      } else {
-        dispatch({
-          type: DataActions.DATA_FAILURE,
-          payload: { message: "axios not success", error: response },
-        });
-      }
-    });
+      return true;
+    }
   },
 
   addAddress: (address: IAddress) =>
@@ -147,7 +154,6 @@ export const reducer: Reducer<IDataState> = (
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case DataActions.DATA_REQUEST:
-      // TODO: Loading Data from cache
       // return { ...state, status: Status.LOADING, cachedData: true };
       const cacheData = GetCacheData();
       if (cacheData) {
@@ -156,7 +162,6 @@ export const reducer: Reducer<IDataState> = (
       return { ...state, readFromCachedData: false };
 
     case DataActions.DATA_SUCCESS:
-      // TODO: cache data
       const dataState = { ...state, status: Status.SUCCEEDED };
       if (action.payload && action.payload.data) {
         const data = action.payload.data;
@@ -202,9 +207,9 @@ export const reducer: Reducer<IDataState> = (
     case AddressActions.ADD_ADDRESS:
       const address = action.payload ? action.payload.address : undefined;
       if (address) {
-        if (address.id && state.addresses.find((ad) => ad.id == address.id)) {
+        if (address.id && state.addresses.find((ad) => ad.id === address.id)) {
           const thisAddress = state.addresses.find(
-            (ad) => ad.id == address.id
+            (ad) => ad.id === address.id
           ) as IAddress;
           const index = state.addresses.indexOf(thisAddress);
           const changedAddresses = state.addresses;
