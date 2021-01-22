@@ -69,12 +69,12 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
 
   let location = useLocation();
 
-  return status == Status.INIT ||
-    (status == Status.LOADING && login == false) ? (
+  return status === Status.INIT ||
+    (status === Status.LOADING && login === false) ? (
     <div style={middleCenter}>
       <h1>در حال بارگزاری</h1>
     </div>
-  ) : login == false ? (
+  ) : login === false ? (
     <Redirect to={AdminPath.Admin} />
   ) : (
     <div>
@@ -107,7 +107,7 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
             <Link to={AdminPath.Dashboard}>داشبورد</Link>
           </Menu.Item>
 
-          {userRole && userRole.toUpperCase() == UserRole.ADMIN && (
+          {userRole && userRole.toUpperCase() === UserRole.ADMIN && (
             <React.Fragment>
               <Divider dashed />
 
@@ -152,7 +152,7 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
             </React.Fragment>
           )}
 
-          {userRole && userRole.toUpperCase() == UserRole.SELLER && (
+          {userRole && userRole.toUpperCase() === UserRole.SELLER && (
             <React.Fragment>
               <Menu.Item key={AdminPath.SellerProducts}>
                 <ShopOutlined />
@@ -165,7 +165,7 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
             </React.Fragment>
           )}
 
-          {userRole && userRole.toUpperCase() == UserRole.DELIVERY && (
+          {userRole && userRole.toUpperCase() === UserRole.DELIVERY && (
             <React.Fragment>
               <Menu.Item key={AdminPath.DeliverOrders}>
                 <ShopOutlined />
@@ -194,7 +194,7 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
         className="main-layout"
         style={{ minHeight: window.innerHeight - 102 + "px" }}
       >
-        <Spin spinning={status == Status.LOADING} tip="در حال بارگزاری ...">
+        <Spin spinning={status === Status.LOADING} tip="در حال بارگزاری ...">
           {children}
         </Spin>
       </main>

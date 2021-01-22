@@ -59,7 +59,7 @@ const Banner: React.FC<IBannerProps> = ({
   }
 
   const sendData = () => {
-    if (!validateInputs() || status == Status.LOADING) return;
+    if (!validateInputs() || status === Status.LOADING) return;
 
     var formData = new FormData();
     formData.append("id", id);

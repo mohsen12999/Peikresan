@@ -52,7 +52,7 @@ const Factor: React.FC<IFactorProps> = ({
     : 0;
 
   const SendToBank = () => {
-    if (status == Status.LOADING) return;
+    if (status === Status.LOADING) return;
     SendCart(shopCart, address, deliverTime, deliverAtDoor);
   };
 
@@ -76,7 +76,7 @@ const Factor: React.FC<IFactorProps> = ({
 
         <Button
           type="primary"
-          disabled={status == Status.LOADING}
+          disabled={status === Status.LOADING}
           onClick={SendToBank}
         >
           پرداخت

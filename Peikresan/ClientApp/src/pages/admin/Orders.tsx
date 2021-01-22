@@ -28,7 +28,7 @@ const Orders: React.FC<IOrdersProps> = ({ orders, subOrders }) => {
   // ) => (
   //   <Menu onClick={(e) => func(orderId, e.key)}>
   //     {users
-  //       .filter((u) => u.role.toUpperCase() == role)
+  //       .filter((u) => u.role.toUpperCase() === role)
   //       .map((user) => (
   //         <Menu.Item key={user.id}>{user.fullName}</Menu.Item>
   //       ))}
@@ -81,8 +81,8 @@ const Orders: React.FC<IOrdersProps> = ({ orders, subOrders }) => {
             نمایش سفارش
           </Tag>
 
-          {/* {userRole == "admin" &&
-            (record.orderStatus == 10 || record.orderStatus == 23) && (
+          {/* {userRole === "admin" &&
+            (record.orderStatus === 10 || record.orderStatus === 23) && (
               <Dropdown
                 overlay={makeMenu(
                   record.id,
@@ -96,8 +96,8 @@ const Orders: React.FC<IOrdersProps> = ({ orders, subOrders }) => {
               </Dropdown>
             )}
 
-          {userRole == "admin" &&
-            (record.orderStatus == 27 || record.orderStatus == 33) && (
+          {userRole === "admin" &&
+            (record.orderStatus === 27 || record.orderStatus === 33) && (
               <Dropdown
                 overlay={makeMenu(
                   record.id,

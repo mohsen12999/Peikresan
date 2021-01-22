@@ -73,7 +73,7 @@ const Products: React.FC<IProductsProps> = ({
           <Popconfirm
             title="از حذف اطمینان دارید؟"
             onConfirm={(e) => {
-              if (status == Status.LOADING) return;
+              if (status === Status.LOADING) return;
               RemoveElement(
                 AdminDataUrl.REMOVE_PRODUCT_URL,
                 AdminDataModel.Products,

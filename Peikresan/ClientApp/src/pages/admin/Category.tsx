@@ -20,7 +20,7 @@ interface ICategoryProps {
   status: Status;
 
   AddOrChangeElement: Function;
-  ResetStatus: Function;
+  // ResetStatus: Function;
 }
 
 interface IParamTypes {
@@ -31,10 +31,10 @@ const Category: React.FC<ICategoryProps> = ({
   categories,
   status,
   AddOrChangeElement,
-  ResetStatus,
+  // ResetStatus,
 }) => {
   const { id } = useParams<IParamTypes>();
-  const history = useHistory();
+  // const history = useHistory();
 
   const [file, setFile] = React.useState<File>();
   const [title, setTitle] = React.useState<string>();
@@ -43,14 +43,14 @@ const Category: React.FC<ICategoryProps> = ({
   const [showImage, setShowImage] = React.useState<string>();
 
   // React.useEffect(() => {
-  if (status === Status.SUCCEEDED) {
-    message.success("با موفقیت ذخیره شد.");
-    history.push(AdminPath.Categories);
-    return ResetStatus();
-  } else if (status === Status.FAILED) {
-    message.error("اشکال در ذخیره");
-    return ResetStatus();
-  }
+  // if (status === Status.SUCCEEDED) {
+  //   message.success("با موفقیت ذخیره شد.");
+  //   history.push(AdminPath.Categories);
+  //   return ResetStatus();
+  // } else if (status === Status.FAILED) {
+  //   message.error("اشکال در ذخیره");
+  //   return ResetStatus();
+  // }
   //}, [status]);
 
   const validateInputs = () => title && title.length > 1;
@@ -171,7 +171,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = {
   AddOrChangeElement: actionCreators.addOrChangeElement,
-  ResetStatus: actionCreators.resetStatus,
+  // ResetStatus: actionCreators.resetStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Category);

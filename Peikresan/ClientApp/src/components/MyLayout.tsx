@@ -40,7 +40,7 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
   children,
   LoadData,
 }) => {
-  if (loadingDataStatus == Status.INIT) {
+  if (loadingDataStatus === Status.INIT) {
     LoadData();
   }
 
@@ -141,7 +141,7 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
         style={{ minHeight: window.innerHeight - 102 + "px" }}
       >
         <Spin
-          spinning={loadingDataStatus == Status.LOADING}
+          spinning={loadingDataStatus === Status.LOADING}
           tip="در حال بارگزاری ..."
         >
           {children}

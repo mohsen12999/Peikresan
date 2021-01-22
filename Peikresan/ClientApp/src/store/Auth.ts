@@ -423,7 +423,7 @@ export const reducer: Reducer<IAuthState> = (
         const stateModelData = state[modelName] as Array<any>;
         const element = action.payload.data.element;
         const filterData = stateModelData.filter(
-          (m: any) => m.id == element.id
+          (m: any) => m.id === element.id
         );
         if (filterData) {
           return { ...state, [modelName]: [...filterData, element] };

@@ -59,7 +59,7 @@ const Home: React.FC<IHomeProps> = ({
     <section className="badge-scroll">
       <ScrollbarBadge
         badges={categories
-          .filter((cat) => cat.parentId == 0)
+          .filter((cat) => cat.parentId === 0)
           .map(
             (c) =>
               ({

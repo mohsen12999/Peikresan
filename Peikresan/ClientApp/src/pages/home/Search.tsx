@@ -19,7 +19,7 @@ interface IParamTypes {
 
 const Search: React.FC<ISearchProps> = ({ products }) => {
   const { text } = useParams<IParamTypes>();
-  const searchTxt = text == undefined ? "" : text.trim();
+  const searchTxt = text === undefined ? "" : text.trim();
   const selectedProduct = products.filter((p) => p.title.includes(searchTxt));
 
   // products

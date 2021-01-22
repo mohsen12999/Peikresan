@@ -66,7 +66,7 @@ const Banners: React.FC<IBannersProps> = ({
           <Popconfirm
             title="از حذف اطمینان دارید؟"
             onConfirm={() => {
-              if (status == Status.LOADING) return;
+              if (status === Status.LOADING) return;
               RemoveElement(
                 AdminDataUrl.REMOVE_BANNER_URL,
                 AdminDataModel.Banners,

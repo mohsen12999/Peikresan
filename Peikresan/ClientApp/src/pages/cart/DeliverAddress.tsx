@@ -129,7 +129,7 @@ const DeliverAddress: React.FC<IAddressProps> = ({
                   setNewAddress({
                     ...newAddress,
                     districtId: Number(value),
-                    district: districts.find((d) => d.id == value).name,
+                    district: districts.find((d) => d.id === value).name,
                   })
                 }
                 filterOption={(input, option) =>
@@ -221,7 +221,7 @@ const DeliverAddress: React.FC<IAddressProps> = ({
                 title="آدرس"
                 key={add.id}
                 className={
-                  radioState == add.id
+                  radioState === add.id
                     ? "address-card address-card-selected"
                     : "address-card"
                 }
@@ -262,7 +262,7 @@ const DeliverAddress: React.FC<IAddressProps> = ({
               type="primary"
               className="save-address-btn"
               style={{ borderRadius: "16px" }}
-              disabled={radioState == null || radioState <= 0}
+              disabled={radioState === null || radioState <= 0}
             >
               ادامه خرید
             </Button>

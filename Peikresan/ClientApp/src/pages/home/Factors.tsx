@@ -12,7 +12,7 @@ interface IFactorsProps {
 const factors: React.FC<IFactorsProps> = ({ factors }) => (
   <MyLayout>
     <h1>فاکتور خرید شما</h1>
-    {factors.length == 0 ? (
+    {factors.length === 0 ? (
       <div>
         <h2>سابقه خریدی برای شما وجود ندارد</h2>
       </div>

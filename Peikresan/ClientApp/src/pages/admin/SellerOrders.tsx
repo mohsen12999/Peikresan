@@ -65,11 +65,11 @@ const SellerOrders: React.FC<ISellerOrdersProps> = ({
               ];
 
               if (
-                // userRole == "seller" &&
+                // userRole === "seller" &&
                 record.requestStatus === RequestStatus.Pending //  &&
-                // record.sellerId == context.admin.id
+                // record.sellerId === context.admin.id
                 // record.SubOrders.filter(
-                //   (sb) => sb.id == context.admin.id
+                //   (sb) => sb.id === context.admin.id
                 // ).length > 0
               ) {
                 buttons = [

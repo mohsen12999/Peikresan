@@ -229,7 +229,7 @@ export const reducer: Reducer<IDataState> = (
 
     case AddressActions.REMOVE_ADDRESS:
       const id = action.payload ? action.payload.id : undefined;
-      const removedAddress = state.addresses.filter((ad) => ad.id != id);
+      const removedAddress = state.addresses.filter((ad) => ad.id !== id);
       SaveAddresses(removedAddress);
       return { ...state, addresses: removedAddress };
 

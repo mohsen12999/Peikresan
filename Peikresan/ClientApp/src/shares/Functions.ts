@@ -30,7 +30,7 @@ export const GetShopCartProducts = (
     .filter((c) => c > 0)
     .map(
       (c, i) =>
-        ({ ...products.find((p) => p.id == i), count: c } as IShopCartProduct)
+        ({ ...products.find((p) => p.id === i), count: c } as IShopCartProduct)
     );
 
 export const GetSubCategories = (id: number, categories: ICategory[]) =>
@@ -41,7 +41,7 @@ export const GetProductsFromList = (
   products: IProduct[]
 ): IProduct[] =>
   idList
-    .map((s) => products.find((p) => p.id == s))
+    .map((s) => products.find((p) => p.id === s))
     .filter((p) => p !== undefined)
     .map((p) => p as IProduct);
 
@@ -52,7 +52,7 @@ export const CalculateShopCartTotalPrice = (
   shopCart
     .filter((c) => c > 0)
     .map((c, i) => {
-      const product = products.find((p) => p.id == i);
+      const product = products.find((p) => p.id === i);
       return product
         ? { count: c, price: product.price }
         : { count: c, price: 0 };

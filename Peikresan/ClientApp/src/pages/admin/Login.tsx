@@ -43,7 +43,7 @@ const Login: React.FC<ILoginProps> = ({ status, login, TryLogin }) => {
         />
         <Button
           type="primary"
-          disabled={!validate() || status == Status.LOADING}
+          disabled={!validate() || status === Status.LOADING}
           onClick={() => {
             TryLogin(email, password);
           }}

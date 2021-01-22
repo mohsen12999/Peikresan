@@ -24,15 +24,15 @@ const Category: React.FC<ICategoryProps> = ({ products, categories }) => {
   const { id } = useParams<IParamTypes>();
 
   // const category = context.GetCategory(id);
-  const category = categories.find((c) => c.id == Number(id));
-  const subCategories = categories.filter((c) => c.parentId == Number(id));
-  const categoryProducts = products.filter((p) => p.categoryId == Number(id));
+  const category = categories.find((c) => c.id === Number(id));
+  const subCategories = categories.filter((c) => c.parentId === Number(id));
+  const categoryProducts = products.filter((p) => p.categoryId === Number(id));
 
   return (
     <MyLayout>
       <div>
         <h2>
-          {Number(id) === 0 || category == undefined
+          {Number(id) === 0 || category === undefined
             ? "همه دسته بندی ها"
             : category
             ? category.title
@@ -44,7 +44,7 @@ const Category: React.FC<ICategoryProps> = ({ products, categories }) => {
             <ScrollbarsList
               key={subCat.id}
               products={products
-                .filter((p) => p.categoryId == subCat.id)
+                .filter((p) => p.categoryId === subCat.id)
                 .slice(0, 10)}
               title={subCat.title}
               more={{
