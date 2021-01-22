@@ -1,5 +1,6 @@
 import { IAddress, IUserFactor } from "./Interfaces";
 import { IDataState } from "../store/Data";
+import { IShopCartState } from "../store/ShopCart";
 
 const TOKEN = "TOKEN";
 const ADDRESSES = "ADDRESSES";
@@ -7,13 +8,13 @@ const FACTORS = "FACTORS";
 const DATA = "DATA";
 
 const SHOP_CART = "SHOP_CART";
-const PRODUCTS = "PRODUCTS";
-const CATEGORIES = "CATEGORIES";
-const SUGGESTIONS = "SUGGESTIONS";
-const NEWEST = "NEWEST";
-const MOST_SELL = "MOST_SELL";
-const SLIDERS = "SLIDERS";
-const BANNERS = "BANNERS";
+// const PRODUCTS = "PRODUCTS";
+// const CATEGORIES = "CATEGORIES";
+// const SUGGESTIONS = "SUGGESTIONS";
+// const NEWEST = "NEWEST";
+// const MOST_SELL = "MOST_SELL";
+// const SLIDERS = "SLIDERS";
+// const BANNERS = "BANNERS";
 // const DISTRICTS = "DISTRICTS";
 
 export const AddToken = (token: string) => {
@@ -50,6 +51,14 @@ export const CacheData = (data: IDataState) => {
 
 export const GetCacheData = (): IDataState => {
   return JSON.parse(localStorage.getItem(DATA) as string);
+};
+
+export const CacheShopCart = (shopCart: IShopCartState) => {
+  localStorage.setItem(SHOP_CART, JSON.stringify(shopCart));
+};
+
+export const GetShopCartCache = (): IShopCartState => {
+  return JSON.parse(localStorage.getItem(SHOP_CART) as string);
 };
 
 /*
