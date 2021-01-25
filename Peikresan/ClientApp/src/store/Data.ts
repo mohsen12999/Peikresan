@@ -17,6 +17,8 @@ import {
   CacheData,
   SaveAddresses,
   SaveFactors,
+  GetAddresses,
+  GetFactors,
 } from "../shares/LocalStorage";
 import { Status } from "../shares/Constants";
 
@@ -145,8 +147,8 @@ export const reducer: Reducer<IDataState> = (
       mostSells: [],
       sliders: [],
       banners: [],
-      addresses: [],
-      factors: [],
+      addresses: GetAddresses() ?? [],
+      factors: GetFactors() ?? [],
       deliverTimes: [],
     };
   }
