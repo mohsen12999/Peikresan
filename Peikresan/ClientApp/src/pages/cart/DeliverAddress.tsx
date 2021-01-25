@@ -270,7 +270,7 @@ const DeliverAddress: React.FC<IAddressProps> = ({
               type="primary"
               className="save-address-btn"
               style={{ borderRadius: "16px" }}
-              disabled={radioState === null || radioState <= 0}
+              disabled={radioState === undefined || radioState <= 0}
             >
               ادامه خرید
             </Button>
