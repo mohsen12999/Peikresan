@@ -39,7 +39,7 @@ export enum GetLocationToAddressAction {
   GET_ADDRESS_FROM_LOCATION_FAILURE = "GET_ADDRESS_FROM_LOCATION_FAILURE ",
 }
 
-export const ADD_ADDRESS = "ADD_ADDRESS";
+export const ADD_DELIVERY_ADDRESS = "ADD_DELIVERY_ADDRESS";
 
 export const ADD_TIME = "ADD_TIME";
 
@@ -71,7 +71,7 @@ export interface IGetLocationFromAddress {
 }
 
 export interface IShopCartAddress {
-  type: typeof ADD_ADDRESS;
+  type: typeof ADD_DELIVERY_ADDRESS;
   payload: { address: IAddress };
 }
 
@@ -127,7 +127,7 @@ export const actionCreators = {
 
   setShopCartAddress: (address: IAddress) =>
     ({
-      type: ADD_ADDRESS,
+      type: ADD_DELIVERY_ADDRESS,
       payload: { address: address },
     } as IShopCartAddress),
 
@@ -208,15 +208,15 @@ export const actionCreators = {
             longitude,
           {
             headers: {
-              "Api-Key": "web.KJN3LZa0jk1B2bGAInWR8snqjPfHMr1JoJTADpxc",
+              "Api-Key": "service.XvTyoZ2GGVPseflcBzO6G7ejpD4UmtHIeo3PbbCq",
             },
           }
         )
         .then((response) => {
-          if (response.data && response.data.status == "OK") {
+          if (response.data && response.data.status === "OK") {
             dispatch({
               type:
-                GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_FAILURE,
+                GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_SUCCESS,
               payload: {
                 message: "get data successfully",
                 data: response.data,
@@ -252,7 +252,11 @@ export const reducer: Reducer<IShopCartState> = (
   if (state === undefined) {
     const cachedShopCart = GetShopCartCache();
     if (cachedShopCart) {
-      return cachedShopCart;
+      return {
+        shopCart: cachedShopCart,
+        deliverAtDoor: false,
+        status: Status.INIT,
+      };
     }
 
     return {
@@ -277,9 +281,8 @@ export const reducer: Reducer<IShopCartState> = (
       if (addedShopCart[action.payload.productId] > max) {
         addedShopCart[action.payload.productId] = max;
       }
-      const addedShopCartState = { ...state, shopCart: addedShopCart };
-      CacheShopCart(addedShopCartState);
-      return addedShopCartState;
+      CacheShopCart(addedShopCart);
+      return { ...state, shopCart: addedShopCart };
 
     case ShopCartActions.REMOVE_PRODUCT:
       const removedShopCart = [...state.shopCart];
@@ -291,51 +294,40 @@ export const reducer: Reducer<IShopCartState> = (
           removedShopCart[action.payload.productId] = 0;
         }
       }
-      const removedShopCartState = { ...state, shopCart: removedShopCart };
-      CacheShopCart(removedShopCartState);
-      return removedShopCartState;
+      CacheShopCart(removedShopCart);
+      return { ...state, shopCart: removedShopCart };
 
     case ShopCartActions.DELETE_PRODUCT:
       const deletedShopCart = [...state.shopCart];
       if (deletedShopCart[action.payload.productId]) {
         deletedShopCart[action.payload.productId] = 0;
       }
-      const deletedShopCartState = { ...state, shopCart: deletedShopCart };
-      CacheShopCart(deletedShopCartState);
-      return deletedShopCartState;
+      CacheShopCart(deletedShopCart);
+      return { ...state, shopCart: deletedShopCart };
 
     case ShopCartActions.RESET_SHOP_CART:
-      const resetShopCartState = { ...state, shopCart: [] };
-      CacheShopCart(resetShopCartState);
-      return resetShopCartState;
+      CacheShopCart([]);
+      return { ...state, shopCart: [] };
 
     case ADD_LOCATION_ON_MAP:
       const lang = action.payload.lang;
       const lat = action.payload.lat;
-      const addLocationState = { ...state, latitude: lat, longitude: lang };
-      CacheShopCart(addLocationState);
-      return addLocationState;
+      return { ...state, latitude: lat, longitude: lang };
 
-    case ADD_ADDRESS:
-      const addedAddressState = { ...state, address: action.payload.address };
-      CacheShopCart(addedAddressState);
-      return addedAddressState;
+    case ADD_DELIVERY_ADDRESS:
+      return { ...state, address: action.payload.address };
 
     case ADD_TIME:
-      const addedTimeState = {
+      return {
         ...state,
         deliverTime: action.payload.deliverTime,
       };
-      CacheShopCart(addedTimeState);
-      return addedTimeState;
 
     case DELIVER_AT_DOOR:
-      const deliverAtDoorState = {
+      return {
         ...state,
         deliverAtDoor: action.payload.value,
       };
-      CacheShopCart(deliverAtDoorState);
-      return deliverAtDoorState;
 
     case BankActions.SEND_REQUEST:
       return { ...state, status: Status.LOADING };
@@ -371,12 +363,19 @@ export const reducer: Reducer<IShopCartState> = (
       return { ...state, status: Status.LOADING };
 
     case GetLocationToAddressAction.GET_ADDRESS_FROM_LOCATION_SUCCESS:
-      const currentAddress = { ...state.address };
+      const currentAddress = { ...state.address } as IAddress;
       const addressData = action.payload?.data;
       if (addressData) {
-        currentAddress.state = addressData.state;
-        currentAddress.state = addressData.state;
-        currentAddress.description = addressData.formatted_address;
+        if (addressData.state) {
+          currentAddress.state = addressData.state;
+        }
+        if (addressData.city) {
+          currentAddress.city = addressData.city;
+        }
+        if (addressData.formatted_address) {
+          currentAddress.formattedAddress = addressData.formatted_address;
+        }
+        return { ...state, address: currentAddress };
       }
       return state;
 
