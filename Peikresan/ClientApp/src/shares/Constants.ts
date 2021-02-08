@@ -12,11 +12,12 @@ export const DefaultAddress: IAddress = {
   state: "مازندران",
   city: "رامسر",
   description: "",
-  level: "",
-  unit: "",
-  number: "",
+  formattedAddress: "",
+  // level: "",
+  // unit: "",
+  // number: "",
   mobile: "",
-  postalCode: "",
+  // postalCode: "",
 };
 
 export enum DeliverDay {
