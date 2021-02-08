@@ -1,6 +1,5 @@
 import { IAddress, IUserFactor } from "./Interfaces";
 import { IDataState } from "../store/Data";
-import { IShopCartState } from "../store/ShopCart";
 
 const TOKEN = "TOKEN";
 const ADDRESSES = "ADDRESSES";
@@ -53,11 +52,11 @@ export const GetCacheData = (): IDataState => {
   return JSON.parse(localStorage.getItem(DATA) as string);
 };
 
-export const CacheShopCart = (shopCart: IShopCartState) => {
+export const CacheShopCart = (shopCart: number[]) => {
   localStorage.setItem(SHOP_CART, JSON.stringify(shopCart));
 };
 
-export const GetShopCartCache = (): IShopCartState => {
+export const GetShopCartCache = (): number[] => {
   return JSON.parse(localStorage.getItem(SHOP_CART) as string);
 };
 
