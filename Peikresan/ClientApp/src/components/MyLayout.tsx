@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { Link, useLocation, Redirect, useHistory } from "react-router-dom";
 import { Input, Drawer, Menu, Divider, Badge, Spin } from "antd";
 import {
   MenuUnfoldOutlined,
@@ -11,25 +11,26 @@ import {
   WechatOutlined,
   SolutionOutlined,
   ShoppingCartOutlined,
-  DollarOutlined,
-  // UserOutlined,
   InstagramOutlined,
 } from "@ant-design/icons";
-import { Link, useLocation } from "react-router-dom";
 
 import Enamad from "./Enamad";
 
-import "./MyLayout.css";
 import { ApplicationState } from "../store";
 import { Status } from "../shares/Constants";
 import { HomePath, CartPath } from "../shares/URLs";
+import { IAddress } from "../shares/Interfaces";
 import { actionCreators } from "../store/Data";
+import { ValidateAddress } from "../shares/Functions";
+
+import "./MyLayout.css";
 
 const { Search } = Input;
 
 interface IMyLayoutProps {
   shopCart: number[];
   loadingDataStatus: Status;
+  address?: IAddress;
 
   LoadData: Function;
 }
@@ -38,9 +39,11 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
   shopCart,
   loadingDataStatus,
   children,
+  address,
   LoadData,
 }) => {
-  if (loadingDataStatus === Status.INIT) {
+  const validAddress = ValidateAddress(address);
+  if (loadingDataStatus === Status.INIT && validAddress) {
     LoadData();
   }
 
@@ -57,7 +60,9 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
 
   let location = useLocation();
 
-  return (
+  return !validAddress ? (
+    <Redirect to={CartPath.AddressesList} />
+  ) : (
     <div>
       <div className="my-header">
         <Search
@@ -189,6 +194,7 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
 const mapStateToProps = (state: ApplicationState) => ({
   shopCart: state.shopCart ? state.shopCart.shopCart : [],
   loadingDataStatus: state.data ? state.data.status : Status.IDLE,
+  address: state.shopCart?.address,
 });
 
 const mapDispatchToProps = {
