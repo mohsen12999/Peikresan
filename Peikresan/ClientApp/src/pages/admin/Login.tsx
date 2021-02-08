@@ -4,12 +4,13 @@ import { Input, Space, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import { Redirect } from "react-router-dom";
 
-import MyLayout from "../../components/MyLayout";
+import SimpleLayout from "../../components/SimpleLayout";
 import { ApplicationState } from "../../store";
 import { actionCreators } from "../../store/Auth";
+import { Status } from "../../shares/Constants";
+import { HomePath } from "../../shares/URLs";
 
 import "./Login.css";
-import { Status } from "../../shares/Constants";
 
 interface ILoginProps {
   status: Status;
@@ -19,7 +20,6 @@ interface ILoginProps {
 }
 
 const Login: React.FC<ILoginProps> = ({ status, login, TryLogin }) => {
-  // TODO: remove MyLayout
   const [email, setEmail] = React.useState<string>();
   const [password, setPassword] = React.useState<string>();
 
@@ -29,7 +29,7 @@ const Login: React.FC<ILoginProps> = ({ status, login, TryLogin }) => {
   return login ? (
     <Redirect to={"/admin/dashboard"} />
   ) : (
-    <MyLayout>
+    <SimpleLayout title="ورود به سایت" subTitle="" backPage={HomePath.Home}>
       <h1 className="login-title">ورود یه سایت</h1>
       <Space direction="vertical" className="login-space">
         <Input
@@ -51,7 +51,7 @@ const Login: React.FC<ILoginProps> = ({ status, login, TryLogin }) => {
           ورود به سایت
         </Button>
       </Space>
-    </MyLayout>
+    </SimpleLayout>
   );
 };
 
