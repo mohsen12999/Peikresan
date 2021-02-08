@@ -2,11 +2,12 @@
 {
     public class SellerProductModel
     {
-        public string id { get; set; }
-        public string product { get; set; }
-        public int count { get; set; }
+        public string Id { get; set; }
+        public string Product { get; set; }
+        public int Count { get; set; }
+        public decimal Price { get; set; }
 
         // admin add for users
-        public string userId { get; set; }
+        public string UserId { get; set; }
     }
 }

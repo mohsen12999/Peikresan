@@ -2,17 +2,20 @@ namespace Peikresan.Data.ViewModels
 {
     public class RegisterModel
     {
-        public string id { get; set; }
-        public string username { get; set; }
-        public string email { get; set; }
-        public string password { get; set; }
+        public string Id { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
 
-        public string roleId { get; set; }
+        public string RoleId { get; set; }
 
-        public string firstName { get; set; }
-        public string lastName { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
 
-        public string mobile { get; set; }
-        public string address { get; set; }
+        public string Mobile { get; set; }
+        public string Address { get; set; }
+
+        public double? Latitude { get; set; }
+        public double? Longitude { get; set; }
     }
 }

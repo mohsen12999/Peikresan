@@ -4,8 +4,8 @@ namespace Peikresan.Data.ViewModels
 {
     public class SliderModel
     {
-        public string id { get; set; }
-        public IFormFile file { get; set; }
-        public string title { get; set; }
+        public string Id { get; set; }
+        public IFormFile File { get; set; }
+        public string Title { get; set; }
     }
 }

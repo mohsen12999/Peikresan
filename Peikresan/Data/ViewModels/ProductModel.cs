@@ -4,17 +4,17 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Peikresan.Data.ViewModels
 {
     public class ProductModel{
-        public string id { get; set; }
-        public IFormFile file { get; set; }
-        public string title { get; set; }
-        public string description { get; set; }
+        public string Id { get; set; }
+        public IFormFile File { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
         
         [Column(TypeName = "decimal(10,3)")]
-        public decimal price { get; set; }
-        public string order { get; set; }
-        public int max { get; set; }
-        public bool soldByWeight { get; set; } = false;
-        public string minWeight { get; set; } = "";
-        public string category { get; set; }
+        public decimal Price { get; set; }
+        public string Order { get; set; }
+        public int Max { get; set; }
+        public bool SoldByWeight { get; set; } = false;
+        public string MinWeight { get; set; } = "";
+        public string Category { get; set; }
     }
 }

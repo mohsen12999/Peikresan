@@ -7,7 +7,7 @@ namespace Peikresan.Data.ViewModels
 {
     public class AnswerModel
     {
-        public int orderId { get; set; }
-        public bool answer { get; set; }
+        public int OrderId { get; set; }
+        public bool Answer { get; set; }
     }
 }
