@@ -43,7 +43,7 @@ const DeliverMap: React.FC<IDeliverMapProps> = ({
     <MyLayout>
       <NeshanMap
         options={{
-          key: "web.KJN3LZa0jk1B2bGAInWR8snqjPfHMr1JoJTADpxc",
+          key: "web.XxEaHY5vRVBzSohpITdF9929HR8cASxnRdU4XXbF",
           maptype: "dreamy",
           poi: true,
           traffic: false,

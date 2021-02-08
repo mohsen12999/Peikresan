@@ -29,3 +29,8 @@
   background-color: lightgray !important;
   border-color: darkgray !important;
 }
+
+.ant-select-selection-search-input[disabled],
+.ant-input[disabled] {
+  color: black !important;
+}

@@ -60,6 +60,8 @@ const DeliverAddress: React.FC<IAddressProps> = ({
   const cities = [{ value: "رامسر" }];
 
   const saveAddress = () => {
+    console.log("DeliverAddress.tsx saveAddress");
+
     AddAddress({ ...newAddress });
     setNewAddress({ ...DefaultAddress });
     setShowNewAddress(false);
@@ -162,7 +164,7 @@ const DeliverAddress: React.FC<IAddressProps> = ({
               autoSize={{ minRows: 2, maxRows: 6 }}
             />
 
-            <Row style={{ direction: "rtl" }}>
+            {/* <Row style={{ direction: "rtl" }}>
               <Col span={12}>
                 <Input
                   placeholder="طبقه"
@@ -200,7 +202,7 @@ const DeliverAddress: React.FC<IAddressProps> = ({
                   }
                 />
               </Col>
-            </Row>
+            </Row> */}
             <Row className="btn-row">
               <Button
                 type="primary"

@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
-import { Row, Col, Button, Divider, message } from "antd";
+import { Row, Col, Button, Divider } from "antd";
 
 import MyLayout from "../../components/MyLayout";
 import {
@@ -45,7 +44,6 @@ const Factor: React.FC<IFactorProps> = ({
   SendCart,
 }) => {
   // const [url, setUrl] = React.useState("https://mabna.shaparak.ir:8080/Pay");
-  let history = useHistory();
   const shopCartTotalPrice = CalculateShopCartTotalPrice(shopCart, products);
   const deliverPrice = sellOptions
     ? CalculateDeliverPrice(shopCartTotalPrice, deliverAtDoor, sellOptions)
