@@ -46,10 +46,13 @@ export interface IUser {
   firstName: string;
   lastName: string;
   mobile: string;
-  Address: string;
+  address: string;
 
   role: string;
   roleId: string;
+
+  latitude: number;
+  longitude: number;
 }
 
 export interface IRole {
@@ -91,21 +94,21 @@ export interface ISellerProduct {
   productTitle: string;
 
   count: number;
+  price: number;
 }
 
 export interface IAddress {
   id?: number;
   state: string;
   city: string;
-  districtId?: number;
-  district?: string;
   mobile: string;
   name: string;
+  formattedAddress: string;
   description: string;
-  level: string;
-  unit: string;
-  number: string;
-  postalCode: string;
+  // level: string;
+  // unit: string;
+  // number: string;
+  // postalCode: string;
 }
 
 export interface IDeliverTime {
