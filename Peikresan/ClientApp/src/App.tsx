@@ -21,6 +21,9 @@ import DeliverTime from "./pages/cart/DeliverTime";
 import Factor from "./pages/cart/Factor";
 import Comeback from "./pages/cart/Comeback";
 import DeliverMap from "./pages/cart/DeliverMap";
+import AddressesList from "./pages/cart/AddressesList";
+import NewAddress from "./pages/cart/NewAddress";
+import CompleteAddress from "./pages/cart/CompleteAddress";
 
 import Login from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -65,6 +68,9 @@ export default () => (
       <Route path={CartPath.DeliverTime} component={DeliverTime} />
       <Route path={CartPath.Factor} component={Factor} />
       <Route path={CartPath.Comeback + ":id/"} component={Comeback} />
+      <Route path={CartPath.AddressesList} component={AddressesList} />
+      <Route path={CartPath.NewAddress} component={NewAddress} />
+      <Route path={CartPath.CompleteAddress} component={CompleteAddress} />
 
       <Route exact path={AdminPath.Login} component={Login} />
       <Route path={AdminPath.Dashboard} component={AdminDashboard} />
