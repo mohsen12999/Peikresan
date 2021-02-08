@@ -87,18 +87,16 @@ export const CalculateTotalPrice = (
   );
 };
 
-export const ValidateAddress = ({
+export const ValidateAddressData = ({
   state,
   city,
   mobile,
   name,
-  description,
 }: IAddress): boolean =>
-  name.length > 2 &&
-  state.length > 2 &&
-  city.length > 2 &&
-  description.length > 5 &&
-  mobile.length > 5;
+  name.length > 2 && state.length > 2 && city.length > 2 && mobile.length > 5;
+
+export const ValidateAddress = (address?: IAddress) =>
+  address ? ValidateAddressData(address) : false;
 
 export const OrderStatusDescription = (orderStatus: number) => {
   switch (orderStatus) {
