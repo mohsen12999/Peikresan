@@ -152,7 +152,7 @@ const Addresses: React.FC<IAddressesProps> = ({
               autoSize={{ minRows: 2, maxRows: 6 }}
             />
 
-            <Row style={{ direction: "rtl" }}>
+            {/* <Row style={{ direction: "rtl" }}>
               <Col span={12}>
                 <Input
                   placeholder="طبقه"
@@ -190,7 +190,7 @@ const Addresses: React.FC<IAddressesProps> = ({
                   }
                 />
               </Col>
-            </Row>
+            </Row> */}
             <Row className="btn-row">
               <Button
                 type="primary"
