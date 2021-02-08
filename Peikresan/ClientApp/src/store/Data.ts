@@ -11,7 +11,7 @@ import {
   ISellOptions,
   IDeliverTime,
 } from "../shares/Interfaces";
-import { DATA_URL } from "../shares/URLs";
+import { DATA_SHOP_URL } from "../shares/URLs";
 import {
   GetCacheData,
   CacheData,
@@ -84,24 +84,53 @@ export type KnownAction = ILoadData | IChangeAddress;
 
 export const actionCreators = {
   loadData: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    if (getState().data?.status === Status.LOADING) {
+      dispatch({
+        type: DataActions.DATA_FAILURE,
+        payload: { message: "we are in loading!" },
+      });
+      return false;
+    }
+
     dispatch({ type: DataActions.DATA_REQUEST } as ILoadData);
 
-    try {
-      axios.get(DATA_URL).then((response) => {
-        if (response && response.data && response.data.success) {
-          dispatch({
-            type: DataActions.DATA_SUCCESS,
-            payload: { message: "axios success get data", data: response.data },
-          });
-          return true;
-        } else {
-          dispatch({
-            type: DataActions.DATA_FAILURE,
-            payload: { message: "axios not success", error: response },
-          });
-          return false;
-        }
+    const latitude = getState().shopCart?.latitude;
+    const longitude = getState().shopCart?.longitude;
+
+    if (latitude === undefined || longitude === undefined) {
+      dispatch({
+        type: DataActions.DATA_FAILURE,
+        payload: {
+          message: "latitude or longitude is undefined",
+          error: { latitude, longitude },
+        },
       });
+      return false;
+    }
+
+    try {
+      axios
+        .get(
+          DATA_SHOP_URL + "?latitude=" + latitude + "&longitude=" + longitude
+        )
+        .then((response) => {
+          if (response && response.data && response.data.success) {
+            dispatch({
+              type: DataActions.DATA_SUCCESS,
+              payload: {
+                message: "axios success get data",
+                data: response.data,
+              },
+            });
+            return true;
+          } else {
+            dispatch({
+              type: DataActions.DATA_FAILURE,
+              payload: { message: "axios not success", error: response },
+            });
+            return false;
+          }
+        });
     } catch (error) {
       dispatch({
         type: DataActions.DATA_FAILURE,
