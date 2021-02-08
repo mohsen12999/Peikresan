@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Table, Tag, Space, Button, Menu, Dropdown, Modal } from "antd";
+import { Table, Tag, Space, Button, Modal } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
