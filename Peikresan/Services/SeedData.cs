@@ -199,16 +199,16 @@ namespace Peikresan.Services
             var random = new Random();
 
             modelBuilder.Entity<Product>().HasData(
-                new Product { Id = 1, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product1.jpg", CategoryId = 1, Max = 10, Price = random.Next(100) * 1000 },
-                new Product { Id = 2, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product2.jpg", CategoryId = 1, Max = 10, Price = random.Next(100) * 1000 },
-                new Product { Id = 3, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product3.jpg", CategoryId = 1, Max = 10, Price = random.Next(100) * 1000 },
-                new Product { Id = 4, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product4.jpg", CategoryId = 1, Max = 10, Price = random.Next(100) * 1000 },
-                new Product { Id = 5, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product5.jpg", CategoryId = 1, Max = 10, Price = random.Next(100) * 1000 },
-                new Product { Id = 6, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product6.jpg", CategoryId = 1, Max = 10, Price = random.Next(100) * 1000 },
-                new Product { Id = 7, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product7.jpg", CategoryId = 1, Max = 10, Price = random.Next(100) * 1000 },
-                new Product { Id = 8, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product8.jpg", CategoryId = 1, Max = 10, Price = random.Next(100) * 1000 },
-                new Product { Id = 9, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product9.jpg", CategoryId = 1, Max = 10, Price = random.Next(100) * 1000 },
-                new Product { Id = 10, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product10.jpg", CategoryId = 1, Max = 10, SoldByWeight = true, MinWeight = 100, Price = random.Next(100) * 1000 }
+                new Product { Id = 1, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product1.jpg", CategoryId = 1, Max = 10 },
+                new Product { Id = 2, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product2.jpg", CategoryId = 1, Max = 10 },
+                new Product { Id = 3, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product3.jpg", CategoryId = 1, Max = 10 },
+                new Product { Id = 4, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product4.jpg", CategoryId = 1, Max = 10 },
+                new Product { Id = 5, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product5.jpg", CategoryId = 1, Max = 10 },
+                new Product { Id = 6, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product6.jpg", CategoryId = 1, Max = 10 },
+                new Product { Id = 7, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product7.jpg", CategoryId = 1, Max = 10 },
+                new Product { Id = 8, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product8.jpg", CategoryId = 1, Max = 10 },
+                new Product { Id = 9, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product9.jpg", CategoryId = 1, Max = 10 },
+                new Product { Id = 10, Title = "نام محصول", Description = "توضیح", Img = "/img/product/product10.jpg", CategoryId = 1, Max = 10, SoldByWeight = true, MinWeight = 100 }
             );
         }
 
