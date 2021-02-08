@@ -98,7 +98,10 @@ namespace Peikresan.Controllers
         {
             // return new JsonResult(new {latitude, longitude});
             // TODO: find 3 nearer seller
-            var sellers = await _context.Users.Include(u => u.Role).Where(u => u.Role.Name == "Seller").ToListAsync();
+            var sellers = await _context.Users
+                .Include(u => u.Role).Where(u => u.Role.Name == "Seller")
+                .AsNoTracking()
+                .ToListAsync();
             if (sellers.Count > 3)
             {
                 var buyerLocation = GeographyPoint.Create(latitude, longitude);
@@ -111,6 +114,7 @@ namespace Peikresan.Controllers
                 // .Select(p => new { p.Id, p.Title, p.Description, p.Price, p.Img, p.Max, p.Order, p.SoldByWeight, p.MinWeight, p.CategoryId })
                 .Include(p => p.Category)
                 .Select(p => new ClientProduct() { Id = p.Id, Title = p.Title, Description = p.Description, Img = p.Img, Max = p.Max, Order = p.Order, SoldByWeight = p.SoldByWeight, MinWeight = p.MinWeight, CategoryId = p.CategoryId, Category = p.Category.Title })
+                .AsNoTracking()
                 .ToListAsync();
 
             // TODO: find seller products
@@ -122,10 +126,11 @@ namespace Peikresan.Controllers
 
             var categories = await _context.Categories
                 .Select(c => new { c.Id, c.Title, c.Description, c.Img, c.ParentId, c.HaveChild, c.Order })
+                .AsNoTracking()
                 .ToListAsync();
 
-            var sliders = await _context.Sliders.ToListAsync();
-            var banners = await _context.Banners.ToListAsync();
+            var sliders = await _context.Sliders.AsNoTracking().ToListAsync();
+            var banners = await _context.Banners.AsNoTracking().ToListAsync();
 
 
             int[] suggestions = products.OrderBy(el => el.Id).Select(o => o.Id).Take(10).ToArray();
