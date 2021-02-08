@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Table, Tag, Space, Popconfirm, message, Tooltip, Button } from "antd";
+import { Table, Tag, Space, Popconfirm, Tooltip, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
@@ -16,14 +16,12 @@ interface ICategoriesProps {
   status: Status;
 
   RemoveElement: Function;
-  ResetStatus: Function;
 }
 
 const Categories: React.FC<ICategoriesProps> = ({
   categories,
   status,
   RemoveElement,
-  ResetStatus,
 }) => {
   //React.useEffect(() => {
   // if (status === Status.SUCCEEDED) {
@@ -118,7 +116,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = {
   RemoveElement: actionCreators.removeElement,
-  ResetStatus: actionCreators.resetStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Categories);

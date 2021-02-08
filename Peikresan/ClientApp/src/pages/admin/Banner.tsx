@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useParams, useHistory } from "react-router-dom";
-import { Input, Space, Button, message } from "antd";
+import { useParams } from "react-router-dom";
+import { Input, Space, Button } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
@@ -16,7 +16,6 @@ interface IBannerProps {
   status: Status;
 
   AddOrChangeElement: Function;
-  ResetStatus: Function;
 }
 interface IParamTypes {
   id: string;
@@ -26,26 +25,13 @@ const Banner: React.FC<IBannerProps> = ({
   banners,
   status,
   AddOrChangeElement,
-  ResetStatus,
 }) => {
   const { id } = useParams<IParamTypes>();
-  const history = useHistory();
 
   const [file, setFile] = React.useState<File>();
   const [title, setTitle] = React.useState<string>();
   const [url, setUrl] = React.useState<string>();
   const [showImage, setShowImage] = React.useState<string>();
-
-  //React.useEffect(() => {
-  if (status === Status.SUCCEEDED) {
-    message.success("با موفقیت ذخیره شد.");
-    history.push(AdminPath.Categories);
-    return ResetStatus();
-  } else if (status === Status.FAILED) {
-    message.error("اشکال در ذخیره");
-    return ResetStatus();
-  }
-  //}, [status]);
 
   const validateInputs = () => title && title.length > 1 && url;
 
@@ -70,7 +56,8 @@ const Banner: React.FC<IBannerProps> = ({
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_BANNER_URL,
       AdminDataModel.Banners,
-      formData
+      formData,
+      AdminPath.Categories
     );
   };
 
@@ -150,7 +137,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = {
   AddOrChangeElement: actionCreators.addOrChangeElement,
-  ResetStatus: actionCreators.resetStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Banner);

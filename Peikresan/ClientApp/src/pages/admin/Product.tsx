@@ -1,23 +1,14 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useParams, useHistory, Link } from "react-router-dom";
-import {
-  Input,
-  Space,
-  Button,
-  InputNumber,
-  // AutoComplete,
-  Checkbox,
-  Cascader,
-  message,
-} from "antd";
+import { useParams } from "react-router-dom";
+import { Input, Space, Button, InputNumber, Checkbox, Cascader } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
 import { ICategory, IProduct } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
-import { AdminPath, AdminDataUrl, LOGIN_URL } from "../../shares/URLs";
+import { AdminPath, AdminDataUrl } from "../../shares/URLs";
 import { AdminDataModel, Status } from "../../shares/Constants";
 import { MakeCategoryTree } from "../../shares/Functions";
 
@@ -31,7 +22,6 @@ interface IProductProps {
   status: Status;
 
   AddOrChangeElement: Function;
-  ResetStatus: Function;
 }
 
 interface IParamTypes {
@@ -44,15 +34,12 @@ const Product: React.FC<IProductProps> = ({
   status,
 
   AddOrChangeElement,
-  ResetStatus,
 }) => {
   const { id } = useParams<IParamTypes>();
-  const history = useHistory();
 
   const [file, setFile] = React.useState<File>();
   const [title, setTitle] = React.useState<string>();
   const [barcode, setBarcode] = React.useState<number>();
-  const [price, setPrice] = React.useState<number>();
   const [max, setMax] = React.useState<number>();
   const [description, setDescription] = React.useState<string>();
   const [order, setOrder] = React.useState<number>();
@@ -61,18 +48,7 @@ const Product: React.FC<IProductProps> = ({
   const [minWeight, setMinWeight] = React.useState<number>();
   const [showImage, setShowImage] = React.useState<string>();
 
-  //React.useEffect(() => {
-  if (status === Status.SUCCEEDED) {
-    history.push(AdminPath.Products);
-    message.success("با موفقیت ذخیره شد.");
-    return ResetStatus();
-  } else if (status === Status.FAILED) {
-    message.error("اشکال در ذخیره");
-    return ResetStatus();
-  }
-  //}, [status]);
-
-  const validateInputs = () => title && title.length > 1 && price;
+  const validateInputs = () => title && title.length > 1;
 
   if (id !== undefined) {
     const product = products.find((p) => p.id === Number(id));
@@ -80,7 +56,6 @@ const Product: React.FC<IProductProps> = ({
     if (product !== undefined && title === undefined) {
       setTitle(product.title);
       setBarcode(product.barcode);
-      setPrice(product.price);
       setMax(product.max);
       setDescription(product.description);
       setOrder(product.order);
@@ -98,7 +73,6 @@ const Product: React.FC<IProductProps> = ({
     formData.append("file", file ? file : "");
     formData.append("title", title ? title : "");
     formData.append("barcode", String(barcode));
-    formData.append("price", String(price));
     formData.append("max", String(max));
     formData.append("description", description ? description : "");
     formData.append("order", String(order));
@@ -109,7 +83,8 @@ const Product: React.FC<IProductProps> = ({
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_PRODUCT_URL,
       AdminDataModel.Products,
-      formData
+      formData,
+      AdminPath.Products
     );
   };
 
@@ -157,14 +132,6 @@ const Product: React.FC<IProductProps> = ({
             value={title}
             onChange={(e) => {
               setTitle(e.target.value);
-            }}
-          />
-          <InputNumber
-            className="input-style"
-            placeholder="قیمت"
-            value={price}
-            onChange={(value) => {
-              setPrice(Number(value));
             }}
           />
           <InputNumber
@@ -261,7 +228,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = {
   AddOrChangeElement: actionCreators.addOrChangeElement,
-  ResetStatus: actionCreators.resetStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Product);

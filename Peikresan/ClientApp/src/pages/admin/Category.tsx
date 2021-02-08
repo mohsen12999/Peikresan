@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useParams, useHistory } from "react-router-dom";
-import { Input, Space, Button, AutoComplete, message } from "antd";
+import { useParams } from "react-router-dom";
+import { Input, Space, Button, AutoComplete } from "antd";
 import { UploadOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
@@ -78,7 +78,8 @@ const Category: React.FC<ICategoryProps> = ({
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_CATEGORY_URL,
       AdminDataModel.Categories,
-      formData
+      formData,
+      AdminPath.Categories
     );
   };
 

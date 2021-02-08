@@ -1,13 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useParams, useHistory, Link } from "react-router-dom";
-import { Space, Button, InputNumber, message, AutoComplete } from "antd";
+import { useParams } from "react-router-dom";
+import { Space, Button, InputNumber, AutoComplete } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
 import { IProduct, ISellerProduct } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
-import { AdminPath, AdminDataUrl, LOGIN_URL } from "../../shares/URLs";
+import { AdminPath, AdminDataUrl } from "../../shares/URLs";
 import { AdminDataModel, Status } from "../../shares/Constants";
 
 import "./Admin.css";
@@ -18,7 +18,6 @@ interface ISellerProductProps {
   status: Status;
 
   AddOrChangeElement: Function;
-  ResetStatus: Function;
 }
 
 interface IParamTypes {
@@ -30,24 +29,12 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
   products,
   status,
   AddOrChangeElement,
-  ResetStatus,
 }) => {
   const { id } = useParams<IParamTypes>();
-  const history = useHistory();
 
   const [product, setProduct] = React.useState<string>();
   const [count, setCount] = React.useState<number>();
-
-  //React.useEffect(() => {
-  if (status === Status.SUCCEEDED) {
-    history.push(AdminPath.SellerProducts);
-    message.success("با موفقیت ذخیره شد.");
-    return ResetStatus();
-  } else if (status === Status.FAILED) {
-    message.error("اشکال در ذخیره");
-    return ResetStatus();
-  }
-  //}, [status]);
+  const [price, setPrice] = React.useState<number>();
 
   const validateInputs = () => product && product.length > 1 && count;
 
@@ -56,6 +43,7 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
     if (sellerProduct !== undefined && product === undefined) {
       setProduct(sellerProduct.productTitle);
       setCount(sellerProduct.count);
+      setPrice(sellerProduct.price);
     }
   }
 
@@ -66,11 +54,13 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
     formData.append("id", id);
     formData.append("product", product ? product : "");
     formData.append("count", String(count));
+    formData.append("price", String(price));
 
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_SELLER_PRODUCT_URL,
       AdminDataModel.SellerProducts,
-      formData
+      formData,
+      AdminPath.SellerProducts
     );
   };
 
@@ -102,6 +92,15 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
             }}
           />
 
+          <InputNumber
+            className="input-style"
+            value={price}
+            placeholder="قیمت"
+            onChange={(value) => {
+              setPrice(Number(value));
+            }}
+          />
+
           <br />
 
           <Button
@@ -125,7 +124,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = {
   AddOrChangeElement: actionCreators.addOrChangeElement,
-  ResetStatus: actionCreators.resetStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SellerProduct);

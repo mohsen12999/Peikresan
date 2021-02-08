@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
-import { useParams, useHistory } from "react-router-dom";
-import { Input, Space, Button, Select, message } from "antd";
+import { useParams } from "react-router-dom";
+import { Input, Space, Button, Select, InputNumber } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
@@ -18,7 +18,6 @@ interface IUserProps {
   roles: IRole[];
 
   AddOrChangeElement: Function;
-  ResetStatus: Function;
 }
 
 interface IParamTypes {
@@ -29,12 +28,9 @@ const User: React.FC<IUserProps> = ({
   users,
   status,
   roles,
-
   AddOrChangeElement,
-  ResetStatus,
 }) => {
   const { id } = useParams<IParamTypes>();
-  const history = useHistory();
 
   const [userName, setUserName] = React.useState<string>();
   const [email, setEmail] = React.useState<string>();
@@ -45,16 +41,8 @@ const User: React.FC<IUserProps> = ({
   const [mobile, setMobile] = React.useState<string>();
   const [address, setAddress] = React.useState<string>();
 
-  //React.useEffect(() => {
-  if (status === Status.SUCCEEDED) {
-    history.push(AdminPath.Categories);
-    message.success("با موفقیت ذخیره شد.");
-    return ResetStatus();
-  } else if (status === Status.FAILED) {
-    message.error("اشکال در ذخیره");
-    return ResetStatus();
-  }
-  //}, [status]);
+  const [latitude, setLatitude] = React.useState<number>();
+  const [longitude, setLongitude] = React.useState<number>();
 
   const validateInputs = () =>
     userName &&
@@ -74,7 +62,9 @@ const User: React.FC<IUserProps> = ({
       setFirstName(user.firstName);
       setLastName(user.lastName);
       setMobile(user.mobile);
-      setAddress(user.Address);
+      setAddress(user.address);
+      setLatitude(user.latitude);
+      setLongitude(user.longitude);
     }
   }
 
@@ -91,11 +81,14 @@ const User: React.FC<IUserProps> = ({
     formData.append("lastName", lastName ? lastName : "");
     formData.append("mobile", mobile ? mobile : "");
     formData.append("address", address ? address : "");
+    formData.append("latitude", latitude ? String(latitude) : "");
+    formData.append("longitude", longitude ? String(longitude) : "");
 
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_USER_URL,
       AdminDataModel.Users,
-      formData
+      formData,
+      AdminPath.Categories
     );
   };
 
@@ -179,6 +172,23 @@ const User: React.FC<IUserProps> = ({
             ))}
           </Select> */}
 
+          <InputNumber
+            className="input-style"
+            value={latitude}
+            placeholder="طول جغرافیایی"
+            onChange={(value) => {
+              setLatitude(Number(value));
+            }}
+          />
+          <InputNumber
+            className="input-style"
+            value={longitude}
+            placeholder="عرض جغرافیایی"
+            onChange={(value) => {
+              setLongitude(Number(value));
+            }}
+          />
+
           <Select
             className="input-style"
             onChange={(value) => {
@@ -215,7 +225,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = {
   AddOrChangeElement: actionCreators.addOrChangeElement,
-  ResetStatus: actionCreators.resetStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(User);
