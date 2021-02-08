@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Peikresan.Data.Models
 {
@@ -14,5 +12,8 @@ namespace Peikresan.Data.Models
         public Product Product { get; set; }
 
         public int Count { get; set; }
+
+        [Column(TypeName = "decimal(10,3)")]
+        public decimal Price { get; set; }
     }
 }
