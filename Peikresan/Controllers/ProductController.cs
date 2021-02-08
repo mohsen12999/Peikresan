@@ -50,35 +50,34 @@ namespace Peikresan.Controllers
             }
 
             var filename = 
-                await ImageServices.SaveAndConvertImage(productModel.file, _webRootPath, WebsiteModel.Product, 500, 500);
+                await ImageServices.SaveAndConvertImage(productModel.File, _webRootPath, WebsiteModel.Product, 500, 500);
             
-            var productCategory = string.IsNullOrEmpty(productModel.category) ? null : productModel.category.Trim();
+            var productCategory = string.IsNullOrEmpty(productModel.Category) ? null : productModel.Category.Trim();
             if (productCategory != null && productCategory.IndexOf('/') > 0)
             {
                 productCategory = productCategory.Substring(0, productCategory.IndexOf('/')).Trim();
             }
 
-            var cat = productCategory == null ? null : await _context.Categories.Where(el => el.Title == productModel.category.Trim()).FirstOrDefaultAsync();
+            var cat = productCategory == null ? null : await _context.Categories.Where(el => el.Title == productModel.Category.Trim()).FirstOrDefaultAsync();
             // var cattId = cat != null ? cat.Id : 0;
 
-            if (productModel.id == "" || productModel.id.ToLower() == "undefined")
+            if (productModel.Id == "" || productModel.Id.ToLower() == "undefined")
             {
 
                 var product = new Product
                 {
-                    Title = productModel.title,
-                    Description = string.IsNullOrEmpty(productModel.description) || productModel.description.ToLower() == "undefined" ? "" : productModel.description,
-                    Price = productModel.price,
-                    Max = productModel.max,
-                    SoldByWeight = productModel.soldByWeight,
+                    Title = productModel.Title,
+                    Description = string.IsNullOrEmpty(productModel.Description) || productModel.Description.ToLower() == "undefined" ? "" : productModel.Description,
+                    Max = productModel.Max,
+                    SoldByWeight = productModel.SoldByWeight,
                 };
 
-                if (int.TryParse(productModel.order, out int order))
+                if (int.TryParse(productModel.Order, out int order))
                 {
                     product.Order = order;
                 }
 
-                if (int.TryParse(productModel.minWeight, out int minWeight))
+                if (int.TryParse(productModel.MinWeight, out int minWeight))
                 {
                     product.MinWeight = minWeight;
                 }
@@ -95,7 +94,7 @@ namespace Peikresan.Controllers
                 {
                     element= product,
                     cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
-                    product = new { product.Id, product.Title, product.Description, product.Price, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
+                    product = new { product.Id, product.Title, product.Description, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
                     eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog()
                     {
@@ -109,23 +108,22 @@ namespace Peikresan.Controllers
             }
             else
             {
-                var product = await _context.Products.FindAsync(int.Parse(productModel.id));
+                var product = await _context.Products.FindAsync(int.Parse(productModel.Id));
                 if (product == null)
                 {
-                    return NotFound("Product not Found: " + productModel.id);
+                    return NotFound("Product not Found: " + productModel.Id);
                 }
 
-                product.Title = productModel.title;
-                product.Description = string.IsNullOrEmpty(productModel.description) || productModel.description.ToLower() == "undefined" ? "" : productModel.description;
-                product.Price = productModel.price;
-                if (int.TryParse(productModel.order, out int order))
+                product.Title = productModel.Title;
+                product.Description = string.IsNullOrEmpty(productModel.Description) || productModel.Description.ToLower() == "undefined" ? "" : productModel.Description;
+                if (int.TryParse(productModel.Order, out var order))
                 {
                     product.Order = order;
                 }
-                product.Max = productModel.max;
-                product.SoldByWeight = productModel.soldByWeight;
+                product.Max = productModel.Max;
+                product.SoldByWeight = productModel.SoldByWeight;
 
-                if (int.TryParse(productModel.minWeight, out int minWeight))
+                if (int.TryParse(productModel.MinWeight, out int minWeight))
                 {
                     product.MinWeight = minWeight;
                 }
@@ -144,7 +142,7 @@ namespace Peikresan.Controllers
                 return Ok(new
                 {
                     cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
-                    product = new { product.Id, product.Title, product.Description, product.Price, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
+                    product = new { product.Id, product.Title, product.Description, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
                     eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
@@ -168,17 +166,17 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove Product");
             }
 
-            var id = Convert.ToInt32(justId.id);
+            var id = Convert.ToInt32(justId.Id);
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
-                return NotFound("Product not Found: " + justId.id);
+                return NotFound("Product not Found: " + justId.Id);
             }
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
             var products = await _context.Products
-                .Select(p => new { p.Id, p.Title, p.Description, p.Price, p.Img, p.Max, p.Order, p.SoldByWeight, p.MinWeight, p.CategoryId })
+                .Select(p => new { p.Id, p.Title, p.Description, p.Img, p.Max, p.Order, p.SoldByWeight, p.MinWeight, p.CategoryId })
                 .ToListAsync();
 
             return Ok(new

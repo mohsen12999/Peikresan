@@ -42,12 +42,12 @@ namespace Peikresan.Controllers
             }
 
             var filename =
-                await ImageServices.SaveAndConvertImage(bannerModel.file, _webRootPath, WebsiteModel.Banner, 500, 425);
+                await ImageServices.SaveAndConvertImage(bannerModel.File, _webRootPath, WebsiteModel.Banner, 500, 425);
             
 
-            if (bannerModel.id == "" || bannerModel.id.ToLower() == "undefined")
+            if (bannerModel.Id == "" || bannerModel.Id.ToLower() == "undefined")
             {
-                var banner = new Banner { Title = bannerModel.title, Url = bannerModel.url.Trim() };
+                var banner = new Banner { Title = bannerModel.Title, Url = bannerModel.Url.Trim() };
                 if (filename.Length > 0)
                 {
                     banner.Img = filename;
@@ -73,14 +73,14 @@ namespace Peikresan.Controllers
             }
             else
             {
-                var banner = await _context.Banners.FindAsync(int.Parse(bannerModel.id));
+                var banner = await _context.Banners.FindAsync(int.Parse(bannerModel.Id));
                 if (banner == null)
                 {
-                    return NotFound("banner not Found: " + bannerModel.id);
+                    return NotFound("banner not Found: " + bannerModel.Id);
                 }
 
-                banner.Title = bannerModel.title;
-                banner.Url = bannerModel.url.Trim();
+                banner.Title = bannerModel.Title;
+                banner.Url = bannerModel.Url.Trim();
 
                 if (filename.Length > 0)
                 {
@@ -119,7 +119,7 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove Banner");
             }
 
-            var id = Convert.ToInt32(justId.id);
+            var id = Convert.ToInt32(justId.Id);
             var banner = await _context.Banners.FindAsync(id);
             if (banner == null)
             {

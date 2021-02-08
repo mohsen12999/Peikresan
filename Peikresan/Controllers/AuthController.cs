@@ -141,7 +141,7 @@ namespace Peikresan.Controllers
         {
             var thisUser = await _context.Users
                 .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.UserName == loginModel.username || u.Email == loginModel.username); //await _context.Users.FirstOrDefaultAsync(x => x.Username.ToLower().Equals(username.ToLower()));
+                .FirstOrDefaultAsync(u => u.UserName == loginModel.Username || u.Email == loginModel.Username); //await _context.Users.FirstOrDefaultAsync(x => x.Username.ToLower().Equals(username.ToLower()));
 
             if (thisUser == null)
             {
@@ -150,7 +150,7 @@ namespace Peikresan.Controllers
 
             var passwordHasher = new PasswordHasher<User>();
 
-            if (passwordHasher.VerifyHashedPassword(thisUser, thisUser.PasswordHash, loginModel.password) !=
+            if (passwordHasher.VerifyHashedPassword(thisUser, thisUser.PasswordHash, loginModel.Password) !=
                 PasswordVerificationResult.Success)
             {
                 return Unauthorized("Wrong Username or Password");
@@ -176,29 +176,29 @@ namespace Peikresan.Controllers
         {
             try
             {
-                var user = new User() { UserName = registerModel.username, Email = registerModel.email };
-                var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.roleId.Trim()).FirstAsync();
+                var user = new User() { UserName = registerModel.Username, Email = registerModel.Email };
+                var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.RoleId.Trim()).FirstAsync();
                 if (role != null) user.Role = role;
 
-                if (string.IsNullOrEmpty(registerModel.firstName) == false && registerModel.firstName.ToLower() != "undefined")
+                if (string.IsNullOrEmpty(registerModel.FirstName) == false && registerModel.FirstName.ToLower() != "undefined")
                 {
-                    user.FirstName = registerModel.firstName.Trim();
+                    user.FirstName = registerModel.FirstName.Trim();
                 }
-                if (string.IsNullOrEmpty(registerModel.lastName) == false && registerModel.lastName.ToLower() != "undefined")
+                if (string.IsNullOrEmpty(registerModel.LastName) == false && registerModel.LastName.ToLower() != "undefined")
                 {
-                    user.LastName = registerModel.lastName.Trim();
+                    user.LastName = registerModel.LastName.Trim();
                 }
-                if (string.IsNullOrEmpty(registerModel.mobile) == false && registerModel.mobile.ToLower() != "undefined")
+                if (string.IsNullOrEmpty(registerModel.Mobile) == false && registerModel.Mobile.ToLower() != "undefined")
                 {
-                    user.Mobile = registerModel.mobile.Trim();
+                    user.Mobile = registerModel.Mobile.Trim();
                 }
-                if (string.IsNullOrEmpty(registerModel.address) == false && registerModel.address.ToLower() != "undefined")
+                if (string.IsNullOrEmpty(registerModel.Address) == false && registerModel.Address.ToLower() != "undefined")
                 {
-                    user.Address = registerModel.address.Trim();
+                    user.Address = registerModel.Address.Trim();
                 }
 
                 var passwordHasher = new PasswordHasher<User>();
-                var passwordHash = passwordHasher.HashPassword(user, registerModel.password);
+                var passwordHash = passwordHasher.HashPassword(user, registerModel.Password);
                 user.PasswordHash = passwordHash;
 
                 await _context.Users.AddAsync(user);

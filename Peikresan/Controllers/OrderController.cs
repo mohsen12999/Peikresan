@@ -103,7 +103,7 @@ namespace Peikresan.Controllers
             //    return Unauthorized("Only Seller Can Remove Category");
             //}
             var order = await _context.Orders
-                .Where(ord => ord.Id == answerModel.orderId).Include(o => o.OrderItems)
+                .Where(ord => ord.Id == answerModel.OrderId).Include(o => o.OrderItems)
                 .FirstOrDefaultAsync();
 
             if (order == null)
@@ -116,7 +116,7 @@ namespace Peikresan.Controllers
                 return BadRequest("Can not chooser " + order.OrderStatus + " - " + order.OrderStatusDescription);
             }
 
-            if (answerModel.answer)
+            if (answerModel.Answer)
             {
                 order.OrderStatus = OrderStatus.SellerAccepted;
                 order.SellerAcceptedDateTime = DateTime.Now;
@@ -164,7 +164,7 @@ namespace Peikresan.Controllers
             }
 
             var deliver = await _context.Users
-                .Include(u => u.Role).FirstAsync(us => us.Id == Guid.Parse(chooseUser.userId));
+                .Include(u => u.Role).FirstAsync(us => us.Id == Guid.Parse(chooseUser.UserId));
 
             if (deliver == null)
             {
@@ -176,7 +176,7 @@ namespace Peikresan.Controllers
             //    return BadRequest("user is not seller");
             //}
             var order = await _context.Orders
-                .Where(ord => ord.Id == chooseUser.orderId).Include(o => o.OrderItems)
+                .Where(ord => ord.Id == chooseUser.OrderId).Include(o => o.OrderItems)
                 .FirstOrDefaultAsync();
 
             if (order == null)
@@ -227,7 +227,7 @@ namespace Peikresan.Controllers
             //    return Unauthorized("Only Deliver Can Remove Category");
             //}
             var order = await _context.Orders
-                .Where(ord => ord.Id == answerModel.orderId).Include(o => o.OrderItems)
+                .Where(ord => ord.Id == answerModel.OrderId).Include(o => o.OrderItems)
                 .FirstOrDefaultAsync();
 
             if (order == null)
@@ -240,7 +240,7 @@ namespace Peikresan.Controllers
                 return BadRequest("Can not chooser " + order.OrderStatus + " - " + order.OrderStatusDescription);
             }
 
-            if (answerModel.answer)
+            if (answerModel.Answer)
             {
                 order.OrderStatus = OrderStatus.DeliverAccepted;
                 order.DeliverAcceptedDateTime = DateTime.Now;
@@ -282,7 +282,7 @@ namespace Peikresan.Controllers
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
-            var orderId = Convert.ToInt32(justId.id);
+            var orderId = Convert.ToInt32(justId.Id);
             var order = await _context.Orders
                 .Where(ord => ord.Id == orderId)
                 .Include(o => o.OrderItems)
@@ -333,7 +333,7 @@ namespace Peikresan.Controllers
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
-            var orderId = Convert.ToInt32(justId.id);
+            var orderId = Convert.ToInt32(justId.Id);
             var order = await _context.Orders
                 .Where(ord => ord.Id == orderId)
                 .Include(o => o.OrderItems)

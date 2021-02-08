@@ -70,7 +70,7 @@ namespace Peikresan.Controllers
         [Authorize]
         public IActionResult Post()
         {
-            return Ok(new { success = true, msg = "access granted", name = User.Identity.Name });
+            return Ok(new { success = true, msg = "access granted", name = User.Identity?.Name });
             // var products = await _context.Products.ToListAsync();
             // var categories = await _context.Categories.ToListAsync();
             // var sliders = await _context.Sliders.Select(s => s.Img).ToListAsync();
@@ -108,7 +108,7 @@ namespace Peikresan.Controllers
             var imgError = "";
             try
             {
-                using (var fileStream = categoryModel.file.OpenReadStream())
+                using (var fileStream = categoryModel.File.OpenReadStream())
                 {
                     using (Image<Rgba32> image = Image.Load<Rgba32>(fileStream))
                     {
@@ -129,14 +129,14 @@ namespace Peikresan.Controllers
                 filename = "";
             }
 
-            var parent = await _context.Categories.Where(el => el.Title == categoryModel.category.Trim()).FirstOrDefaultAsync();
+            var parent = await _context.Categories.Where(el => el.Title == categoryModel.Category.Trim()).FirstOrDefaultAsync();
 
-            if (categoryModel.id == "" || categoryModel.id.ToLower() == "undefined")
+            if (categoryModel.Id == "" || categoryModel.Id.ToLower() == "undefined")
             {
                 var cat = new Category
                 {
-                    Title = categoryModel.title,
-                    Description = string.IsNullOrEmpty(categoryModel.description) || categoryModel.description.ToLower() == "undefined" ? "" : categoryModel.description
+                    Title = categoryModel.Title,
+                    Description = string.IsNullOrEmpty(categoryModel.Description) || categoryModel.Description.ToLower() == "undefined" ? "" : categoryModel.Description
                 };
                 if (filename.Length > 0)
                 {
@@ -165,13 +165,13 @@ namespace Peikresan.Controllers
             }
             else
             {
-                var cat = await _context.Categories.FindAsync(int.Parse(categoryModel.id));
+                var cat = await _context.Categories.FindAsync(int.Parse(categoryModel.Id));
                 if (cat == null)
                 {
-                    return NotFound("Category not Found: " + categoryModel.id);
+                    return NotFound("Category not Found: " + categoryModel.Id);
                 }
-                cat.Title = categoryModel.title;
-                cat.Description = string.IsNullOrEmpty(categoryModel.description) || categoryModel.description.ToLower() == "undefined" ? "" : categoryModel.description;
+                cat.Title = categoryModel.Title;
+                cat.Description = string.IsNullOrEmpty(categoryModel.Description) || categoryModel.Description.ToLower() == "undefined" ? "" : categoryModel.Description;
                 if (filename.Length > 0)
                 {
                     cat.Img = filename;
@@ -212,7 +212,7 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove Category");
             }
 
-            var id = Convert.ToInt32(justId.id);
+            var id = Convert.ToInt32(justId.Id);
             var cat = await _context.Categories.FindAsync(id);
             if (cat == null)
             {
@@ -267,7 +267,7 @@ namespace Peikresan.Controllers
             string filename;
             try
             {
-                using (var fileStream = productModel.file.OpenReadStream())
+                using (var fileStream = productModel.File.OpenReadStream())
                 {
                     using (Image<Rgba32> image = Image.Load<Rgba32>(fileStream))
                     {
@@ -285,33 +285,33 @@ namespace Peikresan.Controllers
             {
                 filename = "";
             }
-            var productCategory = string.IsNullOrEmpty(productModel.category) ? null : productModel.category.Trim();
+            var productCategory = string.IsNullOrEmpty(productModel.Category) ? null : productModel.Category.Trim();
             if (productCategory != null && productCategory.IndexOf('/') > 0)
             {
                 productCategory = productCategory.Substring(0, productCategory.IndexOf('/')).Trim();
             }
 
-            var cat = productCategory == null ? null : await _context.Categories.Where(el => el.Title == productModel.category.Trim()).FirstOrDefaultAsync();
+            var cat = productCategory == null ? null : await _context.Categories.Where(el => el.Title == productModel.Category.Trim()).FirstOrDefaultAsync();
             // var cattId = cat != null ? cat.Id : 0;
 
-            if (productModel.id == "" || productModel.id.ToLower() == "undefined")
+            if (productModel.Id == "" || productModel.Id.ToLower() == "undefined")
             {
 
                 var product = new Product
                 {
-                    Title = productModel.title,
-                    Description = string.IsNullOrEmpty(productModel.description) || productModel.description.ToLower() == "undefined" ? "" : productModel.description,
-                    Price = productModel.price,
-                    Max = productModel.max,
-                    SoldByWeight = productModel.soldByWeight,
+                    Title = productModel.Title,
+                    Description = string.IsNullOrEmpty(productModel.Description) || productModel.Description.ToLower() == "undefined" ? "" : productModel.Description,
+                    // Price = productModel.Price,
+                    Max = productModel.Max,
+                    SoldByWeight = productModel.SoldByWeight,
                 };
 
-                if (int.TryParse(productModel.order, out int order))
+                if (int.TryParse(productModel.Order, out int order))
                 {
                     product.Order = order;
                 }
 
-                if (int.TryParse(productModel.minWeight, out int minWeight))
+                if (int.TryParse(productModel.MinWeight, out int minWeight))
                 {
                     product.MinWeight = minWeight;
                 }
@@ -327,7 +327,7 @@ namespace Peikresan.Controllers
                 return Ok(new
                 {
                     cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
-                    product = new { product.Id, product.Title, product.Description, product.Price, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
+                    product = new { product.Id, product.Title, product.Description, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
                     eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
@@ -341,23 +341,22 @@ namespace Peikresan.Controllers
             }
             else
             {
-                var product = await _context.Products.FindAsync(int.Parse(productModel.id));
+                var product = await _context.Products.FindAsync(int.Parse(productModel.Id));
                 if (product == null)
                 {
-                    return NotFound("Product not Found: " + productModel.id);
+                    return NotFound("Product not Found: " + productModel.Id);
                 }
 
-                product.Title = productModel.title;
-                product.Description = string.IsNullOrEmpty(productModel.description) || productModel.description.ToLower() == "undefined" ? "" : productModel.description;
-                product.Price = productModel.price;
-                if (int.TryParse(productModel.order, out int order))
+                product.Title = productModel.Title;
+                product.Description = string.IsNullOrEmpty(productModel.Description) || productModel.Description.ToLower() == "undefined" ? "" : productModel.Description;
+                if (int.TryParse(productModel.Order, out var order))
                 {
                     product.Order = order;
                 }
-                product.Max = productModel.max;
-                product.SoldByWeight = productModel.soldByWeight;
+                product.Max = productModel.Max;
+                product.SoldByWeight = productModel.SoldByWeight;
 
-                if (int.TryParse(productModel.minWeight, out int minWeight))
+                if (int.TryParse(productModel.MinWeight, out var minWeight))
                 {
                     product.MinWeight = minWeight;
                 }
@@ -376,7 +375,7 @@ namespace Peikresan.Controllers
                 return Ok(new
                 {
                     cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
-                    product = new { product.Id, product.Title, product.Description, product.Price, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
+                    product = new { product.Id, product.Title, product.Description, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
                     eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
@@ -400,17 +399,17 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove Product");
             }
 
-            var id = Convert.ToInt32(justId.id);
+            var id = Convert.ToInt32(justId.Id);
             var product = await _context.Products.FindAsync(id);
             if (product == null)
             {
-                return NotFound("Product not Found: " + justId.id);
+                return NotFound("Product not Found: " + justId.Id);
             }
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
 
             var products = await _context.Products
-                .Select(p => new { p.Id, p.Title, p.Description, p.Price, p.Img, p.Max, p.Order, p.SoldByWeight, p.MinWeight, p.CategoryId })
+                .Select(p => new { p.Id, p.Title, p.Description, p.Img, p.Max, p.Order, p.SoldByWeight, p.MinWeight, p.CategoryId })
                 .ToListAsync();
 
             return Ok(new
@@ -447,7 +446,7 @@ namespace Peikresan.Controllers
             var imgError = "";
             try
             {
-                using (var fileStream = bannerModel.file.OpenReadStream())
+                using (var fileStream = bannerModel.File.OpenReadStream())
                 {
                     using (Image<Rgba32> image = Image.Load<Rgba32>(fileStream))
                     {
@@ -468,9 +467,9 @@ namespace Peikresan.Controllers
                 filename = "";
             }
 
-            if (bannerModel.id == "" || bannerModel.id.ToLower() == "undefined")
+            if (bannerModel.Id == "" || bannerModel.Id.ToLower() == "undefined")
             {
-                var banner = new Banner { Title = bannerModel.title, Url = bannerModel.url.Trim() };
+                var banner = new Banner { Title = bannerModel.Title, Url = bannerModel.Url.Trim() };
                 if (filename.Length > 0)
                 {
                     banner.Img = filename;
@@ -497,14 +496,14 @@ namespace Peikresan.Controllers
             }
             else
             {
-                var banner = await _context.Banners.FindAsync(int.Parse(bannerModel.id));
+                var banner = await _context.Banners.FindAsync(int.Parse(bannerModel.Id));
                 if (banner == null)
                 {
-                    return NotFound("banner not Found: " + bannerModel.id);
+                    return NotFound("banner not Found: " + bannerModel.Id);
                 }
 
-                banner.Title = bannerModel.title;
-                banner.Url = bannerModel.url.Trim();
+                banner.Title = bannerModel.Title;
+                banner.Url = bannerModel.Url.Trim();
 
                 if (filename.Length > 0)
                 {
@@ -543,7 +542,7 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove Banner");
             }
 
-            var id = Convert.ToInt32(justId.id);
+            var id = Convert.ToInt32(justId.Id);
             var banner = await _context.Banners.FindAsync(id);
             if (banner == null)
             {
@@ -588,7 +587,7 @@ namespace Peikresan.Controllers
             var imgError = "";
             try
             {
-                using (var fileStream = sliderModel.file.OpenReadStream())
+                using (var fileStream = sliderModel.File.OpenReadStream())
                 {
                     using (Image<Rgba32> image = Image.Load<Rgba32>(fileStream))
                     {
@@ -609,9 +608,9 @@ namespace Peikresan.Controllers
                 filename = "";
             }
 
-            if (sliderModel.id == "" || sliderModel.id.ToLower() == "undefined")
+            if (sliderModel.Id == "" || sliderModel.Id.ToLower() == "undefined")
             {
-                var slider = new Slider { Title = sliderModel.title };
+                var slider = new Slider { Title = sliderModel.Title };
                 if (filename.Length > 0)
                 {
                     slider.Img = filename;
@@ -638,12 +637,12 @@ namespace Peikresan.Controllers
             }
             else
             {
-                var slider = await _context.Sliders.FindAsync(int.Parse(sliderModel.id));
+                var slider = await _context.Sliders.FindAsync(int.Parse(sliderModel.Id));
                 if (slider == null)
                 {
-                    return NotFound("Slidder not Found: " + sliderModel.id);
+                    return NotFound("Slider not Found: " + sliderModel.Id);
                 }
-                slider.Title = sliderModel.title;
+                slider.Title = sliderModel.Title;
                 if (filename.Length > 0)
                 {
                     slider.Img = filename;
@@ -680,7 +679,7 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove Slider");
             }
 
-            var id = Convert.ToInt32(justId.id);
+            var id = Convert.ToInt32(justId.Id);
             var slider = await _context.Sliders.FindAsync(id);
             if (slider == null)
             {
@@ -723,25 +722,25 @@ namespace Peikresan.Controllers
 
             try
             {
-                var user = new User() { UserName = registerModel.username, Email = registerModel.email };
-                var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.roleId.Trim()).FirstAsync();
+                var user = new User() { UserName = registerModel.Username, Email = registerModel.Email };
+                var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.RoleId.Trim()).FirstAsync();
                 if (role != null) user.Role = role;
 
-                if (string.IsNullOrEmpty(registerModel.firstName) == false && registerModel.firstName.ToLower() != "undefines")
+                if (string.IsNullOrEmpty(registerModel.FirstName) == false && registerModel.FirstName.ToLower() != "undefines")
                 {
-                    user.FirstName = registerModel.firstName.Trim();
+                    user.FirstName = registerModel.FirstName.Trim();
                 }
-                if (string.IsNullOrEmpty(registerModel.lastName) == false && registerModel.lastName.ToLower() != "undefines")
+                if (string.IsNullOrEmpty(registerModel.LastName) == false && registerModel.LastName.ToLower() != "undefines")
                 {
-                    user.LastName = registerModel.lastName.Trim();
+                    user.LastName = registerModel.LastName.Trim();
                 }
-                if (string.IsNullOrEmpty(registerModel.mobile) == false && registerModel.mobile.ToLower() != "undefines")
+                if (string.IsNullOrEmpty(registerModel.Mobile) == false && registerModel.Mobile.ToLower() != "undefines")
                 {
-                    user.Mobile = registerModel.mobile.Trim();
+                    user.Mobile = registerModel.Mobile.Trim();
                 }
 
                 var passwordHasher = new PasswordHasher<User>();
-                var passwordHash = passwordHasher.HashPassword(user, registerModel.password);
+                var passwordHash = passwordHasher.HashPassword(user, registerModel.Password);
                 user.PasswordHash = passwordHash;
 
                 await _context.Users.AddAsync(user);
@@ -777,7 +776,7 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove User");
             }
 
-            var id = justId.id.ToString();
+            var id = justId.Id.ToString();
             var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id.ToString() == id);
             if (user == null)
             {
@@ -823,15 +822,15 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Seller Can Remove User");
             }
 
-            var product = await _context.Products.Where(p => p.Title == sellerProductModel.product.Trim()).FirstAsync();
+            var product = await _context.Products.Where(p => p.Title == sellerProductModel.Product.Trim()).FirstAsync();
             if (product == null)
             {
-                return BadRequest("product not Found! " + sellerProductModel.product);
+                return BadRequest("product not Found! " + sellerProductModel.Product);
             }
 
-            if (string.IsNullOrEmpty(sellerProductModel.id) || sellerProductModel.id.ToLower() == "undefined")
+            if (string.IsNullOrEmpty(sellerProductModel.Id) || sellerProductModel.Id.ToLower() == "undefined")
             {
-                var sellerProduct = new SellerProduct { UserId = thisUser.Id, Count = sellerProductModel.count, ProductId = product.Id };
+                var sellerProduct = new SellerProduct { UserId = thisUser.Id, Count = sellerProductModel.Count, ProductId = product.Id };
                 await _context.SellerProducts.AddAsync(sellerProduct);
                 try
                 {
@@ -858,14 +857,14 @@ namespace Peikresan.Controllers
             }
             else
             {
-                var sellerProduct = await _context.SellerProducts.FindAsync(int.Parse(sellerProductModel.id));
+                var sellerProduct = await _context.SellerProducts.FindAsync(int.Parse(sellerProductModel.Id));
                 if (sellerProduct == null)
                 {
-                    return NotFound("Slidder not Found: " + sellerProductModel.id);
+                    return NotFound("Slidder not Found: " + sellerProductModel.Id);
                 }
 
                 sellerProduct.UserId = thisUser.Id;
-                sellerProduct.Count = sellerProductModel.count;
+                sellerProduct.Count = sellerProductModel.Count;
                 sellerProduct.ProductId = product.Id;
                 _context.SellerProducts.Update(sellerProduct);
                 try
@@ -904,7 +903,7 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove SellerProduct");
             }
 
-            var id = Convert.ToInt32(justId.id);
+            var id = Convert.ToInt32(justId.Id);
             var sellerProduct = await _context.SellerProducts.FindAsync(id);
             if (sellerProduct == null)
             {

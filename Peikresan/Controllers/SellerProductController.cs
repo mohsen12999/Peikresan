@@ -35,15 +35,15 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Seller Can Remove User");
             }
 
-            var product = await _context.Products.Where(p => p.Title == sellerProductModel.product.Trim()).FirstAsync();
+            var product = await _context.Products.Where(p => p.Title == sellerProductModel.Product.Trim()).FirstAsync();
             if (product == null)
             {
-                return BadRequest("product not Found! " + sellerProductModel.product);
+                return BadRequest("product not Found! " + sellerProductModel.Product);
             }
 
-            if (string.IsNullOrEmpty(sellerProductModel.id) || sellerProductModel.id.ToLower() == "undefined")
+            if (string.IsNullOrEmpty(sellerProductModel.Id) || sellerProductModel.Id.ToLower() == "undefined")
             {
-                var sellerProduct = new SellerProduct { UserId = thisUser.Id, Count = sellerProductModel.count, ProductId = product.Id };
+                var sellerProduct = new SellerProduct { UserId = thisUser.Id, Count = sellerProductModel.Count, Price= sellerProductModel.Price, ProductId = product.Id };
                 await _context.SellerProducts.AddAsync(sellerProduct);
                 try
                 {
@@ -71,14 +71,15 @@ namespace Peikresan.Controllers
             }
             else
             {
-                var sellerProduct = await _context.SellerProducts.FindAsync(int.Parse(sellerProductModel.id));
+                var sellerProduct = await _context.SellerProducts.FindAsync(int.Parse(sellerProductModel.Id));
                 if (sellerProduct == null)
                 {
-                    return NotFound("Slider not Found: " + sellerProductModel.id);
+                    return NotFound("Slider not Found: " + sellerProductModel.Id);
                 }
 
                 sellerProduct.UserId = thisUser.Id;
-                sellerProduct.Count = sellerProductModel.count;
+                sellerProduct.Count = sellerProductModel.Count;
+                sellerProduct.Price = sellerProductModel.Price;
                 sellerProduct.ProductId = product.Id;
                 _context.SellerProducts.Update(sellerProduct);
                 try
@@ -117,7 +118,7 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove SellerProduct");
             }
 
-            var id = Convert.ToInt32(justId.id);
+            var id = Convert.ToInt32(justId.Id);
             var sellerProduct = await _context.SellerProducts.FindAsync(id);
             if (sellerProduct == null)
             {

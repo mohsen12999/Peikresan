@@ -49,17 +49,17 @@ namespace Peikresan.Controllers
             }
 
             var filename =
-                await ImageServices.SaveAndConvertImage(categoryModel.file, _webRootPath, WebsiteModel.Category, 500,
+                await ImageServices.SaveAndConvertImage(categoryModel.File, _webRootPath, WebsiteModel.Category, 500,
                     425);
 
-            var parent = await _context.Categories.Where(el => el.Title == categoryModel.category.Trim()).FirstOrDefaultAsync();
+            var parent = await _context.Categories.Where(el => el.Title == categoryModel.Category.Trim()).FirstOrDefaultAsync();
 
-            if (categoryModel.id == "" || categoryModel.id.ToLower() == "undefined")
+            if (categoryModel.Id == "" || categoryModel.Id.ToLower() == "undefined")
             {
                 var cat = new Category
                 {
-                    Title = categoryModel.title,
-                    Description = string.IsNullOrEmpty(categoryModel.description) || categoryModel.description.ToLower() == "undefined" ? "" : categoryModel.description
+                    Title = categoryModel.Title,
+                    Description = string.IsNullOrEmpty(categoryModel.Description) || categoryModel.Description.ToLower() == "undefined" ? "" : categoryModel.Description
                 };
                 if (filename.Length > 0)
                 {
@@ -88,13 +88,13 @@ namespace Peikresan.Controllers
             }
             else
             {
-                var cat = await _context.Categories.FindAsync(int.Parse(categoryModel.id));
+                var cat = await _context.Categories.FindAsync(int.Parse(categoryModel.Id));
                 if (cat == null)
                 {
-                    return NotFound("Category not Found: " + categoryModel.id);
+                    return NotFound("Category not Found: " + categoryModel.Id);
                 }
-                cat.Title = categoryModel.title;
-                cat.Description = string.IsNullOrEmpty(categoryModel.description) || categoryModel.description.ToLower() == "undefined" ? "" : categoryModel.description;
+                cat.Title = categoryModel.Title;
+                cat.Description = string.IsNullOrEmpty(categoryModel.Description) || categoryModel.Description.ToLower() == "undefined" ? "" : categoryModel.Description;
                 if (filename.Length > 0)
                 {
                     cat.Img = filename;
@@ -134,7 +134,7 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove Category");
             }
 
-            var id = Convert.ToInt32(justId.id);
+            var id = Convert.ToInt32(justId.Id);
             var cat = await _context.Categories.FindAsync(id);
             if (cat == null)
             {

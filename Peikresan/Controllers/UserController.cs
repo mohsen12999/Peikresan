@@ -40,38 +40,38 @@ namespace Peikresan.Controllers
             try
             {
 
-                if (registerModel.id == "" || registerModel.id.ToLower() == "undefined")
+                if (registerModel.Id == "" || registerModel.Id.ToLower() == "undefined")
                 {
-                    var user = new User() { UserName = registerModel.username, Email = registerModel.email };
-                    var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.roleId.Trim()).FirstAsync();
+                    var user = new User() { UserName = registerModel.Username, Email = registerModel.Email };
+                    var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.RoleId.Trim()).FirstAsync();
                     if (role != null) user.Role = role;
 
-                    if (string.IsNullOrEmpty(registerModel.firstName) == false &&
-                        registerModel.firstName.ToLower() != "undefined")
+                    if (string.IsNullOrEmpty(registerModel.FirstName) == false &&
+                        registerModel.FirstName.ToLower() != "undefined")
                     {
-                        user.FirstName = registerModel.firstName.Trim();
+                        user.FirstName = registerModel.FirstName.Trim();
                     }
 
-                    if (string.IsNullOrEmpty(registerModel.lastName) == false &&
-                        registerModel.lastName.ToLower() != "undefined")
+                    if (string.IsNullOrEmpty(registerModel.LastName) == false &&
+                        registerModel.LastName.ToLower() != "undefined")
                     {
-                        user.LastName = registerModel.lastName.Trim();
+                        user.LastName = registerModel.LastName.Trim();
                     }
 
-                    if (string.IsNullOrEmpty(registerModel.mobile) == false &&
-                        registerModel.mobile.ToLower() != "undefined")
+                    if (string.IsNullOrEmpty(registerModel.Mobile) == false &&
+                        registerModel.Mobile.ToLower() != "undefined")
                     {
-                        user.Mobile = registerModel.mobile.Trim();
+                        user.Mobile = registerModel.Mobile.Trim();
                     }
 
-                    if (string.IsNullOrEmpty(registerModel.address) == false &&
-                        registerModel.address.ToLower() != "undefined")
+                    if (string.IsNullOrEmpty(registerModel.Address) == false &&
+                        registerModel.Address.ToLower() != "undefined")
                     {
-                        user.Address = registerModel.address.Trim();
+                        user.Address = registerModel.Address.Trim();
                     }
 
                     var passwordHasher = new PasswordHasher<User>();
-                    var passwordHash = passwordHasher.HashPassword(user, registerModel.password);
+                    var passwordHash = passwordHasher.HashPassword(user, registerModel.Password);
                     user.PasswordHash = passwordHash;
 
                     await _context.Users.AddAsync(user);
@@ -101,43 +101,43 @@ namespace Peikresan.Controllers
                 }
                 else
                 {
-                    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == registerModel.id);
+                    var user = await _context.Users.FirstOrDefaultAsync(u => u.Id.ToString() == registerModel.Id);
                     if (user == null)
                     {
                         return BadRequest("can not find user to change");
                     }
-                    var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.roleId.Trim()).FirstAsync();
+                    var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.RoleId.Trim()).FirstAsync();
                     if (role != null) user.Role = role;
 
-                    if (string.IsNullOrEmpty(registerModel.firstName) == false &&
-                        registerModel.firstName.ToLower() != "undefined")
+                    if (string.IsNullOrEmpty(registerModel.FirstName) == false &&
+                        registerModel.FirstName.ToLower() != "undefined")
                     {
-                        user.FirstName = registerModel.firstName.Trim();
+                        user.FirstName = registerModel.FirstName.Trim();
                     }
 
-                    if (string.IsNullOrEmpty(registerModel.lastName) == false &&
-                        registerModel.lastName.ToLower() != "undefined")
+                    if (string.IsNullOrEmpty(registerModel.LastName) == false &&
+                        registerModel.LastName.ToLower() != "undefined")
                     {
-                        user.LastName = registerModel.lastName.Trim();
+                        user.LastName = registerModel.LastName.Trim();
                     }
 
-                    if (string.IsNullOrEmpty(registerModel.mobile) == false &&
-                        registerModel.mobile.ToLower() != "undefined")
+                    if (string.IsNullOrEmpty(registerModel.Mobile) == false &&
+                        registerModel.Mobile.ToLower() != "undefined")
                     {
-                        user.Mobile = registerModel.mobile.Trim();
+                        user.Mobile = registerModel.Mobile.Trim();
                     }
 
-                    if (string.IsNullOrEmpty(registerModel.address) == false &&
-                        registerModel.address.ToLower() != "undefined")
+                    if (string.IsNullOrEmpty(registerModel.Address) == false &&
+                        registerModel.Address.ToLower() != "undefined")
                     {
-                        user.Address = registerModel.address.Trim();
+                        user.Address = registerModel.Address.Trim();
                     }
 
-                    if (string.IsNullOrEmpty(registerModel.password) == false &&
-                        registerModel.password.ToLower() != "undefined")
+                    if (string.IsNullOrEmpty(registerModel.Password) == false &&
+                        registerModel.Password.ToLower() != "undefined")
                     {
                         var passwordHasher = new PasswordHasher<User>();
-                        var passwordHash = passwordHasher.HashPassword(user, registerModel.password);
+                        var passwordHash = passwordHasher.HashPassword(user, registerModel.Password);
                         user.PasswordHash = passwordHash;
                     }
 
@@ -183,7 +183,7 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove User");
             }
 
-            var id = justId.id.ToString();
+            var id = justId.Id.ToString();
             var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id.ToString() == id);
             if (user == null)
             {

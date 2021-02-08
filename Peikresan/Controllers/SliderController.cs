@@ -42,11 +42,11 @@ namespace Peikresan.Controllers
             }
 
             var filename =
-                await ImageServices.SaveAndConvertImage(sliderModel.file, _webRootPath, WebsiteModel.Slider, 500, 425);
+                await ImageServices.SaveAndConvertImage(sliderModel.File, _webRootPath, WebsiteModel.Slider, 500, 425);
 
-            if (sliderModel.id == "" || sliderModel.id.ToLower() == "undefined")
+            if (sliderModel.Id == "" || sliderModel.Id.ToLower() == "undefined")
             {
-                var slider = new Slider { Title = sliderModel.title };
+                var slider = new Slider { Title = sliderModel.Title };
                 if (filename.Length > 0)
                 {
                     slider.Img = filename;
@@ -73,12 +73,12 @@ namespace Peikresan.Controllers
             }
             else
             {
-                var slider = await _context.Sliders.FindAsync(int.Parse(sliderModel.id));
+                var slider = await _context.Sliders.FindAsync(int.Parse(sliderModel.Id));
                 if (slider == null)
                 {
-                    return NotFound("Slider not Found: " + sliderModel.id);
+                    return NotFound("Slider not Found: " + sliderModel.Id);
                 }
-                slider.Title = sliderModel.title;
+                slider.Title = sliderModel.Title;
                 if (filename.Length > 0)
                 {
                     slider.Img = filename;
@@ -114,7 +114,7 @@ namespace Peikresan.Controllers
                 return Unauthorized("Only Admin Can Remove Slider");
             }
 
-            var id = Convert.ToInt32(justId.id);
+            var id = Convert.ToInt32(justId.Id);
             var slider = await _context.Sliders.FindAsync(id);
             if (slider == null)
             {

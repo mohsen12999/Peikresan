@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -86,7 +85,7 @@ namespace Peikresan.Controllers
                 var product = await _context.Products.FindAsync(productId);
                 if (product != null && item.Value > 0)
                 {
-                    var orderItem = new OrderItem() { Order = order, Product = product, Title = product.Title, Price = product.Price, Count = item.Value };
+                    var orderItem = new OrderItem() { Order = order, Product = product, Title = product.Title, Count = item.Value };
                     orderItemList.Add(orderItem);
                 }
             }
@@ -98,8 +97,11 @@ namespace Peikresan.Controllers
                 _context.Orders.Update(order);
                 await _context.WebsiteLog.AddAsync(new WebsiteLog()
                 {
-                    WebsiteModel = WebsiteModel.Order, WebsiteEventType = WebsiteEventType.Insert,
-                    Description = "make order with " + orderItemList.Count + " item", ObjectId = order.Id, UserId = ""
+                    WebsiteModel = WebsiteModel.Order,
+                    WebsiteEventType = WebsiteEventType.Insert,
+                    Description = "make order with " + orderItemList.Count + " item",
+                    ObjectId = order.Id,
+                    UserId = ""
                 });
                 await _context.SaveChangesAsync();
             }
