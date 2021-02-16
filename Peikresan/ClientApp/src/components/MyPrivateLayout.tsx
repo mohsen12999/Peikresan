@@ -40,21 +40,22 @@ interface IMyPrivateLayoutProps {
   // role?: string;
   userRole?: string;
 
-  shopCart: number[];
-
   logout: Function;
+  TryAccess: Function;
 }
 
 const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
   status,
   login,
   userRole,
-  shopCart,
   logout,
+  TryAccess,
   children,
 }) => {
   React.useEffect(() => {
-    // TODO: access data -> at start, status==init
+    if (status === Status.INIT) {
+      TryAccess();
+    }
   }, []);
 
   const [drawerVisible, setDrawerVisible] = React.useState(false);
@@ -79,19 +80,9 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
   ) : (
     <div>
       <div className="my-header">
-        <Search
-          placeholder="جستجو در پیک‌رسان"
-          onSearch={(value) => console.log(value)}
-          className="search-input"
-        />
-
         <MenuUnfoldOutlined className="open-color" onClick={showDrawerBtn} />
 
-        <Link to={CartPath.Cart} className="show-cart-btn">
-          <Badge count={shopCart.filter((c) => c > 0).length}>
-            <ShoppingCartOutlined />
-          </Badge>
-        </Link>
+        <h2>پنل مدیریت</h2>
       </div>
       <Drawer
         title="منو"
@@ -198,39 +189,6 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
           {children}
         </Spin>
       </main>
-      <footer className="layout-footer">اینماد</footer>
-
-      <div className="bottom-menu">
-        <Menu mode="horizontal" selectedKeys={[location.pathname]}>
-          <Menu.Item key={HomePath.Home}>
-            <Link to={HomePath.Home}>
-              <HomeOutlined />
-            </Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to={CartPath.Cart}>
-              <Badge count={shopCart.filter((c) => c > 0).length}>
-                <ShoppingCartOutlined />
-              </Badge>
-            </Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to={CartPath.Cart}>
-              <DollarOutlined />
-            </Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to={HomePath.Categories}>
-              <AppstoreOutlined />
-            </Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to={HomePath.Profile}>
-              <UserOutlined />
-            </Link>
-          </Menu.Item>
-        </Menu>
-      </div>
     </div>
   );
 };
@@ -239,12 +197,11 @@ const mapStateToProps = (state: ApplicationState) => ({
   status: state.auth ? state.auth.status : Status.IDLE,
   login: state.auth ? state.auth.login : false,
   userRole: state.auth ? state.auth.role : undefined,
-
-  shopCart: state.shopCart ? state.shopCart.shopCart : [],
 });
 
 const mapDispatchToProps = {
   logout: actionCreators.logout,
+  TryAccess: actionCreators.tryAccess,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(MyPrivateLayout);
