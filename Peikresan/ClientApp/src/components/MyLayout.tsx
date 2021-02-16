@@ -83,7 +83,7 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
         <MenuUnfoldOutlined className="open-color" onClick={showDrawerBtn} />
 
         <Link to={CartPath.Cart} className="show-cart-btn">
-          <Badge count={shopCart.filter((c) => c > 0).length}>
+          <Badge count={shopCart ? shopCart.filter((c) => c > 0).length : 0}>
             <ShoppingCartOutlined />
           </Badge>
         </Link>
