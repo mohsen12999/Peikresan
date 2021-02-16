@@ -1,7 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 import { Action, Reducer } from "redux";
 import { AppThunkAction } from "./";
-import { AdminDataUrl, LOGIN_URL, OrderUrl } from "../shares/URLs";
+import { ACCESS_URL, AdminDataUrl, LOGIN_URL, OrderUrl } from "../shares/URLs";
 import {
   IUser,
   IRole,
@@ -51,9 +51,9 @@ export enum AuthActions {
   LOGIN_SUCCESS = "LOGIN_SUCCESS ",
   LOGIN_FAILURE = "LOGIN_FAILURE ",
 
-  //   ACCESS_REQUEST = "ACCESS_REQUEST",
-  //   ACCESS_SUCCESS = "ACCESS_SUCCESS ",
-  //   ACCESS_FAILURE = "ACCESS_FAILURE ",
+  ACCESS_REQUEST = "ACCESS_REQUEST",
+  ACCESS_SUCCESS = "ACCESS_SUCCESS ",
+  ACCESS_FAILURE = "ACCESS_FAILURE ",
 
   LOGOUT = "LOGOUT ",
 }
@@ -162,6 +162,42 @@ export const actionCreators = {
     } catch (error) {
       dispatch({
         type: AuthActions.LOGIN_FAILURE,
+        payload: { message: "axios catch error", error: error },
+      });
+      return false;
+    }
+  },
+
+  tryAccess: (): AppThunkAction<KnownAction> => (dispatch, getState) => {
+    const status = getState().auth?.status;
+    if (status === Status.LOADING) {
+      dispatch({
+        type: AuthActions.ACCESS_FAILURE,
+        payload: { message: "we have another fetch " },
+      });
+      return false;
+    }
+
+    dispatch({ type: AuthActions.LOGIN_REQUEST });
+
+    try {
+      axios.post(ACCESS_URL, {}, requestConfig).then((response) => {
+        if (response && response.data && response.data.success) {
+          dispatch({
+            type: AuthActions.ACCESS_SUCCESS,
+            payload: { message: "axios success get data", data: response.data },
+          });
+        } else {
+          dispatch({
+            type: AuthActions.ACCESS_FAILURE,
+            payload: { message: "axios not success", error: response },
+          });
+        }
+      });
+      return true;
+    } catch (error) {
+      dispatch({
+        type: AuthActions.ACCESS_FAILURE,
         payload: { message: "axios catch error", error: error },
       });
       return false;
@@ -355,9 +391,11 @@ export const reducer: Reducer<IAuthState> = (
   const action = incomingAction as KnownAction;
   switch (action.type) {
     case AuthActions.LOGIN_REQUEST:
+    case AuthActions.ACCESS_REQUEST:
       return { ...state, login: false, status: Status.LOADING };
 
     case AuthActions.LOGIN_SUCCESS:
+    case AuthActions.ACCESS_SUCCESS:
       const loginState = {
         ...state,
         login: false,
@@ -400,10 +438,17 @@ export const reducer: Reducer<IAuthState> = (
         if (data.categories) {
           loginState.categories = data.categories;
         }
+        if (data.sliders) {
+          loginState.sliders = data.sliders;
+        }
+        if (data.banners) {
+          loginState.banners = data.banners;
+        }
       }
       return loginState;
 
     case AuthActions.LOGIN_FAILURE:
+    case AuthActions.ACCESS_FAILURE:
       return { ...state, login: false, status: Status.FAILED };
 
     case AuthActions.LOGOUT:
