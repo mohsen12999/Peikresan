@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Peikresan.Data;
+using Peikresan.Data.ClientModels;
 using Peikresan.Data.Models;
 using Peikresan.Data.ViewModels;
 using Peikresan.Services;
@@ -70,7 +71,23 @@ namespace Peikresan.Controllers
             {
                 var users = await _context.Users
                     .Include(u => u.Role)
-                    .Select(us => new { us.Id, us.UserName, us.FirstName, us.LastName, us.Mobile, us.Email, us.Role })
+                    .Select(us => new ClientUser
+                    {
+                        Id = us.Id.ToString(),
+                        Title = us.Title,
+                        UserName = us.UserName,
+                        Email = us.Email,
+                        FirstName = us.FirstName,
+                        LastName = us.LastName,
+                        FullName = us.FirstName + " " + us.LastName,
+                        Mobile = us.Mobile,
+                        Role = us.Role.Name,
+                        RoleId = us.Role.Id.ToString(),
+                        Address = us.Address,
+                        Latitude = us.Latitude,
+                        Longitude = us.Longitude
+                    })
+                    .AsNoTracking()
                     .ToListAsync();
 
                 var roles = await _context.Roles
@@ -80,10 +97,32 @@ namespace Peikresan.Controllers
                 var orders = await _context.Orders
                     .Where(or => or.OrderStatus != OrderStatus.Init)
                     .Include(o => o.OrderItems)
-                    .OrderByDescending(ord => ord.Id).ToListAsync();
+                    .OrderByDescending(ord => ord.Id)
+                    .AsNoTracking()
+                    .ToListAsync();
 
-                // TODO: Send all products
-                // TODO: Send all categories
+                var products = await _context.Products
+                    .Include(p => p.Category)
+                    .Select(p => new ClientProduct
+                    {
+                        Id = p.Id,
+                        Title = p.Title,
+                        Description = p.Description,
+                        Img = p.Img,
+                        Max = p.Max,
+                        SoldByWeight = p.SoldByWeight,
+                        MinWeight = p.MinWeight,
+                        Barcode = p.Barcode,
+                        Order = p.Order,
+                        CategoryId = p.CategoryId,
+                        Category = p.Category.Title
+                    })
+                    .AsNoTracking()
+                    .ToListAsync();
+
+                var categories = await _context.Categories.AsNoTracking().ToListAsync();
+                var banners = await _context.Banners.AsNoTracking().ToListAsync();
+                var sliders = await _context.Sliders.AsNoTracking().ToListAsync();
 
                 return Ok(new
                 {
@@ -96,6 +135,10 @@ namespace Peikresan.Controllers
                     users,
                     roles,
                     orders,
+                    products,
+                    categories,
+                    banners,
+                    sliders,
                     eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
@@ -107,7 +150,7 @@ namespace Peikresan.Controllers
             }
 
             var userOrders = await _context.Orders
-                .Where(ord => ord.DeliverId == thisUser.Id )
+                .Where(ord => ord.DeliverId == thisUser.Id)
                 //.Where(ord => ord.DeliverId == thisUser.Id || ord.SellerId == thisUser.Id)
                 .Include(o => o.OrderItems).ToListAsync();
             var sellerProducts = await _context.SellerProducts
