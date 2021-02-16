@@ -9,9 +9,8 @@ import SimpleLayout from "../../components/SimpleLayout";
 import { CartPath } from "../../shares/URLs";
 import { actionCreators } from "../../store/ShopCart";
 import { ApplicationState } from "../../store";
-import "./DeliverAddress.css";
 
-// TODO: add location to address
+import "./DeliverAddress.css";
 
 interface INewAddressProps {
   latitude?: number;
@@ -85,45 +84,40 @@ const NewAddress: React.FC<INewAddressProps> = ({
     >
       {neshanMap}
 
-      <Button
-        icon={<AimOutlined />}
-        style={{ position: "fixed", left: "5px", bottom: "5px" }}
-        type="default"
-        onClick={() => {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                ChooseLocation(
-                  position.coords.latitude,
-                  position.coords.longitude
-                );
-                history.push(CartPath.CompleteAddress);
-              },
-              (error) => {
-                message.warn("خطا در خواندن موقعیت مکانی");
-                console.log(error);
-              }
-            );
-          } else {
-            message.warn("خطا در خواندن مکان");
-          }
-        }}
-      >
-        مکان فعلی
-      </Button>
+      <div className="under-map-line">
+        <Button
+          icon={<AimOutlined />}
+          className="under-map-btn left"
+          type="default"
+          onClick={() => {
+            if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(
+                (position) => {
+                  ChooseLocation(
+                    position.coords.latitude,
+                    position.coords.longitude
+                  );
+                  history.push(CartPath.CompleteAddress);
+                },
+                (error) => {
+                  message.warn("خطا در خواندن موقعیت مکانی");
+                  console.log(error);
+                }
+              );
+            } else {
+              message.warn("خطا در خواندن مکان");
+            }
+          }}
+        >
+          مکان فعلی
+        </Button>
 
-      <br />
-
-      {latitude && longitude && (
-        <Link to={CartPath.CompleteAddress}>
-          <Button
-            style={{ position: "fixed", right: "5px", bottom: "5px" }}
-            type="primary"
-          >
-            مرحله بعد
-          </Button>
-        </Link>
-      )}
+        {latitude && longitude && (
+          <Link className="under-map-btn right" to={CartPath.CompleteAddress}>
+            <Button type="primary">مرحله بعد</Button>
+          </Link>
+        )}
+      </div>
     </SimpleLayout>
   );
 };

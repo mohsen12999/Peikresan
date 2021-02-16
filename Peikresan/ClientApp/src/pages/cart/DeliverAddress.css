@@ -34,3 +34,26 @@
 .ant-input[disabled] {
   color: black !important;
 }
+
+@media all and (max-width: 750px) {
+  .under-map-line {
+    position: fixed !important;
+    top: calc(100vh - 55px) !important;
+    z-index: 1000000 !important;
+  }
+}
+
+.under-map-line {
+  width: min(600px, 100vw);
+  position: relative;
+  padding: 5px;
+}
+
+.under-map-btn.left {
+  position: absolute;
+  left: 5px;
+}
+.under-map-btn.right {
+  position: absolute;
+  right: 5px;
+}
