@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Peikresan.Data;
@@ -50,20 +52,23 @@ namespace Peikresan.Controllers
             // Save Order
             var order = new Order()
             {
-                Name = cartModel.Name,
-                State = cartModel.State,
-                City = cartModel.City,
-                Description = cartModel.Description,
-                Mobile = cartModel.Mobile,
-                Level = cartModel.Level,
-                Number = cartModel.Number,
-                Unit = cartModel.Unit,
-                PostalCode = cartModel.PostalCode,
+                Name = cartModel.Address.Name,
+                State = cartModel.Address.State,
+                City = cartModel.Address.City,
+                FormattedAddress = cartModel.Address.FormattedAddress,
+                Description = cartModel.Address.Description,
+                Mobile = cartModel.Address.Mobile,
+                Latitude = cartModel.Address.Latitude,
+                Longitude = cartModel.Address.Longitude,
+
 
                 // time
-                Day = cartModel.Day,
-                Time = cartModel.Time,
-                Value = cartModel.Value,
+
+                DeliverTimeId = cartModel.DeliverTime.Id,
+                DeliverTime = cartModel.DeliverTime.Time,
+                DeliverTimeTitle = cartModel.DeliverTime.Title,
+                DeliverDay = cartModel.DeliverTime.DeliverDay,
+
                 DeliverAtDoor = cartModel.DeliverAtDoor
             };
 
@@ -78,22 +83,20 @@ namespace Peikresan.Controllers
             }
 
             // Save Order Item
-            var orderItemList = new List<OrderItem>();
-            foreach (var item in cartModel.ShopCart)
-            {
-                var productId = item.Key;
-                var product = await _context.Products.FindAsync(productId);
-                if (product != null && item.Value > 0)
+            var orderItemList = cartModel.ShopCart.Select(item => new OrderItem()
                 {
-                    var orderItem = new OrderItem() { Order = order, Product = product, Title = product.Title, Count = item.Value };
-                    orderItemList.Add(orderItem);
-                }
-            }
+                    Order = order,
+                    ProductId = item.Id,
+                    Count = item.Count,
+                    Title = item.Title,
+                    Price = item.Price
+                })
+                .ToList();
 
             try
             {
                 await _context.OrderItems.AddRangeAsync(orderItemList);
-                order.TotalPrice = PriceService.CalculatePrice(orderItemList, order.DeliverAtDoor);
+                order.TotalPrice = PriceServices.CalculatePrice(orderItemList, order.DeliverAtDoor, order.DeliverDay == "EXPRESS");
                 _context.Orders.Update(order);
                 await _context.WebsiteLog.AddAsync(new WebsiteLog()
                 {
@@ -112,94 +115,44 @@ namespace Peikresan.Controllers
 
 
             // Connect to bank
-            return await GetTokenFromSepehr(order.Id);
 
-            // Send Url
-            // return Ok(new { order,orderItemlist});
-        }
-
-        private async Task<IActionResult> GetTokenFromSepehr(int orderId)
-        {
-            var order = await _context.Orders.FindAsync(orderId);
-            using (var client = new HttpClient())
+            // var order = await _context.Orders.FindAsync(orderId);
+            using var client = new HttpClient();
+            // client.BaseAddress = new Uri(_sepehrUrl);
+            var dataAsString = JsonConvert.SerializeObject(new { Amount = order.TotalPrice * 10, invoiceID = order.Id, terminalID = SepehrTid, callbackURL = CallbackUrl });
+            var dataContent = new StringContent(dataAsString, Encoding.UTF8, "application/json");
+            try
             {
-                // client.BaseAddress = new Uri(_sepehrUrl);
-                var dataAsString = JsonConvert.SerializeObject(new { Amount = order.TotalPrice * 10, invoiceID = orderId, terminalID = SepehrTid, callbackURL = CallbackUrl });
-                var dataContent = new StringContent(dataAsString, Encoding.UTF8, "application/json");
-                try
-                {
-                    var response = await client.PostAsync(SepehrUrl, dataContent);
+                var response = await client.PostAsync(SepehrUrl, dataContent);
 
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        return BadRequest("bank error: " + response.StatusCode);
-                    }
-
-                    var content = await response.Content.ReadAsStringAsync();
-                    var resultContent = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
-                    var status = (resultContent)["Status"].ToString();
-                    if (status != "0")
-                    {
-                        return BadRequest("bank error status: " + status);
-                    }
-
-                    try
-                    {
-                        var token = (resultContent)["Accesstoken"].ToString();
-                        return Ok(new { success = true, order, token, tid = SepehrTid, url = SepehrPayUrl });
-                    }
-                    catch (Exception)
-                    {
-                        return BadRequest("Can not find AccessToken " + content);
-                    }
-                }
-                catch (Exception e)
-                {
-                    return BadRequest("bank error in Exception " + e.Message);
-                }
-            }
-        }
-
-
-        /*
-        private async Task<IActionResult> VerifyToSepehr(int orderId)
-        {
-            var order = _context.Orders.Find(orderId);
-            using (var client = new HttpClient())
-            {
-                var dataAsString = JsonConvert.SerializeObject(new { digitalreceipt = "", Tid = _sepehrTID });
-                var dataContent = new StringContent(dataAsString, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(_sepehrAdviceUrl, dataContent);
-                if (response.IsSuccessStatusCode)
-                {
-                    var content = await response.Content.ReadAsStringAsync();
-                    var resultContent = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
-                    var status = (resultContent)["Status"].ToString();
-                    if (status == "OK")
-                    {
-                        try
-                        {
-                            order.VerifyStatus = status;
-                            order.VerifyReturnId = (resultContent)["ReturnId"].ToString();
-                            order.VerifyMessage = (resultContent)["Message"].ToString();
-                            await _context.SaveChangesAsync();
-
-                            return Ok(new { resultContent });
-                        }
-                        catch (Exception)
-                        {
-                            return BadRequest("Can not find data " + content);
-                        }
-                    }
-                }
-                else
+                if (!response.IsSuccessStatusCode)
                 {
                     return BadRequest("bank error: " + response.StatusCode);
                 }
+
+                var content = await response.Content.ReadAsStringAsync();
+                var resultContent = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
+                var status = (resultContent)["Status"].ToString();
+                if (status != "0")
+                {
+                    return BadRequest("bank error status: " + status);
+                }
+
+                try
+                {
+                    var token = (resultContent)["Accesstoken"].ToString();
+                    return Ok(new { success = true, order, token, tid = SepehrTid, url = SepehrPayUrl });
+                }
+                catch (Exception)
+                {
+                    return BadRequest("Can not find AccessToken " + content);
+                }
             }
-            return BadRequest("bank ");
+            catch (Exception e)
+            {
+                return BadRequest("bank error in Exception " + e.Message);
+            }
         }
-        */
 
         [HttpPost]
         public async Task<IActionResult> ComeFromBankAsync([FromForm] ComeBackResponse comeBackResponse)
@@ -237,86 +190,222 @@ namespace Peikresan.Controllers
                 return Redirect("/comeback/0/?error=save_order_before_advice&msg=" + ex.Message);
             }
 
-            using (var client = new HttpClient())
+            using var client = new HttpClient();
+
+            var dataAsString = JsonConvert.SerializeObject(new { comeBackResponse.digitalreceipt, Tid = SepehrTid });
+            var dataContent = new StringContent(dataAsString, Encoding.UTF8, "application/json");
+            var response = await client.PostAsync(SepehrAdviceUrl, dataContent);
+
+            if (!response.IsSuccessStatusCode)
             {
-                var dataAsString = JsonConvert.SerializeObject(new { comeBackResponse.digitalreceipt, Tid = SepehrTid });
-                var dataContent = new StringContent(dataAsString, Encoding.UTF8, "application/json");
-                var response = await client.PostAsync(SepehrAdviceUrl, dataContent);
+                return Redirect("/comeback/0/?error=responseNotSuccess&StatusCode=" + response.StatusCode);
+            }
 
-                if (!response.IsSuccessStatusCode)
+            var content = await response.Content.ReadAsStringAsync();
+            var resultContent = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
+            var status = (resultContent)["Status"].ToString();
+
+            if (status == null || status.ToLower() != "ok")
+            {
+                return Redirect("/comeback/0/?error=status_ok," + status + ", content" + content + ", respcode: " + order.Respcode + "_" + order.Respmsg);
+            }
+
+            try
+            {
+                order.VerifyStatus = status;
+                order.VerifyReturnId = (resultContent)["ReturnId"].ToString();
+                order.VerifyMessage = (resultContent)["Message"].ToString();
+
+                order.OrderStatus = OrderStatus.Verified;
+                order.VerifiedDateTime = DateTime.Now;
+
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+
+                await UserServices.FindSeller(_context, order.Id);
+
+                // Find Deliver
+                var deliver = await UserServices.ClosestUser(_context, order.Latitude, order.Longitude, "Delivery");
+
+                if(deliver!=null)
+                    order.Deliver = deliver;
+
+                _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+
+                return Redirect("/comeback/" + order.Id + "/?return_id=" + order.VerifyReturnId + "&message=" + order.VerifyMessage + "&trace_number=" + order.Tracenumber);
+            }
+            catch (Exception ex)
+            {
+
+                return Redirect("/comeback/0/?error=save_order_after_advice&msg=" + ex.Message);
+            }
+        }
+
+        // TODO: Fake confirm for last order
+        [HttpGet("fake-confirm")]
+        public async Task<IActionResult> FakeConfirm()
+        {
+            var order = await _context.Orders.OrderBy(or => or.Id).LastAsync();
+            await UserServices.FindSeller(_context, order.Id);
+
+            // Find Deliver
+            var deliver = await UserServices.ClosestUser(_context, order.Latitude, order.Longitude, "Delivery");
+
+            if (deliver != null)
+                order.Deliver = deliver;
+
+            order.OrderStatus = OrderStatus.Verified;
+            order.VerifiedDateTime = DateTime.Now;
+
+            _context.Orders.Update(order);
+            await _context.SaveChangesAsync();
+
+            return Redirect("/comeback/" + order.Id + "/?return_id=" + order.VerifyReturnId + "&message=" + order.VerifyMessage + "&trace_number=" + order.Tracenumber);
+
+        }
+    }
+}
+
+/*
+ * private static async Task<bool> FindingSeller(ApplicationDbContext context, List<OrderItem> orderItems, int orderId, List<Guid> denyUsers)
+        {
+            var order = await context.Orders
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+            var districtId = order.DistrictId;
+
+            // local markets
+            var localSellerList = orderItems
+                .SelectMany(oi => oi.Product.SellerProducts)
+                .Where(spd => spd.User.DistrictId == districtId && denyUsers.All(du => du != spd.User.Id))
+                // .Where(spd => spd.User.DistrictId == districtId && denyUsers.All(du => du != spd.User.Id) && spd.User.UserStatus == UserStatus.Active)
+                .Select(sp => sp.UserId);
+
+            if (localSellerList.Any())
+            {
+                var localSellers = localSellerList
+                    .GroupBy(s => s)
+                    .Select(id => new { id = id.Key, count = id.Count() }).OrderByDescending(el => el.count)
+                    .ToList();
+
+                var firstSeller = localSellers.First();
+                if (firstSeller.count == orderItems.Count) // a local market with all product
                 {
-                    return Redirect("/comeback/0/?error=responseNotSuccess&StatusCode=" + response.StatusCode);
+                    // find the answer: 1 local
+                    var subOrder = new SubOrder() { OrderId = orderId, SellerId = firstSeller.id };
+                    await context.SubOrders.AddAsync(subOrder);
+                    orderItems = orderItems.Select(oi =>
+                    {
+                        oi.SubOrder = subOrder;
+                        return oi;
+                    }).ToList();
+                    context.OrderItems.UpdateRange(orderItems);
+
+                    order.OrderStatus = OrderStatus.AssignToSeller;
+                    context.Orders.Update(order);
+
+                    await context.SaveChangesAsync();
+                    return true;
                 }
 
-                var content = await response.Content.ReadAsStringAsync();
-                var resultContent = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
-                var status = (resultContent)["Status"].ToString();
-
-                if (status == null || status.ToLower() != "ok")
+                // try to find second local market
+                var remainItem = orderItems
+                    .Where(oi => oi.Product.SellerProducts.All(sp => sp.UserId != firstSeller.id))
+                    .ToList();
+                var remainItemSellerList = remainItem
+                    .SelectMany(oi => oi.Product.SellerProducts)
+                    .Where(spd => spd.User.DistrictId == districtId && denyUsers.All(du => du != spd.User.Id))
+                    // .Where(spd => spd.User.DistrictId == districtId && denyUsers.All(du => du != spd.User.Id) && spd.User.UserStatus == UserStatus.Active)
+                    .Select(sp => sp.UserId);
+                var remainItemSeller = remainItemSellerList
+                    .GroupBy(s => s).Select(id => new { id = id.Key, count = id.Count() })
+                    .OrderByDescending(el => el.count)
+                    .ToList();
+                var secondSeller = remainItemSeller.First();
+                if (secondSeller.count == remainItem.Count)
                 {
-                    return Redirect("/comeback/0/?error=status_ok," + status + ", content" + content + ", respcode: " + order.Respcode + "_" + order.Respmsg);
-                }
+                    // find the answer: 2 local
+                    var firstSubOrder = new SubOrder() { OrderId = order.Id, SellerId = firstSeller.id };
+                    var secondSubOrder = new SubOrder() { OrderId = order.Id, SellerId = secondSeller.id };
+                    await context.SubOrders.AddRangeAsync(firstSubOrder, secondSubOrder);
+                    orderItems = orderItems.Select(oi =>
+                    {
+                        oi.SubOrder = oi.Product.SellerProducts.Any(sp => sp.UserId == firstSeller.id) ?
+                            firstSubOrder : secondSubOrder;
+                        return oi;
+                    }).ToList();
+                    context.OrderItems.UpdateRange(orderItems);
 
-                try
-                {
-                    order.VerifyStatus = status;
-                    order.VerifyReturnId = (resultContent)["ReturnId"].ToString();
-                    order.VerifyMessage = (resultContent)["Message"].ToString();
+                    order.OrderStatus = OrderStatus.AssignToSeller;
+                    context.Orders.Update(order);
 
-                    order.OrderStatus = OrderStatus.Verified;
-                    order.VerifiedDateTime = DateTime.Now;
-
-                    _context.Orders.Update(order);
-                    await _context.SaveChangesAsync();
-
-                    return Redirect("/comeback/" + order.Id + "/?return_id=" + order.VerifyReturnId + "&message=" + order.VerifyMessage + "&trace_number=" + order.Tracenumber);
-                }
-                catch (Exception ex)
-                {
-
-                    return Redirect("/comeback/0/?error=save_order_after_advice&msg=" + ex.Message);
+                    await context.SaveChangesAsync();
+                    return true;
                 }
             }
 
+            // all market
+            var allSellerList = orderItems
+                .SelectMany(oi => oi.Product.SellerProducts)
+                .Where(spd => denyUsers.All(du => du != spd.User.Id))
+                // .Where(spd => denyUsers.All(du => du != spd.User.Id) && spd.User.UserStatus == UserStatus.Active)
+                .Select(sp => sp.UserId);
+            var allSellers = allSellerList.GroupBy(s => s).Select(id => new { id = id.Key, count = id.Count() }).OrderByDescending(el => el.count).ToList();
+
+            var firstSeller2 = allSellers.First();
+            if (firstSeller2.count == orderItems.Count) // a local market with all product
+            {
+                // find the answer: 1 all
+                var subOrder = new SubOrder() { OrderId = order.Id, SellerId = firstSeller2.id };
+                await context.SubOrders.AddAsync(subOrder);
+                orderItems = orderItems.Select(oi =>
+                {
+                    oi.SubOrder = subOrder;
+                    return oi;
+                }).ToList();
+                context.OrderItems.UpdateRange(orderItems);
+
+                order.OrderStatus = OrderStatus.AssignToSeller;
+                context.Orders.Update(order);
+
+                await context.SaveChangesAsync();
+                return true;
+            }
+
+            // try to find second market
+            var remainItem2 = orderItems
+                .Where(oi => oi.Product.SellerProducts.All(sp => sp.UserId != firstSeller2.id))
+                .ToList();
+            var remainItemSellerList2 = remainItem2
+                .SelectMany(oi => oi.Product.SellerProducts)
+                .Where(spd => denyUsers.All(du => du != spd.User.Id))
+                // .Where(spd => denyUsers.All(du => du != spd.User.Id) && spd.User.UserStatus == UserStatus.Active)
+                .Select(sp => sp.UserId);
+
+            var remainItemSeller2 = remainItemSellerList2.GroupBy(s => s).Select(id => new { id = id.Key, count = id.Count() }).OrderByDescending(el => el.count).ToList();
+            var secondSeller2 = remainItemSeller2.First();
+
+            if (secondSeller2.count == remainItem2.Count)
+            {
+                // find the answer: 2 all
+                var firstSubOrder = new SubOrder() { OrderId = order.Id, SellerId = firstSeller2.id };
+                var secondSubOrder = new SubOrder() { OrderId = order.Id, SellerId = secondSeller2.id };
+                await context.SubOrders.AddRangeAsync(firstSubOrder, secondSubOrder);
+                orderItems = orderItems.Select(oi =>
+                {
+                    oi.SubOrder = oi.Product.SellerProducts.Any(sp => sp.UserId == firstSeller2.id) ?
+                        firstSubOrder : secondSubOrder;
+                    return oi;
+                }).ToList();
+                context.OrderItems.UpdateRange(orderItems);
+
+                order.OrderStatus = OrderStatus.AssignToSeller;
+                context.Orders.Update(order);
+
+                await context.SaveChangesAsync();
+                return true;
+            }
+
+            return false;
         }
-
-        // public static async Task<(int, string, string)> Verification(string token)
-        // {
-        //     using (var client = new HttpClient())
-        //     {
-        //         client.BaseAddress = new Uri("https://pay.ir/");
-        //         var verifyParam = new VerifyParam { api = _api, token = token };
-        //         var dataAsString = JsonConvert.SerializeObject(verifyParam);
-        //         var dataContent = new StringContent(dataAsString, Encoding.UTF8, "application/json");
-        //         var postTask = client.PostAsync("pg/verify", dataContent);
-        //         HttpResponseMessage postResult;
-        //         try
-        //         {
-        //             postResult = await postTask;
-        //         }
-        //         catch (Exception)
-        //         {
-        //             return (-202, "", "");
-        //         }
-
-        //         if (postResult.IsSuccessStatusCode)
-        //         {
-        //             var content = postResult.Content.ReadAsStringAsync().Result;
-        //             var resultContent = JsonConvert.DeserializeObject<Dictionary<string, object>>(content);
-        //             var status = int.Parse((resultContent)["status"].ToString());
-        //             if (status == 1)
-        //             {
-        //                 return (100, (resultContent)["transId"].ToString(), (resultContent)["factorNumber"].ToString());
-        //             }
-        //             if (status <= 0)
-        //             {
-        //                 return (0, (resultContent)["errorMessage"].ToString(), "");
-        //             }
-        //         }
-
-        //         return (-101, "", "");
-        //     }
-
-        // }
-    }
-}
+ */
