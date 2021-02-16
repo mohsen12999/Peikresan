@@ -8,12 +8,15 @@ namespace Peikresan.Data.Models
 {
     public class User : IdentityUser<Guid>
     {
+        public string Title { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         [NotMapped] public string FullName => FirstName + " " + LastName;
 
         public string Mobile { get; set; }
         public string Address { get; set; }
+
+        public bool Active { get; set; } = true;
 
         public double Latitude { get; set; }
         public double Longitude { get; set; }
