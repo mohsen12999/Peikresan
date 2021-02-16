@@ -17,15 +17,16 @@ namespace Peikresan.Data.Models
         public string City { get; set; }
         public string Description { get; set; }
         public string Mobile { get; set; }
-        public string Level { get; set; }
-        public string Number { get; set; }
-        public string Unit { get; set; }
-        public string PostalCode { get; set; }
+        public string FormattedAddress { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
 
         // time
-        public string Day { get; set; }
-        public int Time { get; set; }
-        public string Value { get; set; }
+        public int DeliverTimeId { get; set; }
+        public int DeliverTime { get; set; }
+        public string DeliverTimeTitle { get; set; }
+        public string DeliverDay { get; set; }
+
         public bool DeliverAtDoor { get; set; }
 
         [Column(TypeName = "decimal(10,3)")]

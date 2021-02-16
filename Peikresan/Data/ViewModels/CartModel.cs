@@ -2,25 +2,48 @@
 
 namespace Peikresan.Data.ViewModels
 {
-    public class CartModel
+    public class ShopCartViewModel
     {
-        public IDictionary<int,int> ShopCart { get; set; }
+        public int Id { get; set; }
+        public string Title { get; set; }
+        public int Count { get; set; }
+        public decimal Price { get; set; }
+    }
 
-        // address
-        public string Name { get; set; }
+    public class AddressViewModel
+    {
         public string State { get; set; }
         public string City { get; set; }
-        public string Description { get; set; }
         public string Mobile { get; set; }
-        public string Level { get; set; }
-        public string Number { get; set; }
-        public string Unit { get; set; }
-        public string PostalCode { get; set; }
+        public string Name { get; set; }
+        public string FormattedAddress { get; set; }
+        public string Description { get; set; }
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+    }
 
-        // time
-        public string Day { get; set; }
+    public class DeliverTimeViewModel
+    {
+        public int Id { get; set; }
         public int Time { get; set; }
-        public string Value { get; set; }
+        public string Title { get; set; }
+        public string DeliverDay { get; set; }
+    }
+
+    /*
+    export enum DeliverDay {
+        TODAY = "TODAY",
+        TOMORROW = "TOMORROW",
+        EXPRESS = "EXPRESS",
+    }
+     */
+
+    public class CartModel
+    {
+        public List<ShopCartViewModel> ShopCart { get; set; }
+        public AddressViewModel Address { get; set; }
+        public DeliverTimeViewModel DeliverTime { get; set; }
+        
         public bool DeliverAtDoor{ get; set; }
 
     }
