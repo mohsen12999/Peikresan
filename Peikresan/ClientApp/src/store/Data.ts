@@ -94,8 +94,8 @@ export const actionCreators = {
 
     dispatch({ type: DataActions.DATA_REQUEST } as ILoadData);
 
-    const latitude = getState().shopCart?.latitude;
-    const longitude = getState().shopCart?.longitude;
+    const latitude = getState().shopCart?.address?.latitude;
+    const longitude = getState().shopCart?.address?.longitude;
 
     if (latitude === undefined || longitude === undefined) {
       dispatch({
@@ -224,6 +224,7 @@ export const reducer: Reducer<IDataState> = (
           deliverAtDoor: data.deliverAtDoor,
           deliverPrice: data.deliverPrice,
           minimumCart: data.minimumCart,
+          expressDeliver: data.expressDeliver,
         };
         // dataState.sellOptions. =data.deliverAtDoor;
         CacheData(dataState);
