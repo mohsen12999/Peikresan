@@ -46,7 +46,12 @@ const Factor: React.FC<IFactorProps> = ({
   // const [url, setUrl] = React.useState("https://mabna.shaparak.ir:8080/Pay");
   const shopCartTotalPrice = CalculateShopCartTotalPrice(shopCart, products);
   const deliverPrice = sellOptions
-    ? CalculateDeliverPrice(shopCartTotalPrice, deliverAtDoor, sellOptions)
+    ? CalculateDeliverPrice(
+        shopCartTotalPrice,
+        deliverAtDoor,
+        sellOptions,
+        deliverTime?.deliverDay
+      )
     : 0;
 
   const SendToBank = () => {
