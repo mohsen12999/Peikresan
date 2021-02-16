@@ -20,8 +20,6 @@ import { ApplicationState } from "../../store";
 
 import "./Home.css";
 
-const { Meta } = Card;
-
 interface IHomeProps {
   products: IProduct[];
   categories: ICategory[];
