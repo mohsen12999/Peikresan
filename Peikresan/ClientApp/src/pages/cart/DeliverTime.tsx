@@ -78,7 +78,7 @@ const DeliverTime: React.FC<IDeliverTimeProps> = ({
                   <Col key={dt.id} span={12}>
                     <Radio
                       className="radioStyle"
-                      disabled={currentHour > dt.time}
+                      // disabled={currentHour > dt.time}
                       value={dt.time}
                     >
                       {dt.title}
