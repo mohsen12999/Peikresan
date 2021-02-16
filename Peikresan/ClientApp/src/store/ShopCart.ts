@@ -1,7 +1,9 @@
 import axios from "axios";
 import { Action, Reducer } from "redux";
 import { AppThunkAction } from ".";
+import { message } from "antd";
 import { Status } from "../shares/Constants";
+import { GetShopCartProducts } from "../shares/Functions";
 import { IAddress, IBankData, IDeliverTime } from "../shares/Interfaces";
 import { CacheShopCart, GetShopCartCache } from "../shares/LocalStorage";
 import { Cart_URL } from "../shares/URLs";
@@ -150,8 +152,24 @@ export const actionCreators = {
     deliverAtDoor: boolean
   ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
     dispatch({ type: BankActions.SEND_REQUEST });
+
+    const products = getState().data?.products ?? [];
+    const shopCartProduct = GetShopCartProducts(shopCart, products).map(
+      (p) => ({
+        id: p.id,
+        title: p.title,
+        price: p.price,
+        count: p.count,
+      })
+    );
+
     const response = await axios
-      .post(Cart_URL, { shopCart, address, deliverTime, deliverAtDoor })
+      .post(Cart_URL, {
+        shopCart: shopCartProduct,
+        address,
+        deliverTime,
+        deliverAtDoor,
+      })
       .catch((error) => {
         dispatch({
           type: BankActions.REQUEST_FAILURE,
@@ -169,6 +187,7 @@ export const actionCreators = {
         type: BankActions.REQUEST_FAILURE,
         payload: { message: "axios not success", error: response },
       });
+      message.error("اشکال در ارتباط با بانک");
     }
   },
 
@@ -375,7 +394,9 @@ export const reducer: Reducer<IShopCartState> = (
         if (addressData.formatted_address) {
           currentAddress.formattedAddress = addressData.formatted_address;
         }
-        return { ...state, address: currentAddress };
+        currentAddress.latitude = state.latitude;
+        currentAddress.longitude = state.longitude;
+        return { ...state, address: currentAddress, status: Status.SUCCEEDED };
       }
       return state;
 
