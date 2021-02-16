@@ -47,6 +47,7 @@ export interface IUser {
   lastName: string;
   mobile: string;
   address: string;
+  title: string;
 
   role: string;
   roleId: string;
@@ -109,6 +110,8 @@ export interface IAddress {
   // unit: string;
   // number: string;
   // postalCode: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface IDeliverTime {
@@ -146,6 +149,7 @@ export interface ISellOptions {
   minimumCart: number;
   deliverPrice: number;
   deliverAtDoor: number;
+  expressDeliver: number;
 }
 
 export interface IBankData {
