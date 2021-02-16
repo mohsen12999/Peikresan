@@ -42,7 +42,7 @@ const ChangeableProductCount: React.FC<IChangeableProductCountProps> = ({
   </div>
 );
 
-const mapStateToProps = () => {};
+const mapStateToProps = () => ({});
 
 const mapDispatchToProps = {
   AddProduct: actionCreators.addProduct,
