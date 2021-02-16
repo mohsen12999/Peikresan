@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Spatial;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -86,9 +85,10 @@ namespace Peikresan.Controllers
                 newest,
                 mostSell,
                 times,
-                PriceService.MinimumCart,
-                PriceService.DeliverPrice,
-                PriceService.DeliverAtDoor,
+                PriceServices.MinimumCart,
+                PriceServices.DeliverPrice,
+                PriceServices.DeliverAtDoor,
+                PriceServices.ExpressDeliver,
                 success = true
             });
         }
@@ -96,33 +96,25 @@ namespace Peikresan.Controllers
         [HttpGet("data")]
         public async Task<IActionResult> GetDataBaseOnLocation(double latitude, double longitude)
         {
-            // return new JsonResult(new {latitude, longitude});
-            // TODO: find 3 nearer seller
+            // find 3 nearer seller
+            // TODO: open time for seller
             var sellers = await _context.Users
-                .Include(u => u.Role).Where(u => u.Role.Name == "Seller")
+                .Include(u => u.Role)
+                .Where(u => u.Active && u.Role.Name == "Seller")
+                .OrderBy(u => Math.Sqrt(Math.Pow(latitude - u.Latitude, 2) + Math.Pow(longitude - u.Longitude, 2)))
                 .AsNoTracking()
+                .Take(3)
                 .ToListAsync();
-            if (sellers.Count > 3)
-            {
-                var buyerLocation = GeographyPoint.Create(latitude, longitude);
-                sellers = sellers.OrderBy(u => u.Location.Distance(buyerLocation)).Take(3).ToList();
-            }
 
             var sellersId = sellers.Select(s => s.Id).ToList();
-            var products = await _context.Products.Include(p => p.SellerProducts)
-                .Where(p => p.SellerProducts.Any(s => s.UserId != null && sellersId.Contains((Guid)s.UserId)))
-                // .Select(p => new { p.Id, p.Title, p.Description, p.Price, p.Img, p.Max, p.Order, p.SoldByWeight, p.MinWeight, p.CategoryId })
+
+            var products = await _context.Products
+                .Include(p => p.SellerProducts.Where(sp=>sp.UserId != null && sellersId.Contains((Guid)sp.UserId)))
+                .Where(p => p.SellerProducts!=null &&  p.SellerProducts.Any(sp => sp.UserId != null && sellersId.Contains((Guid)sp.UserId)))
                 .Include(p => p.Category)
-                .Select(p => new ClientProduct() { Id = p.Id, Title = p.Title, Description = p.Description, Img = p.Img, Max = p.Max, Order = p.Order, SoldByWeight = p.SoldByWeight, MinWeight = p.MinWeight, CategoryId = p.CategoryId, Category = p.Category.Title })
+                .Select(p => new ClientProduct() { Id = p.Id, Title = p.Title, Description = p.Description, Img = p.Img, Max = p.Max, Order = p.Order, SoldByWeight = p.SoldByWeight, MinWeight = p.MinWeight, CategoryId = p.CategoryId, Category = p.Category.Title, Price = p.SellerProducts.Min(sp=>sp.Price) })
                 .AsNoTracking()
                 .ToListAsync();
-
-            // TODO: find seller products
-
-            //var products = await _context.Products
-            //    // .Include(pr => pr.SellerProducts).Where(prd => prd.SellerCount > 0)
-            //    .Select(p => new { p.Id, p.Title, p.Description, p.Price, p.Img, p.Max, p.Order, p.SoldByWeight, p.MinWeight, p.CategoryId })
-            //    .ToListAsync();
 
             var categories = await _context.Categories
                 .Select(c => new { c.Id, c.Title, c.Description, c.Img, c.ParentId, c.HaveChild, c.Order })
@@ -145,7 +137,7 @@ namespace Peikresan.Controllers
                 mostSell = products.OrderBy(el => el.Id).Select(o => o.Id).Take(10).ToList();
             }
 
-            var times = new[]{
+            var deliverTimes = new[]{
                 new TimeModel(){Id=8,Time=8, Title="8-10"},
                 new TimeModel(){Id=10,Time=10, Title="10-12"},
                 new TimeModel(){Id=12,Time=12, Title="12-14"},
@@ -166,10 +158,11 @@ namespace Peikresan.Controllers
                 suggestions,
                 newest,
                 mostSell,
-                times,
-                PriceService.MinimumCart,
-                PriceService.DeliverPrice,
-                PriceService.DeliverAtDoor,
+                deliverTimes,
+                PriceServices.MinimumCart,
+                PriceServices.DeliverPrice,
+                PriceServices.DeliverAtDoor,
+                PriceServices.ExpressDeliver,
                 success = true
             });
         }
