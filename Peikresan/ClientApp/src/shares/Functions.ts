@@ -1,4 +1,4 @@
-import { UserRole } from "./Constants";
+import { DeliverDay, UserRole } from "./Constants";
 import {
   ICategory,
   IProduct,
@@ -66,11 +66,14 @@ export const CalculateShopCartTotalPrice = (
 export const CalculateDeliverPrice = (
   shopCartTotalPrice: number,
   deliverAtDoor: boolean,
-  sellOptions: ISellOptions
+  sellOptions: ISellOptions,
+  deliverDay?: DeliverDay
 ) =>
-  (shopCartTotalPrice < sellOptions.minimumCart
-    ? sellOptions.deliverPrice
-    : 0) + (deliverAtDoor ? sellOptions.deliverAtDoor : 0);
+  deliverDay && deliverDay === DeliverDay.EXPRESS
+    ? shopCartTotalPrice + sellOptions.expressDeliver
+    : (shopCartTotalPrice < sellOptions.minimumCart
+        ? sellOptions.deliverPrice
+        : 0) + (deliverAtDoor ? sellOptions.deliverAtDoor : 0);
 
 export const CalculateTotalPrice = (
   shopCart: number[],
