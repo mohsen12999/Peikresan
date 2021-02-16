@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
+﻿
 namespace Peikresan.Data.ClientModels
 {
     public class ClientProduct
@@ -17,27 +13,10 @@ namespace Peikresan.Data.ClientModels
         public bool SoldByWeight { get; set; }
         public int MinWeight { get; set; }
 
-        public int Barcode { get; set; }
+        public decimal? Barcode { get; set; }
         public int Order { get; set; }
 
         public int? CategoryId { get; set; }
         public string Category { get; set; }
     }
 }
-
-/*
-  id: number;
-  title: string;
-  description: string;
-  img: string;
-  price: number;
-  max: number;
-  soldByWeight: boolean;
-  minWeight: number;
-
-  barcode: number;
-  order: number;
-
-  categoryId: number;
-  category: string;
-*/
