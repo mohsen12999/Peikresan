@@ -28,13 +28,13 @@ const Products: React.FC<IProductsProps> = ({
   ResetStatus,
 }) => {
   //React.useEffect(() => {
-  if (status === Status.SUCCEEDED) {
-    message.success("با موفقیت حذف شد.");
-    ResetStatus();
-  } else if (status === Status.FAILED) {
-    message.error("اشکال در حذف");
-    ResetStatus();
-  }
+  // if (status === Status.SUCCEEDED) {
+  //   message.success("با موفقیت حذف شد.");
+  //   ResetStatus();
+  // } else if (status === Status.FAILED) {
+  //   message.error("اشکال در حذف");
+  //   ResetStatus();
+  // }
   //}, [status]);
 
   const columns = [
@@ -106,7 +106,7 @@ const Products: React.FC<IProductsProps> = ({
   return (
     <MyPrivateLayout>
       <div>
-        <h1>لیست دسته بندی ها</h1>
+        <h1>لیست کالا ها</h1>
 
         <Tooltip title="کالای جدید">
           <Link to="/admin/product" className="float-add-btn">

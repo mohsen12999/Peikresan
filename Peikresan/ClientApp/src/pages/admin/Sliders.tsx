@@ -28,13 +28,13 @@ const Sliders: React.FC<ISlidersProps> = ({
   ResetStatus,
 }) => {
   //React.useEffect(() => {
-  if (status === Status.SUCCEEDED) {
-    message.success("با موفقیت حذف شد.");
-    ResetStatus();
-  } else if (status === Status.FAILED) {
-    message.error("اشکال در حذف");
-    ResetStatus();
-  }
+  // if (status === Status.SUCCEEDED) {
+  //   message.success("با موفقیت حذف شد.");
+  //   ResetStatus();
+  // } else if (status === Status.FAILED) {
+  //   message.error("اشکال در حذف");
+  //   ResetStatus();
+  // }
   //}, [status]);
 
   const columns = [

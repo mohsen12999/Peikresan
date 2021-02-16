@@ -18,24 +18,18 @@ interface IUsersProps {
   status: Status;
 
   RemoveElement: Function;
-  ResetStatus: Function;
 }
 
-const Users: React.FC<IUsersProps> = ({
-  users,
-  status,
-  RemoveElement,
-  ResetStatus,
-}) => {
-  if (status === Status.SUCCEEDED) {
-    message.success("با موفقیت حذف شد.");
-    ResetStatus();
-  } else if (status === Status.FAILED) {
-    message.error("اشکال در حذف");
-    ResetStatus();
-  }
-
+const Users: React.FC<IUsersProps> = ({ users, status, RemoveElement }) => {
   const columns = [
+    {
+      title: "عنوان",
+      key: "title",
+      dataIndex: "title",
+      render: (title: string, record: IUser) => (
+        <Space size="middle">{title}</Space>
+      ),
+    },
     {
       title: "نام و نام خانوادگی",
       key: "fullName",
@@ -107,7 +101,6 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = {
   RemoveElement: actionCreators.removeElement,
-  ResetStatus: actionCreators.resetStatus,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Users);

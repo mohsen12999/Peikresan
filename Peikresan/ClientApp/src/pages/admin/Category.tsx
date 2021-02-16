@@ -8,7 +8,7 @@ import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
 import { ICategory } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
-import { AdminPath, AdminDataUrl, LOGIN_URL } from "../../shares/URLs";
+import { AdminPath, AdminDataUrl } from "../../shares/URLs";
 import { AdminDataModel, Status } from "../../shares/Constants";
 
 import "./Admin.css";
