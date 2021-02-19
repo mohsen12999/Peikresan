@@ -3,7 +3,7 @@ import { Action, Reducer } from "redux";
 import { AppThunkAction } from ".";
 import { message } from "antd";
 import { Status } from "../shares/Constants";
-import { GetShopCartProducts } from "../shares/Functions";
+import { GetShopCartProducts, MakeAndSubmitForm } from "../shares/Functions";
 import { IAddress, IBankData, IDeliverTime } from "../shares/Interfaces";
 import { CacheShopCart, GetShopCartCache } from "../shares/LocalStorage";
 import { Cart_URL } from "../shares/URLs";
@@ -182,6 +182,14 @@ export const actionCreators = {
         type: BankActions.REQUEST_SUCCESS,
         payload: { message: "axios success get data", data: response.data },
       });
+
+      MakeAndSubmitForm(
+        response.data.url,
+        new Map([
+          ["TerminalID", response.data.tid],
+          ["token", response.data.token],
+        ])
+      );
     } else {
       dispatch({
         type: BankActions.REQUEST_FAILURE,
