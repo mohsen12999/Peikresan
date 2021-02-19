@@ -5,7 +5,7 @@ import { Row, Col, Button, Divider } from "antd";
 import MyLayout from "../../components/MyLayout";
 import {
   IAddress,
-  IBankData,
+  // IBankData,
   IDeliverTime,
   IProduct,
   ISellOptions,
@@ -28,7 +28,7 @@ interface IFactorProps {
   deliverAtDoor: boolean;
   status: Status;
   sellOptions?: ISellOptions;
-  bankData?: IBankData;
+  // bankData?: IBankData;
   SendCart: Function;
 }
 
@@ -38,7 +38,7 @@ const Factor: React.FC<IFactorProps> = ({
   deliverAtDoor,
   status,
   sellOptions,
-  bankData,
+  // bankData,
   deliverTime,
   address,
   SendCart,
@@ -85,7 +85,7 @@ const Factor: React.FC<IFactorProps> = ({
           پرداخت
         </Button>
 
-        {bankData && bankData.success && (
+        {/* {bankData && bankData.success && (
           <form method="post" action={bankData.url} style={{ display: "none" }}>
             <input
               type="hidden"
@@ -100,7 +100,7 @@ const Factor: React.FC<IFactorProps> = ({
               value={bankData.token}
             />
           </form>
-        )}
+        )} */}
       </div>
     </MyLayout>
   );
@@ -114,7 +114,7 @@ const mapStateToProps = (state: ApplicationState) => ({
   deliverAtDoor: state.shopCart ? state.shopCart.deliverAtDoor : false,
   status: state.shopCart ? state.shopCart.status : Status.IDLE,
   sellOptions: state.data ? state.data.sellOptions : undefined,
-  bankData: state.shopCart ? state.shopCart.bankData : undefined,
+  // bankData: state.shopCart ? state.shopCart.bankData : undefined,
 });
 
 const mapDispatchToProps = {
