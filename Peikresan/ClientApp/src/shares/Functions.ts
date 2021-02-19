@@ -170,3 +170,27 @@ export const MakeCategoryTree = (
         } as ITreeNode)
     );
 };
+
+export const MakeAndSubmitForm = (
+  url: string,
+  inputs: Map<string, string>
+): void => {
+  // make form element
+  var formElement = document.createElement("form");
+  formElement.setAttribute("method", "POST");
+  formElement.setAttribute("action", url);
+
+  inputs.forEach((value, key) => {
+    const inputElement = document.createElement("input");
+    inputElement.setAttribute("name", key);
+    inputElement.setAttribute("id", key);
+    inputElement.setAttribute("value", value);
+    formElement.appendChild(inputElement);
+  });
+
+  formElement.style.display = "none";
+  document.body.append(formElement);
+
+  // formElement.submit();
+  document.querySelector("form")?.submit();
+};
