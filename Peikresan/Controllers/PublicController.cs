@@ -97,17 +97,9 @@ namespace Peikresan.Controllers
         public async Task<IActionResult> GetDataBaseOnLocation(double latitude, double longitude)
         {
             // find 3 nearer seller
-            // TODO: open time for seller
-            var sellers = await _context.Users
-                .Include(u => u.Role)
-                .Where(u => u.Active && u.Role.Name == "Seller")
-                .OrderBy(u => Math.Sqrt(Math.Pow(latitude - u.Latitude, 2) + Math.Pow(longitude - u.Longitude, 2)))
-                .AsNoTracking()
-                .Take(3)
-                .ToListAsync();
+            var sellersId = await UserServices.NearUsersId(_context, latitude, longitude, "Seller", 3);
 
-            var sellersId = sellers.Select(s => s.Id).ToList();
-
+            // get this sellers products
             var products = await _context.Products
                 .Include(p => p.SellerProducts.Where(sp=>sp.UserId != null && sellersId.Contains((Guid)sp.UserId)))
                 .Where(p => p.SellerProducts!=null &&  p.SellerProducts.Any(sp => sp.UserId != null && sellersId.Contains((Guid)sp.UserId)))
