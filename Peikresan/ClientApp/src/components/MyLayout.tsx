@@ -60,7 +60,7 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
 
   let location = useLocation();
 
-  return !validAddress ? (
+  return !validAddress && !location.pathname.includes("comeback") ? (
     <Redirect to={CartPath.AddressesList} />
   ) : (
     <div>
