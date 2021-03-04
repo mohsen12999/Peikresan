@@ -176,12 +176,12 @@ const MyLayout: React.FC<IMyLayoutProps> = ({
             </Link>
           </Menu.Item> */}
           <Menu.Item>
-            <Link to={HomePath.Profile}>
+            <Link to={HomePath.Categories}>
               <AppstoreOutlined />
             </Link>
           </Menu.Item>
           {/* <Menu.Item>
-                <Link to={HomePath.Categories}>
+                <Link to={HomePath.Profile}>
                   <UserOutlined />
                 </Link>
               </Menu.Item> */}
