@@ -29,6 +29,7 @@ export interface IDataState {
   readFromCachedData: boolean;
   status: Status;
 
+  sellersId: number[];
   products: IProduct[];
   categories: ICategory[];
   suggestions: number[];
@@ -169,6 +170,7 @@ export const reducer: Reducer<IDataState> = (
     return {
       readFromCachedData: false,
       status: Status.INIT,
+      sellersId: [],
       products: [],
       categories: [],
       suggestions: [],
@@ -196,6 +198,9 @@ export const reducer: Reducer<IDataState> = (
       const dataState = { ...state, status: Status.SUCCEEDED };
       if (action.payload && action.payload.data) {
         const data = action.payload.data;
+        if (data.sellersId) {
+          dataState.sellersId = data.sellersId;
+        }
         if (data.products) {
           dataState.products = data.products;
         }

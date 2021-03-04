@@ -113,11 +113,13 @@ export const actionCreators = {
       type: ShopCartActions.ADD_PRODUCT,
       payload: { productId, max, count },
     } as IChangeShopCartItem),
+
   removeProduct: (productId: number, count = 1) =>
     ({
       type: ShopCartActions.REMOVE_PRODUCT,
       payload: { productId, count },
     } as IChangeShopCartItem),
+
   deleteProduct: (productId: number) =>
     ({
       type: ShopCartActions.DELETE_PRODUCT,

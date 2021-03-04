@@ -25,58 +25,56 @@ const CartItems: React.FC<ICartItemProps> = ({
   shopCart,
   products,
   DeleteProduct,
-}) => {
-  return (
-    <List
-      header={<div className="cart-items-header">محصولات</div>}
-      footer={
-        <div>
-          <div className="cart-items-footer persian-number">
-            قیمت مجموع: {CalculateShopCartTotalPrice(shopCart, products)}
-          </div>
-          <Link to={CartPath.DeliverTime}>
-            <Button style={{ borderRadius: "16px" }} type="primary">
-              ادامه خرید
-            </Button>
-          </Link>
+}) => (
+  <List
+    header={<div className="cart-items-header">محصولات</div>}
+    footer={
+      <div>
+        <div className="cart-items-footer persian-number">
+          قیمت مجموع: {CalculateShopCartTotalPrice(shopCart, products)}
         </div>
-      }
-      bordered
-      dataSource={GetShopCartProducts(shopCart, products)}
-      renderItem={(item) => (
-        <List.Item>
-          <div className="cart-items-single-row">
-            <Link to={"/product/" + item.id}>
-              <img className="cart-items-img" src={item.img} alt={item.title} />
-            </Link>
-            <div className="cart-items-middle">
-              <h3 className="cart-items-title">{item.title}</h3>
-              <div className="cart-items-middle-bottom">
-                <div className="persian-number">{item.price}</div>
+        <Link to={CartPath.DeliverTime}>
+          <Button style={{ borderRadius: "16px" }} type="primary">
+            ادامه خرید
+          </Button>
+        </Link>
+      </div>
+    }
+    bordered
+    dataSource={GetShopCartProducts(shopCart, products)}
+    renderItem={(item) => (
+      <List.Item key={item.id}>
+        <div className="cart-items-single-row">
+          <Link to={"/product/" + item.id}>
+            <img className="cart-items-img" src={item.img} alt={item.title} />
+          </Link>
+          <div className="cart-items-middle">
+            <h3 className="cart-items-title">{item.title}</h3>
+            <div className="cart-items-middle-bottom">
+              <div className="persian-number">{item.price}</div>
 
-                <div className="cart-items-count-span">
-                  <ChangeableProductCount product={item} />
-                </div>
+              <div className="cart-items-count-span">
+                <ChangeableProductCount product={item} />
               </div>
-            </div>
-            <div>
-              <div className="cart-items-delete-product">
-                <Tag
-                  color="red"
-                  style={{ borderRadius: "14px" }}
-                  onClick={() => DeleteProduct(item.id)}
-                >
-                  حذف کالا
-                </Tag>
-              </div>
-              <div className="persian-number">{item.count * item.price}</div>
             </div>
           </div>
-        </List.Item>
-      )}
-    />
-  );
-};
+          <div>
+            <div className="cart-items-delete-product">
+              <Tag
+                color="red"
+                style={{ borderRadius: "14px" }}
+                onClick={() => DeleteProduct(item.id)}
+              >
+                حذف کالا
+              </Tag>
+            </div>
+            <div className="persian-number">{item.count * item.price}</div>
+          </div>
+        </div>
+      </List.Item>
+    )}
+  />
+);
 
 const mapStateToProps = (state: ApplicationState) => ({
   shopCart: state.shopCart ? state.shopCart.shopCart : [],
