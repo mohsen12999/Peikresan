@@ -66,13 +66,15 @@ export interface IOrder extends IAddress {
   orderStatus: number;
 
   deliverAtDoor: boolean;
+  items: IOrderItem[];
 }
 
 export interface ISubOrder {
   id: number;
 
+  sellerId: number;
   sellerName: string;
-  address: string;
+  sellerAddress: string;
 
   requestStatus: number;
 
@@ -84,8 +86,9 @@ export interface IOrderItem {
   id: number;
   title: string;
   count: number;
-  soldByWeight: boolean;
-  minWeight: number;
+  productId: number;
+  product: string;
+  price: number;
 }
 
 export interface ISellerProduct {
