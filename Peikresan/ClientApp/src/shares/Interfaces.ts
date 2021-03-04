@@ -67,6 +67,10 @@ export interface IOrder extends IAddress {
 
   deliverAtDoor: boolean;
   items: IOrderItem[];
+
+  deliveryId: number;
+  delivery: string;
+  deliveryMobile: string;
 }
 
 export interface ISubOrder {

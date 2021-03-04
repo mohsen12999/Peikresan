@@ -144,8 +144,8 @@ const Orders: React.FC<IOrdersProps> = ({ orders, subOrders }) => {
               .filter((so) => so.orderId === modalOrder.id)
               .map((so) => (
                 <div>
-                  <h4>نام فروشنده: </h4>
-                  <p>آدرس: </p>
+                  <h4>نام فروشنده: {so.sellerName}</h4>
+                  <p>آدرس: {so.sellerAddress}</p>
                   <p>لیست اقلام:</p>
                   <ul>
                     {so.items.map((item) => (
@@ -155,6 +155,10 @@ const Orders: React.FC<IOrdersProps> = ({ orders, subOrders }) => {
                 </div>
               ))}
 
+          <div>
+            <h4>نام پیک: {modalOrder?.delivery}</h4>
+            <p>شماره پیک: {modalOrder?.deliveryMobile}</p>
+          </div>
           <div>
             <h4>آدرس خریدار: </h4>
             <div>{modalOrder && <AddressSpan {...modalOrder} />}</div>
