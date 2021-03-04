@@ -27,11 +27,12 @@ export const GetShopCartProducts = (
   products: IProduct[]
 ): IShopCartProduct[] =>
   shopCart
-    .filter((c) => c > 0)
+    //.filter((c) => c > 0)
     .map(
       (c, i) =>
         ({ ...products.find((p) => p.id === i), count: c } as IShopCartProduct)
-    );
+    )
+    .filter((p) => p.count > 0);
 
 export const GetSubCategories = (id: number, categories: ICategory[]) =>
   categories.filter((cat) => Number(cat.parentId) === Number(id));
@@ -50,13 +51,14 @@ export const CalculateShopCartTotalPrice = (
   products: IProduct[]
 ): number =>
   shopCart
-    .filter((c) => c > 0)
+    // .filter((c) => c > 0)
     .map((c, i) => {
       const product = products.find((p) => p.id === i);
       return product
         ? { count: c, price: product.price }
         : { count: c, price: 0 };
     })
+    .filter((p) => p.count > 0)
     .reduce(
       (accumulator, currentValue) =>
         accumulator + currentValue.count * currentValue.price,
