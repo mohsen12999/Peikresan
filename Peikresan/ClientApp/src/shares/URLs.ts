@@ -27,11 +27,13 @@ export enum AdminDataUrl {
 }
 
 export enum OrderUrl {
-  CHOOSE_SELLER = "/api/order/choose-seller",
-  SELLER_ANSWER = "/api/order/seller-answer",
+  // CHOOSE_SELLER = "/api/order/choose-seller",
+  // SELLER_ANSWER = "/api/order/seller-answer",
 
-  CHOOSE_DELIVER = "/api/order/choose-deliver",
-  DELIVER_ANSWER = "/api/order/deliver-answer",
+  // CHOOSE_DELIVER = "/api/order/choose-deliver",
+  // DELIVER_ANSWER = "/api/order/deliver-answer",
+
+  READY_PACKAGE = "/api/order/ready-package",
 
   GET_PRODUCT = "/api/order/get-product",
   DELIVER_PRODUCT = "/api/order/deliver-product",
