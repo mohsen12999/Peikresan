@@ -29,9 +29,10 @@ namespace Peikresan.Data.Models
         Slider = 40,
         Factor = 50,
         Order = 60,
-        OrderItem = 70,
-        SellerProduct = 80,
-        AwesomeProduct = 90,
+        SubOrder = 70,
+        OrderItem = 80,
+        SellerProduct = 90,
+        AwesomeProduct = 100,
         Other = 200
     }
 
