@@ -113,6 +113,7 @@ namespace Peikresan.Controllers
 
                     DeliveryId = order.DeliverId,
                     Delivery = order.Deliver.FullName,
+                    DeliveryMobile = order.Deliver.Mobile,
                     Items = order.OrderItems.Select(oi => new ClientOrderItem()
                     {
                         Id = oi.Id,

@@ -21,6 +21,7 @@ namespace Peikresan.Data.ClientModels
 
         public Guid? DeliveryId { get; set; }
         public string Delivery { get; set; }
+        public string DeliveryMobile { get; set; }
 
         public List<ClientOrderItem> Items { get; set; }
     }
