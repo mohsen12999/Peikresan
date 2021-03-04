@@ -53,57 +53,35 @@ const SellerOrders: React.FC<ISellerOrdersProps> = ({
             color="blue"
             onClick={() => {
               setModalOrder(record);
-              let buttons = [
-                <Button
-                  key="back"
-                  onClick={() => {
-                    setModalVisible(false);
-                  }}
-                >
-                  بستن
-                </Button>,
-              ];
+              const buttons =
+                record.requestStatus === RequestStatus.Pending
+                  ? [
+                      <Button
+                        key="back"
+                        onClick={() => {
+                          AnswerOrder(
+                            OrderUrl.READY_PACKAGE,
+                            userId,
+                            record.id,
+                            false
+                          );
+                          setModalVisible(false);
+                        }}
+                      >
+                        سفارش آماده هست
+                      </Button>,
+                    ]
+                  : [
+                      <Button
+                        key="back"
+                        onClick={() => {
+                          setModalVisible(false);
+                        }}
+                      >
+                        بستن
+                      </Button>,
+                    ];
 
-              if (
-                // userRole === "seller" &&
-                record.requestStatus === RequestStatus.Pending //  &&
-                // record.sellerId === context.admin.id
-                // record.SubOrders.filter(
-                //   (sb) => sb.id === context.admin.id
-                // ).length > 0
-              ) {
-                buttons = [
-                  <Button
-                    key="back"
-                    onClick={() => {
-                      AnswerOrder(
-                        OrderUrl.SELLER_ANSWER,
-                        userId,
-                        record.id,
-                        false
-                      );
-                      setModalVisible(false);
-                    }}
-                  >
-                    رد سفارش
-                  </Button>,
-                  <Button
-                    key="submit"
-                    type="primary"
-                    onClick={() => {
-                      AnswerOrder(
-                        OrderUrl.SELLER_ANSWER,
-                        userId,
-                        record.id,
-                        true
-                      );
-                      setModalVisible(false);
-                    }}
-                  >
-                    قبول سفارش
-                  </Button>,
-                ];
-              }
               setModalBtn(buttons);
               setModalVisible(true);
             }}
