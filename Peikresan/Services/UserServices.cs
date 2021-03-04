@@ -44,7 +44,6 @@ namespace Peikresan.Services
                 .ToListAsync();
         }
 
-        // TODO: Do it with out saving in db
         public static async Task<bool> FindSeller(ApplicationDbContext context, int orderId)
         {
             var order = await context.Orders.FindAsync(orderId);
@@ -58,11 +57,22 @@ namespace Peikresan.Services
             var sellersProducts = await context.SellerProducts.Where(sp =>
                 sellerIds.Contains((Guid)sp.UserId) && orderProductsId.Contains((int)sp.ProductId)).ToListAsync();
 
-            var sp1 = await context.SellerProducts.Where(sp => sellerIds.Contains((Guid)sp.UserId)).ToListAsync();
-            var sp2 = await context.SellerProducts.Where(sp => orderProductsId.Contains((int)sp.ProductId)).ToListAsync();
-
             // only with correct price
             var sellerProducts = (from sellerProduct in sellersProducts from orderItem in orderItems where sellerProduct.ProductId == orderItem.ProductId && sellerProduct.Price == orderItem.Price select sellerProduct).ToList();
+            //var sellerProducts = new List<SellerProduct>();
+            //foreach (var orderItem in orderItems)
+            //{
+            //    foreach (var sellersProduct in sellersProducts)
+            //    {
+            //        if (orderItem.ProductId == sellersProduct.ProductId)
+            //        {
+            //            if (orderItem.Price == sellersProduct.Price)
+            //            {
+            //                sellerProducts.Add(sellersProduct);
+            //            }
+            //        }
+            //    }
+            //}
 
             var sellerGroup = sellerProducts.GroupBy(sp => sp.UserId)
                 .Select(id => new { id = id.Key, count = id.Count() })
