@@ -93,185 +93,221 @@ namespace Peikresan.Controllers
         //    }
         //}
 
+        //[Authorize]
+        //[HttpPost("seller-answer")]
+        //public async Task<IActionResult> AcceptSellerAsync([FromBody] AnswerModel answerModel)
+        //{
+        //    // var thisUser = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+        //    //if (this_user.Role == null || this_user.Role.Name.ToLower() != "seller")
+        //    //{
+        //    //    return Unauthorized("Only Seller Can Remove Category");
+        //    //}
+        //    var order = await _context.Orders
+        //        .Where(ord => ord.Id == answerModel.OrderId).Include(o => o.OrderItems)
+        //        .FirstOrDefaultAsync();
+
+        //    if (order == null)
+        //    {
+        //        return BadRequest("Can not find order");
+        //    }
+
+        //    if (order.OrderStatus != OrderStatus.AssignToSeller)
+        //    {
+        //        return BadRequest("Can not chooser " + order.OrderStatus + " - " + order.OrderStatusDescription);
+        //    }
+
+        //    if (answerModel.Answer)
+        //    {
+        //        order.OrderStatus = OrderStatus.SellerAccepted;
+        //        order.SellerAcceptedDateTime = DateTime.Now;
+        //    }
+        //    else
+        //    {
+        //        order.OrderStatus = OrderStatus.SellerDeny;
+        //    }
+
+        //    try
+        //    {
+        //        _context.Orders.Update(order);
+        //        await _context.SaveChangesAsync();
+        //        return Ok(new
+        //        {
+        //            order,
+        //            success = true,
+        //            EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+        //            {
+        //                WebsiteModel = WebsiteModel.Order,
+        //                WebsiteEventType = WebsiteEventType.Update,
+        //                ObjectId = order.Id,
+        //                Description = "SellerDeny",
+        //                UserId = ""
+        //            })
+        //        });
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest("error in save order " + e.Message);
+        //    }
+        //}
+
+        //[Authorize]
+        //[HttpPost("choose-deliver")]
+        //public async Task<IActionResult> ChooseDeliverAsync([FromBody] ChooseUser chooseUser)
+        //{
+        //    var thisUser = await _context.Users
+        //        .Include(u => u.Role)
+        //        .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+        //    if (thisUser.Role == null || thisUser.Role.Name.ToLower() != "admin")
+        //    {
+        //        return Unauthorized("Only Admin Can Remove Category");
+        //    }
+
+        //    var deliver = await _context.Users
+        //        .Include(u => u.Role).FirstAsync(us => us.Id == Guid.Parse(chooseUser.UserId));
+
+        //    if (deliver == null)
+        //    {
+        //        return BadRequest("Can not find user");
+        //    }
+
+        //    //if(deliver.Role==null || deliver.Role.Name.ToLower() != "deliver")
+        //    //{
+        //    //    return BadRequest("user is not seller");
+        //    //}
+        //    var order = await _context.Orders
+        //        .Where(ord => ord.Id == chooseUser.OrderId).Include(o => o.OrderItems)
+        //        .FirstOrDefaultAsync();
+
+        //    if (order == null)
+        //    {
+        //        return BadRequest("Can not find order");
+        //    }
+
+        //    if (order.OrderStatus != OrderStatus.SellerAccepted && order.OrderStatus != OrderStatus.DeliverDeny)
+        //    {
+        //        return BadRequest("Can not chooser " + order.OrderStatus + " - " + order.OrderStatusDescription);
+        //    }
+
+        //    order.Deliver = deliver;
+        //    order.OrderStatus = OrderStatus.AssignToDeliver;
+        //    order.AssignToDeliverDateTime = DateTime.Now;
+
+        //    try
+        //    {
+        //        _context.Orders.Update(order);
+        //        await _context.SaveChangesAsync();
+        //        return Ok(new
+        //        {
+        //            order,
+        //            success = true,
+        //            EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+        //            {
+        //                WebsiteModel = WebsiteModel.Order,
+        //                WebsiteEventType = WebsiteEventType.Update,
+        //                ObjectId = order.Id,
+        //                Description = "AssignToDeliver " + deliver.FullName,
+        //                UserId = deliver.Id.ToString()
+        //            })
+        //        });
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest("error in save order " + e.Message);
+        //    }
+        //}
+
+        //[Authorize]
+        //[HttpPost("deliver-answer")]
+        //public async Task<IActionResult> AcceptDeliverAsync([FromBody] AnswerModel answerModel)
+        //{
+        //    // var thisUser = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+        //    //if (this_user.Role == null || this_user.Role.Name.ToLower() != "deliver")
+        //    //{
+        //    //    return Unauthorized("Only Deliver Can Remove Category");
+        //    //}
+        //    var order = await _context.Orders
+        //        .Where(ord => ord.Id == answerModel.OrderId).Include(o => o.OrderItems)
+        //        .FirstOrDefaultAsync();
+
+        //    if (order == null)
+        //    {
+        //        return BadRequest("Can not find order");
+        //    }
+
+        //    if (order.OrderStatus != OrderStatus.AssignToDeliver)
+        //    {
+        //        return BadRequest("Can not chooser " + order.OrderStatus + " - " + order.OrderStatusDescription);
+        //    }
+
+        //    if (answerModel.Answer)
+        //    {
+        //        order.OrderStatus = OrderStatus.DeliverAccepted;
+        //        order.DeliverAcceptedDateTime = DateTime.Now;
+        //    }
+        //    else
+        //    {
+        //        order.OrderStatus = OrderStatus.DeliverDeny;
+        //    }
+
+        //    try
+        //    {
+        //        _context.Orders.Update(order);
+        //        await _context.SaveChangesAsync();
+        //        return Ok(new
+        //        {
+        //            order,
+        //            success = true,
+        //            EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+        //            {
+        //                WebsiteModel = WebsiteModel.Order,
+        //                WebsiteEventType = WebsiteEventType.Update,
+        //                ObjectId = order.Id,
+        //                Description = "DeliverDeny",
+        //                UserId = ""
+        //            })
+        //        });
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return BadRequest("error in save order " + e.Message);
+        //    }
+        //}
+
+
         [Authorize]
-        [HttpPost("seller-answer")]
-        public async Task<IActionResult> AcceptSellerAsync([FromBody] AnswerModel answerModel)
+        [HttpPost("ready-package")]
+        public async Task<IActionResult> PackageIsReady([FromBody] JustId justId)
         {
-            // var thisUser = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-            //if (this_user.Role == null || this_user.Role.Name.ToLower() != "seller")
-            //{
-            //    return Unauthorized("Only Seller Can Remove Category");
-            //}
-            var order = await _context.Orders
-                .Where(ord => ord.Id == answerModel.OrderId).Include(o => o.OrderItems)
-                .FirstOrDefaultAsync();
-
-            if (order == null)
+            var id = Convert.ToInt32(justId.Id);
+            var subOrder = await _context.SubOrders.FindAsync(id);
+            if (subOrder == null)
             {
-                return BadRequest("Can not find order");
+                return BadRequest("can not find subOrder!");
             }
 
-            if (order.OrderStatus != OrderStatus.AssignToSeller)
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+            if (subOrder.SellerId != user.Id)
             {
-                return BadRequest("Can not chooser " + order.OrderStatus + " - " + order.OrderStatusDescription);
+                return BadRequest("user is not true!");
             }
 
-            if (answerModel.Answer)
-            {
-                order.OrderStatus = OrderStatus.SellerAccepted;
-                order.SellerAcceptedDateTime = DateTime.Now;
-            }
-            else
-            {
-                order.OrderStatus = OrderStatus.SellerDeny;
-            }
+            subOrder.RequestStatus = RequestStatus.PackageReady;
+            _context.SubOrders.Update(subOrder);
+            await _context.SaveChangesAsync();
 
-            try
+            return Ok(new
             {
-                _context.Orders.Update(order);
-                await _context.SaveChangesAsync();
-                return Ok(new
+                success = true,
+                subOrder,
+                eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
-                    order,
-                    success = true,
-                    EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
-                    {
-                        WebsiteModel = WebsiteModel.Order,
-                        WebsiteEventType = WebsiteEventType.Update,
-                        ObjectId = order.Id,
-                        Description = "SellerDeny",
-                        UserId = ""
-                    })
-                });
-            }
-            catch (Exception e)
-            {
-                return BadRequest("error in save order " + e.Message);
-            }
-        }
-
-        [Authorize]
-        [HttpPost("choose-deliver")]
-        public async Task<IActionResult> ChooseDeliverAsync([FromBody] ChooseUser chooseUser)
-        {
-            var thisUser = await _context.Users
-                .Include(u => u.Role)
-                .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-
-            if (thisUser.Role == null || thisUser.Role.Name.ToLower() != "admin")
-            {
-                return Unauthorized("Only Admin Can Remove Category");
-            }
-
-            var deliver = await _context.Users
-                .Include(u => u.Role).FirstAsync(us => us.Id == Guid.Parse(chooseUser.UserId));
-
-            if (deliver == null)
-            {
-                return BadRequest("Can not find user");
-            }
-
-            //if(deliver.Role==null || deliver.Role.Name.ToLower() != "deliver")
-            //{
-            //    return BadRequest("user is not seller");
-            //}
-            var order = await _context.Orders
-                .Where(ord => ord.Id == chooseUser.OrderId).Include(o => o.OrderItems)
-                .FirstOrDefaultAsync();
-
-            if (order == null)
-            {
-                return BadRequest("Can not find order");
-            }
-
-            if (order.OrderStatus != OrderStatus.SellerAccepted && order.OrderStatus != OrderStatus.DeliverDeny)
-            {
-                return BadRequest("Can not chooser " + order.OrderStatus + " - " + order.OrderStatusDescription);
-            }
-
-            order.Deliver = deliver;
-            order.OrderStatus = OrderStatus.AssignToDeliver;
-            order.AssignToDeliverDateTime = DateTime.Now;
-
-            try
-            {
-                _context.Orders.Update(order);
-                await _context.SaveChangesAsync();
-                return Ok(new
-                {
-                    order,
-                    success = true,
-                    EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
-                    {
-                        WebsiteModel = WebsiteModel.Order,
-                        WebsiteEventType = WebsiteEventType.Update,
-                        ObjectId = order.Id,
-                        Description = "AssignToDeliver " + deliver.FullName,
-                        UserId = deliver.Id.ToString()
-                    })
-                });
-            }
-            catch (Exception e)
-            {
-                return BadRequest("error in save order " + e.Message);
-            }
-        }
-
-        [Authorize]
-        [HttpPost("deliver-answer")]
-        public async Task<IActionResult> AcceptDeliverAsync([FromBody] AnswerModel answerModel)
-        {
-            // var thisUser = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
-            //if (this_user.Role == null || this_user.Role.Name.ToLower() != "deliver")
-            //{
-            //    return Unauthorized("Only Deliver Can Remove Category");
-            //}
-            var order = await _context.Orders
-                .Where(ord => ord.Id == answerModel.OrderId).Include(o => o.OrderItems)
-                .FirstOrDefaultAsync();
-
-            if (order == null)
-            {
-                return BadRequest("Can not find order");
-            }
-
-            if (order.OrderStatus != OrderStatus.AssignToDeliver)
-            {
-                return BadRequest("Can not chooser " + order.OrderStatus + " - " + order.OrderStatusDescription);
-            }
-
-            if (answerModel.Answer)
-            {
-                order.OrderStatus = OrderStatus.DeliverAccepted;
-                order.DeliverAcceptedDateTime = DateTime.Now;
-            }
-            else
-            {
-                order.OrderStatus = OrderStatus.DeliverDeny;
-            }
-
-            try
-            {
-                _context.Orders.Update(order);
-                await _context.SaveChangesAsync();
-                return Ok(new
-                {
-                    order,
-                    success = true,
-                    EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
-                    {
-                        WebsiteModel = WebsiteModel.Order,
-                        WebsiteEventType = WebsiteEventType.Update,
-                        ObjectId = order.Id,
-                        Description = "DeliverDeny",
-                        UserId = ""
-                    })
-                });
-            }
-            catch (Exception e)
-            {
-                return BadRequest("error in save order " + e.Message);
-            }
+                    UserId = user.Id.ToString(),
+                    WebsiteModel = WebsiteModel.SubOrder,
+                    WebsiteEventType = WebsiteEventType.Update,
+                    Description = "Package Is Ready for suborder #" + id + " for user: " + user.FullName
+                })
+            });
         }
 
         [Authorize]
