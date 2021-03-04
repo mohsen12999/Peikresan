@@ -24,8 +24,9 @@ namespace Peikresan.Data.Models
     public enum RequestStatus
     {
         Pending = 0,
-        Accept = 10,
-        Deny = 20,
-        DenyByAdmin = 40
+        PackageReady = 10,
+        // Accept = 10,
+        // Deny = 30,
+        // DenyByAdmin = 40
     }
 }
