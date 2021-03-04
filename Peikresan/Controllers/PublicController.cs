@@ -100,13 +100,35 @@ namespace Peikresan.Controllers
             var sellersId = await UserServices.NearUsersId(_context, latitude, longitude, "Seller", 3);
 
             // get this sellers products
-            var products = await _context.Products
-                .Include(p => p.SellerProducts.Where(sp=>sp.UserId != null && sellersId.Contains((Guid)sp.UserId)))
-                .Where(p => p.SellerProducts!=null &&  p.SellerProducts.Any(sp => sp.UserId != null && sellersId.Contains((Guid)sp.UserId)))
-                .Include(p => p.Category)
-                .Select(p => new ClientProduct() { Id = p.Id, Title = p.Title, Description = p.Description, Img = p.Img, Max = p.Max, Order = p.Order, SoldByWeight = p.SoldByWeight, MinWeight = p.MinWeight, CategoryId = p.CategoryId, Category = p.Category.Title, Price = p.SellerProducts.Min(sp=>sp.Price) })
-                .AsNoTracking()
+            //var products1 = await _context.Products
+            //    .Include(p => p.SellerProducts.Where(sp=>sp.UserId != null && sellersId.Contains((Guid)sp.UserId)))
+            //    .Where(p => p.SellerProducts!=null &&  p.SellerProducts.Any(sp => sp.UserId != null && sellersId.Contains((Guid)sp.UserId)))
+            //    .Include(p => p.Category)
+            //    .Select(p => new ClientProduct() { Id = p.Id, Title = p.Title, Description = p.Description, Img = p.Img, Max = p.Max, Order = p.Order, SoldByWeight = p.SoldByWeight, MinWeight = p.MinWeight, CategoryId = p.CategoryId, Category = p.Category.Title, Price = p.SellerProducts.Min(sp=>sp.Price) })
+            //    .AsNoTracking()
+            //    .ToListAsync();
+
+            var sellersProducts = await _context.SellerProducts
+                .Include(sp=>sp.Product)
+                .ThenInclude(sp=>sp.Category)
+                .Where(sp => sellersId.Contains((Guid)sp.UserId))
                 .ToListAsync();
+            var products = sellersProducts
+                .GroupBy(sp => sp.Product)
+                .Select(p => new ClientProduct()
+                {
+                    Id = p.Key.Id,
+                    Title = p.Key.Title,
+                    Description = p.Key.Description,
+                    Img = p.Key.Img,
+                    Max = p.Key.Max,
+                    Order = p.Key.Order,
+                    SoldByWeight = p.Key.SoldByWeight,
+                    MinWeight = p.Key.MinWeight,
+                    CategoryId = p.Key.CategoryId,
+                    Category = p.Key.Category.Title,
+                    Price = p.Min(sp=>sp.Price)
+                }).ToList();
 
             var categories = await _context.Categories
                 .Select(c => new { c.Id, c.Title, c.Description, c.Img, c.ParentId, c.HaveChild, c.Order })
@@ -143,6 +165,7 @@ namespace Peikresan.Controllers
 
             return Ok(new
             {
+                sellersId,
                 products,
                 categories,
                 sliders,
