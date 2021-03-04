@@ -242,28 +242,28 @@ namespace Peikresan.Controllers
             }
         }
 
-        // TODO: Fake confirm for last order
-        [HttpGet("fake-confirm")]
-        public async Task<IActionResult> FakeConfirm()
-        {
-            var order = await _context.Orders.OrderBy(or => or.Id).LastAsync();
-            await UserServices.FindSeller(_context, order.Id);
+        // Fake confirm for last order
+        //[HttpGet("fake-confirm")]
+        //public async Task<IActionResult> FakeConfirm()
+        //{
+        //    var order = await _context.Orders.OrderBy(or => or.Id).LastAsync();
+        //    await UserServices.FindSeller(_context, order.Id);
 
-            // Find Deliver
-            var deliver = await UserServices.ClosestUser(_context, order.Latitude, order.Longitude, "Delivery");
+        //    // Find Deliver
+        //    var deliver = await UserServices.ClosestUser(_context, order.Latitude, order.Longitude, "Delivery");
 
-            if (deliver != null)
-                order.Deliver = deliver;
+        //    if (deliver != null)
+        //        order.Deliver = deliver;
 
-            order.OrderStatus = OrderStatus.Verified;
-            order.VerifiedDateTime = DateTime.Now;
+        //    order.OrderStatus = OrderStatus.Verified;
+        //    order.VerifiedDateTime = DateTime.Now;
 
-            _context.Orders.Update(order);
-            await _context.SaveChangesAsync();
+        //    _context.Orders.Update(order);
+        //    await _context.SaveChangesAsync();
 
-            return Redirect("/comeback/" + order.Id + "/?return_id=" + order.VerifyReturnId + "&message=" + order.VerifyMessage + "&trace_number=" + order.Tracenumber);
+        //    return Redirect("/comeback/" + order.Id + "/?return_id=" + order.VerifyReturnId + "&message=" + order.VerifyMessage + "&trace_number=" + order.Tracenumber);
 
-        }
+        //}
     }
 }
 
