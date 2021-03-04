@@ -74,11 +74,11 @@ namespace Peikresan.Data.Models
         public DateTime InitDateTime { get; set; } = DateTime.Now;
         public DateTime? VerifiedDateTime { get; set; } = null;
 
-        public DateTime? AssignToSellerDateTime { get; set; } = null;
-        public DateTime? SellerAcceptedDateTime { get; set; } = null;
+        //public DateTime? AssignToSellerDateTime { get; set; } = null;
+        //public DateTime? SellerAcceptedDateTime { get; set; } = null;
 
-        public DateTime? AssignToDeliverDateTime { get; set; } = null;
-        public DateTime? DeliverAcceptedDateTime { get; set; } = null;
+        //public DateTime? AssignToDeliverDateTime { get; set; } = null;
+        //public DateTime? DeliverAcceptedDateTime { get; set; } = null;
 
         public DateTime? DeliverGetProductDateTime { get; set; } = null;
         public DateTime? DeliveredProductDateTime { get; set; } = null;
@@ -95,21 +95,21 @@ namespace Peikresan.Data.Models
         Init = 1,
         Verified = 10,
         
-        // Choose Market
-        AssignToSeller = 20,
-        SellerDeny = 23,
-        SellerAccepted = 27,
+        // - Choose Market
+        //AssignToSeller = 20,
+        //SellerDeny = 23,
+        //SellerAccepted = 27,
         
-        // Choose Deliver
-        AssignToDeliver = 30,
-        DeliverDeny = 33,
-        DeliverAccepted = 37,
+        // - Choose Deliver
+        // AssignToDeliver = 30,
+        // DeliverDeny = 33,
+        // DeliverAccepted = 37,
 
-        // Deliver Action
+        // - Deliver Action
         DeliveryGetProduct = 40,
         DeliveredProduct = 45,
         
-        // Customer
+        // - Customer
         CustomerDelivered = 50,
         CustomerVote = 55
     }
