@@ -64,12 +64,9 @@ namespace Peikresan.Controllers
             return tokenHandler.WriteToken(token);
         }
 
-        private async Task<IActionResult> AccessData(User thisUser)
+        private async Task<IActionResult> AdminAccessData(User thisUser, string tokenString)
         {
-            var tokenString = GenerateJwtToken(thisUser);
-            if (thisUser.Role != null && thisUser.Role.Name.ToLower() == "admin")
-            {
-                var users = await _context.Users
+            var users = await _context.Users
                     .Include(u => u.Role)
                     .Select(us => new ClientUser
                     {
@@ -90,72 +87,148 @@ namespace Peikresan.Controllers
                     .AsNoTracking()
                     .ToListAsync();
 
-                var roles = await _context.Roles
-                    .ToListAsync();
+            var roles = await _context.Roles
+                .ToListAsync();
 
-                // TODO: select order info for not send too much data to client
-                var orders = await _context.Orders
-                    .Where(or => or.OrderStatus != OrderStatus.Init)
-                    .Include(o => o.OrderItems)
-                    .OrderByDescending(ord => ord.Id)
-                    .AsNoTracking()
-                    .ToListAsync();
-
-                var products = await _context.Products
-                    .Include(p => p.Category)
-                    .Select(p => new ClientProduct
-                    {
-                        Id = p.Id,
-                        Title = p.Title,
-                        Description = p.Description,
-                        Img = p.Img,
-                        Max = p.Max,
-                        SoldByWeight = p.SoldByWeight,
-                        MinWeight = p.MinWeight,
-                        Barcode = p.Barcode,
-                        Order = p.Order,
-                        CategoryId = p.CategoryId,
-                        Category = p.Category.Title
-                    })
-                    .AsNoTracking()
-                    .ToListAsync();
-
-                var categories = await _context.Categories.AsNoTracking().ToListAsync();
-                var banners = await _context.Banners.AsNoTracking().ToListAsync();
-                var sliders = await _context.Sliders.AsNoTracking().ToListAsync();
-
-                return Ok(new
+            // TODO: select order info for not send too much data to client
+            var orders = await _context.Orders
+                .Where(or => or.OrderStatus != OrderStatus.Init)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .Include(o => o.Deliver)
+                .OrderByDescending(ord => ord.Id)
+                .Select(order => new ClientOrder()
                 {
-                    success = true,
-                    msg = "Logging successfully",
-                    token = tokenString,
-                    id = thisUser.Id,
-                    username = thisUser.UserName,
-                    role = thisUser.Role?.Name ?? "",
-                    users,
-                    roles,
-                    orders,
-                    products,
-                    categories,
-                    banners,
-                    sliders,
-                    eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
-                    {
-                        UserId = thisUser.Id.ToString(),
-                        WebsiteModel = WebsiteModel.User,
-                        WebsiteEventType = WebsiteEventType.Logging,
-                        Description = "logging admin " + thisUser.FullName
-                    })
-                });
-            }
+                    Id = order.Id,
+                    State = order.State,
+                    City = order.City,
+                    Mobile = order.Mobile,
+                    Name = order.Name,
+                    FormattedAddress = order.FormattedAddress,
+                    Description = order.Description,
+                    Latitude = order.Latitude,
+                    Longitude = order.Longitude,
+                    OrderStatus = (int)order.OrderStatus,
+                    DeliverAtDoor = order.DeliverAtDoor,
 
-            var userOrders = await _context.Orders
-                .Where(ord => ord.DeliverId == thisUser.Id)
-                //.Where(ord => ord.DeliverId == thisUser.Id || ord.SellerId == thisUser.Id)
-                .Include(o => o.OrderItems).ToListAsync();
+                    DeliveryId = order.DeliverId,
+                    Delivery = order.Deliver.FullName,
+                    Items = order.OrderItems.Select(oi => new ClientOrderItem()
+                    {
+                        Id = oi.Id,
+                        Count = oi.Count,
+                        ProductId = oi.ProductId,
+                        Product = oi.Product.Title,
+                        Price = oi.Price,
+                        Title = oi.Title
+                    }).ToList()
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            var subOrders = await _context.SubOrders
+                .Include(so => so.SubOrderItems)
+                .Include(so => so.Seller)
+                .Select(so => new ClientSubOrder()
+                {
+                    Id = so.Id,
+                    SellerId = so.SellerId,
+                    SellerName = so.Seller.FullName,
+                    SellerAddress = so.Seller.Address,
+                    RequestStatus = (int)so.RequestStatus,
+                    OrderId = so.OrderId,
+                    Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
+                    {
+                        Id = soi.Id,
+                        Count = soi.Count,
+                        ProductId = soi.ProductId,
+                        Product = soi.Product.Title,
+                        Price = soi.Price,
+                        Title = soi.Title
+                    }).ToList()
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            var products = await _context.Products
+                .Include(p => p.Category)
+                .Select(p => new ClientProduct
+                {
+                    Id = p.Id,
+                    Title = p.Title,
+                    Description = p.Description,
+                    Img = p.Img,
+                    Max = p.Max,
+                    SoldByWeight = p.SoldByWeight,
+                    MinWeight = p.MinWeight,
+                    Barcode = p.Barcode,
+                    Order = p.Order,
+                    CategoryId = p.CategoryId,
+                    Category = p.Category.Title
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            var categories = await _context.Categories.AsNoTracking().ToListAsync();
+            var banners = await _context.Banners.AsNoTracking().ToListAsync();
+            var sliders = await _context.Sliders.AsNoTracking().ToListAsync();
+
+            return Ok(new
+            {
+                success = true,
+                msg = "Logging successfully",
+                token = tokenString,
+                id = thisUser.Id,
+                username = thisUser.UserName,
+                role = thisUser.Role?.Name ?? "",
+                users,
+                roles,
+                orders,
+                subOrders,
+                products,
+                categories,
+                banners,
+                sliders,
+                eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                {
+                    UserId = thisUser.Id.ToString(),
+                    WebsiteModel = WebsiteModel.User,
+                    WebsiteEventType = WebsiteEventType.Logging,
+                    Description = "logging admin " + thisUser.FullName
+                })
+            });
+        }
+
+        private async Task<IActionResult> SellerAccessData(User thisUser, string tokenString)
+        {
             var sellerProducts = await _context.SellerProducts
                 .Where(sp => sp.UserId == thisUser.Id)
-                .Include(sellp => sellp.Product).ToListAsync();
+                .Include(sp => sp.Product).ToListAsync();
+
+            var subOrders = await _context.SubOrders
+                .Where(so => so.SellerId == thisUser.Id)
+                .Include(so => so.SubOrderItems)
+                .Include(so => so.Seller)
+                .Select(so => new ClientSubOrder()
+                {
+                    Id = so.Id,
+                    SellerId = so.SellerId,
+                    SellerName = so.Seller.FullName,
+                    SellerAddress = so.Seller.Address,
+                    RequestStatus = (int)so.RequestStatus,
+                    OrderId = so.OrderId,
+                    Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
+                    {
+                        Id = soi.Id,
+                        Count = soi.Count,
+                        ProductId = soi.ProductId,
+                        Product = soi.Product.Title,
+                        Price = soi.Price,
+                        Title = soi.Title
+                    }).ToList()
+                })
+                .AsNoTracking()
+                .ToListAsync();
 
             return Ok(new
             {
@@ -165,7 +238,7 @@ namespace Peikresan.Controllers
                 id = thisUser.Id,
                 userName = thisUser.UserName,
                 role = thisUser.Role?.Name ?? "",
-                orders = userOrders,
+                subOrders,
                 sellerProducts,
                 eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
@@ -176,6 +249,99 @@ namespace Peikresan.Controllers
                 })
             });
         }
+
+        private async Task<IActionResult> DeliveryAccessData(User thisUser, string tokenString)
+        {
+            var orders = await _context.Orders
+                .Where(ord => ord.DeliverId == thisUser.Id)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .Include(o => o.Deliver)
+                .OrderByDescending(ord => ord.Id)
+                .Select(order => new ClientOrder()
+                {
+                    Id = order.Id,
+                    State = order.State,
+                    City = order.City,
+                    Mobile = order.Mobile,
+                    Name = order.Name,
+                    FormattedAddress = order.FormattedAddress,
+                    Description = order.Description,
+                    Latitude = order.Latitude,
+                    Longitude = order.Longitude,
+                    OrderStatus = (int)order.OrderStatus,
+                    DeliverAtDoor = order.DeliverAtDoor,
+
+                    DeliveryId = order.DeliverId,
+                    Delivery = order.Deliver.FullName,
+                    Items = order.OrderItems.Select(oi => new ClientOrderItem()
+                    {
+                        Id = oi.Id,
+                        Count = oi.Count,
+                        ProductId = oi.ProductId,
+                        Product = oi.Product.Title,
+                        Price = oi.Price,
+                        Title = oi.Title
+                    }).ToList()
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            return Ok(new
+            {
+                success = true,
+                msg = "Logging successfully",
+                token = tokenString,
+                id = thisUser.Id,
+                userName = thisUser.UserName,
+                role = thisUser.Role?.Name ?? "",
+                orders,
+                eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                {
+                    UserId = thisUser.Id.ToString(),
+                    WebsiteModel = WebsiteModel.User,
+                    WebsiteEventType = WebsiteEventType.Logging,
+                    Description = "logging user " + thisUser.FullName
+                })
+            });
+        }
+
+        private async Task<IActionResult> AccessData(User thisUser)
+        {
+            var tokenString = GenerateJwtToken(thisUser);
+            if (thisUser.Role != null && thisUser.Role.Name.ToLower() == "admin")
+            {
+                return await AdminAccessData(thisUser, tokenString);
+            }
+
+            if (thisUser.Role != null && thisUser.Role.Name.ToLower() == "seller")
+            {
+                return await SellerAccessData(thisUser, tokenString);
+            }
+
+            if (thisUser.Role != null && thisUser.Role.Name.ToLower() == "delivery")
+            {
+                return await DeliveryAccessData(thisUser, tokenString);
+            }
+
+            return Ok(new
+            {
+                success = true,
+                msg = "Logging successfully",
+                token = tokenString,
+                id = thisUser.Id,
+                userName = thisUser.UserName,
+                role = thisUser.Role?.Name ?? "",
+                eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                {
+                    UserId = thisUser.Id.ToString(),
+                    WebsiteModel = WebsiteModel.User,
+                    WebsiteEventType = WebsiteEventType.Logging,
+                    Description = "logging user " + thisUser.FullName
+                })
+            });
+        }
+
 
 
         [HttpPost]
@@ -268,11 +434,30 @@ namespace Peikresan.Controllers
             }
         }
 
-        [Authorize("Admin")]
-        [HttpPost("admin-access")]
-        public IActionResult AdminAccess()
-        {
-            return Ok(new { success = true, msg = "admin access granted" });
-        }
+        //[Authorize("Admin")]
+        //[HttpPost("admin-access")]
+        //public IActionResult AdminAccess()
+        //{
+        //    return Ok(new { success = true, msg = "admin access granted" });
+        //}
+
+        //[HttpGet("fake-rename")]
+        //public async Task<IActionResult> RenameUser()
+        //{
+        //    var users = await _context.Users
+        //        .Where(u => u.UserName.ToLower() != "admin")
+        //        .Include(u => u.Role)
+        //        .ToListAsync();
+
+        //    var passwordHasher = new PasswordHasher<User>();
+        //    foreach (var user in users)
+        //    {
+        //        user.PasswordHash = passwordHasher.HashPassword(user, "p123456");
+        //    }
+        //    _context.Users.UpdateRange(users);
+        //    await _context.SaveChangesAsync();
+
+        //    return Ok(new { success = true, msg = "admin access granted" });
+        //}
     }
 }
