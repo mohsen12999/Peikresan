@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Peikresan.Data;
+using Peikresan.Data.ClientModels;
 using Peikresan.Data.Models;
 using Peikresan.Data.ViewModels;
 using Peikresan.Services;
@@ -410,6 +411,142 @@ namespace Peikresan.Controllers
             {
                 return BadRequest("error in save order " + e.Message);
             }
+        }
+
+        [HttpPost("order-data")]
+        public async Task<IActionResult> GetOrderDataAsync([FromBody] JustId justId)
+        {
+            var code = justId.Id.ToString();
+            var id = Helper.DecodeNumber(code);
+            var order = await _context.Orders
+                .Where(or => or.Id == id)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .Include(o => o.Deliver)
+                .Select(ord => new ClientOrder()
+                {
+                    Id = ord.Id,
+                    State = ord.State,
+                    City = ord.City,
+                    Mobile = ord.Mobile,
+                    Name = ord.Name,
+                    FormattedAddress = ord.FormattedAddress,
+                    Description = ord.Description,
+                    Latitude = ord.Latitude,
+                    Longitude = ord.Longitude,
+                    OrderStatus = (int)ord.OrderStatus,
+                    DeliverAtDoor = ord.DeliverAtDoor,
+
+                    DeliveryId = ord.DeliverId,
+                    Delivery = ord.Deliver.FullName,
+                    DeliveryMobile = ord.Deliver.Mobile,
+                    Items = ord.OrderItems.Select(oi => new ClientOrderItem()
+                    {
+                        Id = oi.Id,
+                        Count = oi.Count,
+                        ProductId = oi.ProductId,
+                        Product = oi.Product.Title,
+                        Price = oi.Price,
+                        Title = oi.Title
+                    }).ToList()
+                })
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            var suborders = await _context.SubOrders
+                .Where(or => or.OrderId == id)
+                .Include(so => so.SubOrderItems)
+                .Include(so => so.Seller)
+                .Select(so => new ClientSubOrder()
+                {
+                    Id = so.Id,
+                    SellerId = so.SellerId,
+                    SellerName = so.Seller.FullName,
+                    SellerAddress = so.Seller.Address,
+                    RequestStatus = (int)so.RequestStatus,
+                    OrderId = so.OrderId,
+                    Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
+                    {
+                        Id = soi.Id,
+                        Count = soi.Count,
+                        ProductId = soi.ProductId,
+                        Product = soi.Product.Title,
+                        Price = soi.Price,
+                        Title = soi.Title
+                    }).ToList()
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
+            if (order == null)
+            {
+                return BadRequest("order not found");
+            }
+
+            return Ok(new
+            {
+                order,
+                suborders,
+                success = true,
+                EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                {
+                    WebsiteModel = WebsiteModel.Order,
+                    WebsiteEventType = WebsiteEventType.Other,
+                    ObjectId = order.Id,
+                    Description = "Show order",
+                    UserId = ""
+                })
+            });
+        }
+
+        [HttpPost("suborder-data")]
+        public async Task<IActionResult> GetSubOrderDataAsync([FromBody] JustId justId)
+        {
+            var code = justId.Id.ToString();
+            var id = Helper.DecodeNumber(code);
+            var subOrder = await _context.SubOrders
+                .Where(or => or.Id == id)
+                .Include(so => so.SubOrderItems)
+                .Include(so => so.Seller)
+                .Select(so => new ClientSubOrder()
+                {
+                    Id = so.Id,
+                    SellerId = so.SellerId,
+                    SellerName = so.Seller.FullName,
+                    SellerAddress = so.Seller.Address,
+                    RequestStatus = (int)so.RequestStatus,
+                    OrderId = so.OrderId,
+                    Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
+                    {
+                        Id = soi.Id,
+                        Count = soi.Count,
+                        ProductId = soi.ProductId,
+                        Product = soi.Product.Title,
+                        Price = soi.Price,
+                        Title = soi.Title
+                    }).ToList()
+                })
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            if (subOrder == null)
+            {
+                return BadRequest("subOrder not found");
+            }
+
+            return Ok(new
+            {
+                subOrder,
+                success = true,
+                EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                {
+                    WebsiteModel = WebsiteModel.SubOrder,
+                    WebsiteEventType = WebsiteEventType.Other,
+                    ObjectId = subOrder.Id,
+                    Description = "Show order",
+                    UserId = ""
+                })
+            });
         }
 
         //[Authorize]
