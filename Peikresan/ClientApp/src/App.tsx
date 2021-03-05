@@ -14,6 +14,9 @@ import Factors from "./pages/home/Factors";
 import FAQ from "./pages/home/FAQ";
 import Product from "./pages/home/Product";
 import Search from "./pages/home/Search";
+import Order from "./pages/home/Order";
+import Suborder from "./pages/home/Suborder";
+import Notfound from "./pages/home/Notfound";
 
 import Cart from "./pages/cart/Cart";
 import DeliverAddress from "./pages/cart/DeliverAddress";
@@ -61,6 +64,8 @@ export default () => (
       <Route path={HomePath.FAQ} component={FAQ} />
       <Route path={HomePath.Product + ":id"} component={Product} />
       <Route path={HomePath.Search + ":text?"} component={Search} />
+      <Route path={HomePath.Order + ":id"} component={Order} />
+      <Route path={HomePath.SubOrder + ":id"} component={Suborder} />
 
       <Route path={CartPath.Cart} component={Cart} />
       <Route path={CartPath.Map} component={DeliverMap} />
@@ -99,6 +104,8 @@ export default () => (
       <Route path={AdminPath.DeliverOrders} component={DeliverOrders} />
 
       <Route path={AdminPath.Factors} component={AdminFactors} />
+
+      <Route component={Notfound} />
     </Switch>
   </ConfigProvider>
 );
