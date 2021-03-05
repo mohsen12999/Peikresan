@@ -22,7 +22,7 @@ const Suborder = () => {
 
   React.useEffect(() => {
     axios
-      .post(OrderUrl.ORDER_DATA, { id })
+      .post(OrderUrl.SUBORDER_DATA, { id })
       .then((response) => {
         if (response && response.data && response.data.success) {
           setLoading(false);
