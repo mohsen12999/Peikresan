@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Button } from "antd";
 import { useParams, useLocation, Link } from "react-router-dom";
 
-import MyLayout from "../../components/MyLayout";
+import SimpleLayout from "../../components/SimpleLayout";
 import { ApplicationState } from "../../store";
 import { actionCreators as dataActionCreators } from "../../store/Data";
 import { actionCreators as shopCartActionCreators } from "../../store/ShopCart";
@@ -48,7 +48,11 @@ const Comeback: React.FC<IComebackProps> = ({
   }
 
   return (
-    <MyLayout>
+    <SimpleLayout
+      title="نتیجه عملیات بانکی"
+      subTitle=""
+      backPage={HomePath.Home}
+    >
       {Number(id) === 0 ? (
         <div>
           <h1>اشکال در پرداخت بانکی</h1>
@@ -64,7 +68,7 @@ const Comeback: React.FC<IComebackProps> = ({
           </Link>
         </div>
       )}
-    </MyLayout>
+    </SimpleLayout>
   );
 };
 
