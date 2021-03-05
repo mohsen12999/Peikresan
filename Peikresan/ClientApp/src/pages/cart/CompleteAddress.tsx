@@ -47,7 +47,7 @@ const CompleteAddress: React.FC<ICompleteAddressProps> = ({
 
   return (
     <SimpleLayout
-      title="انتخاب آدرس مقصد"
+      title="تکمیل آدرس مقصد"
       subTitle=""
       backPage={CartPath.NewAddress}
     >
