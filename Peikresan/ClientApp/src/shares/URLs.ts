@@ -37,6 +37,9 @@ export enum OrderUrl {
 
   GET_PRODUCT = "/api/order/get-product",
   DELIVER_PRODUCT = "/api/order/deliver-product",
+
+  ORDER_DATA = "/api/order/order-data",
+  SUBORDER_DATA = "/api/order/suborder-data",
 }
 
 export enum HomePath {
@@ -56,6 +59,11 @@ export enum HomePath {
   Suggestions = "#",
   MostSells = "#",
   Newest = "#",
+
+  Order = "/order/",
+  SubOrder = "/suborder/",
+
+  NotFound = "/notfound",
 }
 
 export enum CartPath {
