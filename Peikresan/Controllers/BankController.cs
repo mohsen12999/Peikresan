@@ -5,7 +5,6 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Peikresan.Data;
@@ -84,13 +83,13 @@ namespace Peikresan.Controllers
 
             // Save Order Item
             var orderItemList = cartModel.ShopCart.Select(item => new OrderItem()
-                {
-                    Order = order,
-                    ProductId = item.Id,
-                    Count = item.Count,
-                    Title = item.Title,
-                    Price = item.Price
-                })
+            {
+                Order = order,
+                ProductId = item.Id,
+                Count = item.Count,
+                Title = item.Title,
+                Price = item.Price
+            })
                 .ToList();
 
             try
@@ -222,15 +221,33 @@ namespace Peikresan.Controllers
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
 
-                await UserServices.FindSeller(_context, order.Id);
+                var suborders = await UserServices.FindSeller(_context, order.Id);
 
                 // Find Deliver
                 var deliver = await UserServices.ClosestUser(_context, order.Latitude, order.Longitude, "Delivery");
 
-                if(deliver!=null)
+                if (deliver != null)
                     order.Deliver = deliver;
 
+                //_context.Orders.Update(order);
+                //await _context.SaveChangesAsync();
+
+                order.Sms2Admin = SmsServices.FastSms2AdminAfterBuy(order.Id, (int)order.TotalPrice);
+                // order.Sms2Customer = SmsServices.FastSms2CostumerAfterBuy(order.Mobile, order.Id);
+                order.Sms2Customer = SmsServices.FastSms2CostumerAfterBuy("09116310982", order.Id);
+                // order.Sms2Delivery = SmsServices.FastSms2DeliveryAfterBuy(deliver.Mobile, order.Id);
+                order.Sms2Delivery = SmsServices.FastSms2DeliveryAfterBuy("09116310982", order.Id);
+
                 _context.Orders.Update(order);
+                await _context.SaveChangesAsync();
+
+                foreach (var suborder in suborders)
+                {
+                    var user = await _context.Users.FindAsync(suborder.SellerId);
+                    // suborder.Sms2Seller = SmsServices.FastSms2SellerAfterBuy(user.Mobile, suborder.Id);
+                    suborder.Sms2Seller = SmsServices.FastSms2SellerAfterBuy("09116310982", suborder.Id);
+                }
+                _context.SubOrders.UpdateRange(suborders);
                 await _context.SaveChangesAsync();
 
                 return Redirect("/comeback/" + order.Id + "/?return_id=" + order.VerifyReturnId + "&message=" + order.VerifyMessage + "&trace_number=" + order.Tracenumber);
