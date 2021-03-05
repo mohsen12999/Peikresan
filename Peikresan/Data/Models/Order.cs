@@ -71,6 +71,10 @@ namespace Peikresan.Data.Models
         public int? VoteNumber { get; set; }
         public string VoteDescription { get; set; }
 
+        public bool Sms2Admin { get; set; } = false;
+        public bool Sms2Customer { get; set; } = false;
+        public bool Sms2Delivery { get; set; } = false;
+
         public DateTime InitDateTime { get; set; } = DateTime.Now;
         public DateTime? VerifiedDateTime { get; set; } = null;
 

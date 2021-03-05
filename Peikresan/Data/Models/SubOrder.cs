@@ -15,6 +15,8 @@ namespace Peikresan.Data.Models
         public int OrderId { get; set; }
         public virtual Order Order { get; set; }
 
+        public bool Sms2Seller { get; set; } = false;
+
         public RequestStatus RequestStatus { get; set; } = RequestStatus.Pending;
         [NotMapped] public string RequestStatusDescription => Enum.GetName(typeof(RequestStatus), RequestStatus);
 
