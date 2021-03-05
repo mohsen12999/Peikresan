@@ -44,7 +44,7 @@ namespace Peikresan.Services
                 .ToListAsync();
         }
 
-        public static async Task<bool> FindSeller(ApplicationDbContext context, int orderId)
+        public static async Task<List<SubOrder>> FindSeller(ApplicationDbContext context, int orderId)
         {
             var order = await context.Orders.FindAsync(orderId);
 
@@ -109,12 +109,11 @@ namespace Peikresan.Services
                     ProductId = orderItem.ProductId,
                     SubOrderId = subOrder.Id,
                     Title = orderItem.Title
-                })
-                    .ToList();
+                }).ToList();
 
                 await context.SubOrderItems.AddRangeAsync(subOrderItems);
                 await context.SaveChangesAsync();
-                return true;
+                return new List<SubOrder>(){ subOrder };
             }
 
             // 2 Seller
@@ -189,7 +188,11 @@ namespace Peikresan.Services
 
                 await context.SubOrderItems.AddRangeAsync(secondSubOrderItems);
                 await context.SaveChangesAsync();
-                return true;
+                return new List<SubOrder>()
+                {
+                    subOrder,
+                    secondSubOrder
+                };
             }
             else
             {
@@ -250,7 +253,12 @@ namespace Peikresan.Services
                 firstSubOrderItems.AddRange(thirdSubOrderItems);
                 await context.SubOrderItems.AddRangeAsync(firstSubOrderItems);
                 await context.SaveChangesAsync();
-                return true;
+                return new List<SubOrder>()
+                {
+                    subOrder,
+                    secondSubOrder,
+                    thirdSubOrder
+                };
             }
         }
     }
