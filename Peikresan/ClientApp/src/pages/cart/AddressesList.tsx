@@ -5,8 +5,8 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Link, Redirect } from "react-router-dom";
 
 import SimpleLayout from "../../components/SimpleLayout";
-import { CartPath, HomePath } from "../../shares/URLs";
 import AddressSpan from "../../components/AddressSpan";
+import { CartPath, HomePath } from "../../shares/URLs";
 import { IAddress } from "../../shares/Interfaces";
 import { ApplicationState } from "../../store";
 import { actionCreators as dataActionCreators } from "../../store/Data";

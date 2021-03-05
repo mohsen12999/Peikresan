@@ -73,44 +73,45 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
                   بستن
                 </Button>,
               ];
+              // if (
+              //   role.toUpperCase() === UserRole.DELIVERY &&
+              //   record.orderStatus === OrderStatus.AssignToDeliver
+              // ) {
+              //   buttons = [
+              //     <Button
+              //       key="back"
+              //       onClick={() => {
+              //         AnswerOrder(
+              //           OrderUrl.DELIVER_ANSWER,
+              //           userId,
+              //           record.id,
+              //           false
+              //         );
+              //         setModalVisible(false);
+              //       }}
+              //     >
+              //       رد سفارش
+              //     </Button>,
+              //     <Button
+              //       key="submit"
+              //       type="primary"
+              //       onClick={() => {
+              //         AnswerOrder(
+              //           OrderUrl.DELIVER_ANSWER,
+              //           userId,
+              //           record.id,
+              //           true
+              //         );
+              //         setModalVisible(false);
+              //       }}
+              //     >
+              //       قبول سفارش
+              //     </Button>,
+              //   ];
+              // } else
               if (
                 role.toUpperCase() === UserRole.DELIVERY &&
-                record.orderStatus === OrderStatus.AssignToDeliver
-              ) {
-                buttons = [
-                  <Button
-                    key="back"
-                    onClick={() => {
-                      AnswerOrder(
-                        OrderUrl.DELIVER_ANSWER,
-                        userId,
-                        record.id,
-                        false
-                      );
-                      setModalVisible(false);
-                    }}
-                  >
-                    رد سفارش
-                  </Button>,
-                  <Button
-                    key="submit"
-                    type="primary"
-                    onClick={() => {
-                      AnswerOrder(
-                        OrderUrl.DELIVER_ANSWER,
-                        userId,
-                        record.id,
-                        true
-                      );
-                      setModalVisible(false);
-                    }}
-                  >
-                    قبول سفارش
-                  </Button>,
-                ];
-              } else if (
-                role.toUpperCase() === UserRole.DELIVERY &&
-                record.orderStatus === OrderStatus.DeliverAccepted
+                record.orderStatus <= OrderStatus.DeliverAccepted
               ) {
                 buttons = [
                   <Button
