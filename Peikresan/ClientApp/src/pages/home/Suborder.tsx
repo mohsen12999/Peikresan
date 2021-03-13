@@ -27,7 +27,7 @@ const Suborder = () => {
         if (response && response.data && response.data.success) {
           setLoading(false);
           setSuccess(true);
-          setSubOrder(response.data.suborder);
+          setSubOrder(response.data.subOrder);
         } else {
           setLoading(false);
           setSuccess(false);
@@ -50,7 +50,15 @@ const Suborder = () => {
           <ul>
             {subOrder &&
               subOrder.items.map((oi) => (
-                <li>{oi.title + " - " + oi.count + " واحد"}</li>
+                <li>
+                  {oi.title +
+                    " - " +
+                    oi.count +
+                    " واحد - " +
+                    oi.price +
+                    " - " +
+                    oi.price * oi.count}
+                </li>
               ))}
           </ul>
         </div>
