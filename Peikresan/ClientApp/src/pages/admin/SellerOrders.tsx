@@ -117,7 +117,15 @@ const SellerOrders: React.FC<ISellerOrdersProps> = ({
           <ul>
             {modalOrder &&
               modalOrder.items.map((oi) => (
-                <li>{oi.title + " - " + oi.count + " واحد"}</li>
+                <li>
+                  {oi.title +
+                    " - " +
+                    oi.count +
+                    " واحد - " +
+                    oi.price +
+                    " - " +
+                    oi.price * oi.count}
+                </li>
               ))}
           </ul>
         </Modal>
