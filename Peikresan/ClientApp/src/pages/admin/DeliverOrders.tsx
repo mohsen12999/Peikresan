@@ -209,7 +209,15 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
                   <p>لیست اقلام:</p>
                   <ul>
                     {so.items.map((item) => (
-                      <li>{item.title + " - " + item.count + " واحد"}</li>
+                      <li>
+                        {item.title +
+                          " - " +
+                          item.count +
+                          " واحد - " +
+                          item.price +
+                          " - " +
+                          item.price * item.count}
+                      </li>
                     ))}
                   </ul>
                 </div>
