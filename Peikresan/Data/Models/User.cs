@@ -18,6 +18,11 @@ namespace Peikresan.Data.Models
 
         public bool Active { get; set; } = true;
 
+        public double? OpenTime { get; set; }
+        public double? CloseTime { get; set; }
+        public double? OpenTime2 { get; set; }
+        public double? CloseTime2 { get; set; }
+
         public double Latitude { get; set; }
         public double Longitude { get; set; }
         [NotMapped] public GeographyPoint Location => GeographyPoint.Create(Latitude, Longitude);
