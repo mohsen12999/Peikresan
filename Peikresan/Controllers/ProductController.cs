@@ -70,6 +70,7 @@ namespace Peikresan.Controllers
                     Description = string.IsNullOrEmpty(productModel.Description) || productModel.Description.ToLower() == "undefined" ? "" : productModel.Description,
                     Max = productModel.Max,
                     SoldByWeight = productModel.SoldByWeight,
+                    Confirm = productModel.Confirm.ToLower() == "true"
                 };
 
                 if (int.TryParse(productModel.Order, out int order))
@@ -122,6 +123,7 @@ namespace Peikresan.Controllers
                 }
                 product.Max = productModel.Max;
                 product.SoldByWeight = productModel.SoldByWeight;
+                product.Confirm = productModel.Confirm.ToLower() == "true";
 
                 if (int.TryParse(productModel.MinWeight, out int minWeight))
                 {
