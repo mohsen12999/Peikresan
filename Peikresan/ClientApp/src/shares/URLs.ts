@@ -24,6 +24,8 @@ export enum AdminDataUrl {
 
   ADD_CHANGE_SELLER_PRODUCT_URL = "api/sellerproduct",
   REMOVE_SELLER_PRODUCT_URL = "api/sellerproduct/remove-seller-product",
+
+  UPLOAD_SELLER_PRODUCT_URL = "api/sellerproduct/upload-file",
 }
 
 export enum OrderUrl {
@@ -35,10 +37,11 @@ export enum OrderUrl {
 
   READY_PACKAGE = "/api/order/ready-package",
 
-  GET_PRODUCT = "/api/order/get-product",
-  DELIVER_PRODUCT = "/api/order/deliver-product",
+  GET_PRODUCT_FROM_SELLER = "/api/order/get-product",
+  DELIVER_PRODUCT_TO_CUSTOMER = "/api/order/deliver-product",
 
   ORDER_DATA = "/api/order/order-data",
+  MY_ORDER_DATA = "/api/order/my-order-data",
   SUBORDER_DATA = "/api/order/suborder-data",
 }
 
@@ -61,6 +64,7 @@ export enum HomePath {
   Newest = "#",
 
   Order = "/order/",
+  MyOrder = "/my-order/",
   SubOrder = "/suborder/",
 
   NotFound = "/notfound",
