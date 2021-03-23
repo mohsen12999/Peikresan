@@ -6,9 +6,9 @@ namespace Peikresan.Services
 {
     public static class SmsServices
     {
-        private const string UserApiKey = "Peikresan@SmsIr";
-        private const string SecretKey = "df1d8ed01c5e9aa6172b8ed0";
-        private const string LineNumber = "30003472012345";
+        private const string SecretKey = "Peikresan@SmsIr";
+        private const string UserApiKey = "24667f7e22d733a35d607f7e";
+        private const string LineNumber = "3000235173";
         private const string AdminNumber = "09116310982";
 
         //public SmsServices()
@@ -36,28 +36,47 @@ namespace Peikresan.Services
         }
 
 
-        public static bool Sms2CostumerAfterBuy(string mobile, int orderId)
+        public static bool Sms2CostumerAfterBuy(string mobile, string name, int orderId)
         {
             var message =
-                "مشتری گرامی،\n سفارش ما با شماره پیگیری " + orderId + " ثبت شد و در زمان تعیین شده ارسال می شود.\nپیک رسان ";
+                "پیک‌رسان\n" + name +
+                " عزیز\nسفارش تان ثبت شد و در حال پردازش آن هستیم شما می‌توانید وضعیت آن را از نشانی زیر پیگیری کنید.\nشماره سفارش : " + orderId +
+                "\nلینک پیگیری : https://peikresan.com/my-order/" + Helper.EncodeNumber(orderId);
             return SendSms(mobile, message);
         }
 
-        public static bool Sms2AdminAfterBuy(string mobile, int orderId, int price)
+        public static bool Sms2AdminAfterBuy(int orderId, int price)
         {
             var message = "مدیر محترم سایت،\n سفارشی با شماره پیگیری " + orderId + " به مبلغ " + price + " تومان ثبت گردید.\nپیک رسان ";
-            return SendSms(mobile, message);
+            return SendSms(AdminNumber, message);
         }
 
         public static bool Sms2SellerAfterBuy(string mobile, int subOrderId, string time)
         {
-            var message = "فروشنده گرامی،\n سفارشی با کد پیگیری " + subOrderId + " برای فروشگاه شما ثبت گردید. برای اطلاع به لینک زیر مراجعه کنید.\nپیک رسان \n https://peikresan.com/suborder/" + Helper.EncodeNumber(subOrderId);
+            var message = "پیک‌رسان\nفروشنده گرامی سلام\nدر حساب کاربری شما یک سفارش به شماره " + subOrderId +
+                          " برای تحویل " + time +
+                          " به ثبت رسیده است. جهت آماده‌سازی و ارسال آن به مشتری به لینک زیر مراجعه کنید: https://peikresan.com/suborder/" + Helper.EncodeNumber(subOrderId);
             return SendSms(mobile, message);
         }
 
-        public static bool Sms2DeliveryAfterBuy(string mobile, int orderId)
+        public static bool Sms2DeliveryAfterBuy(string mobile, int orderId, string time)
         {
-            var message = "راننده گرامی،\nسفارشی با کد پیگیری " + orderId + " برای شما ثبت شد. برای اطلاع بیشتر به لینک زیر مراجعه کنید.\n پیک رسان\n https://peikresan.com/suborder/[code] " + Helper.EncodeNumber(orderId);
+            var message = "پیک‌رسان\nراننده گرامی سلام\nسفارشی با کد پیگیری " + orderId + " برای تحویل " + time +
+                          " برای شما ثبت شده است.برای اطلاع بیشتر به لینک زیر مراجعه کنید : https://peikresan.com/suborder/[code] " + Helper.EncodeNumber(orderId);
+            return SendSms(mobile, message);
+        }
+
+        public static bool Sms2CostumerAfterDeliveryGetProducts(string mobile, string name, int orderId)
+        {
+            var message = "پیک رسان\n" + name +
+            " عزیز\nسفارش تان را به مامور ارسال تحویل دادیم این سفارش تا لحظاتی دیگر به دست تان می‌رسد.\nلطفا برای تکمیل فرآیند تحویل سفارش تان کد تحویل را به مامور ارسال ارائه کنید.\n شماره سفارش :" + orderId;
+            return SendSms(mobile, message);
+        }
+
+        public static bool Sms2CostumerAfterDeliverProducts(string mobile, string name, int orderId)
+        {
+            var message = "پیک رسان\n" + name +
+                          " عزیز\nاز خریدتان ممنونیم.از شما دعوت میکنیم تا از طریق نشانی زیر به پرسش های ما پاسخ دهید و با بیان نظرهای خود کمک کنید تا کیفیت خدمات مان را بهبود دهیم.\nلینک :";
             return SendSms(mobile, message);
         }
 
@@ -76,7 +95,6 @@ namespace Peikresan.Services
 
             return ultraFastSendResponse.IsSuccessful;
         }
-
 
         public static bool FastSms2CostumerAfterBuy(string mobile, int orderId)
         {
@@ -105,7 +123,7 @@ namespace Peikresan.Services
                 }
             });
         }
-
+        
         public static bool FastSms2SellerAfterBuy(string mobile, int subOrderId)
         {
             var mobileLong = Convert.ToInt64(mobile);
