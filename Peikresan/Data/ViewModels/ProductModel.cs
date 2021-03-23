@@ -16,5 +16,6 @@ namespace Peikresan.Data.ViewModels
         public bool SoldByWeight { get; set; } = false;
         public string MinWeight { get; set; } = "";
         public string Category { get; set; }
+        public string Confirm { get; set; }
     }
 }
