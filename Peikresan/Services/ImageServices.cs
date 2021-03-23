@@ -15,26 +15,23 @@ namespace Peikresan.Services
         {
             try
             {
-                using (var fileStream = file.OpenReadStream())
-                {
-                    using (var image = await Image.LoadAsync<Rgba32>(fileStream))
-                    {
-                        image.Mutate(x => x.Resize(width, height)
-                            //.Grayscale()
-                        );
-                        var filePath = model switch
-                        {
-                            WebsiteModel.Product => "img\\product\\product_" + DateTime.Now.Ticks + ".jpg",
-                            WebsiteModel.Category => "img\\category\\cat_" + DateTime.Now.Ticks + ".jpg",
-                            WebsiteModel.Slider => "img\\slider\\slider_" + DateTime.Now.Ticks + ".jpg",
-                            WebsiteModel.Banner => "img\\banner\\banner_" + DateTime.Now.Ticks + ".jpg",
-                            _ => "img\\pic-" + DateTime.Now.Ticks + ".jpg"
-                        };
+                await using var fileStream = file.OpenReadStream();
+                using var image = await Image.LoadAsync<Rgba32>(fileStream);
 
-                        await image.SaveAsync(Path.Combine(webRootPath, filePath));
-                        return filePath;
-                    }
-                }
+                image.Mutate(x => x.Resize(width, height)
+                    //.Grayscale()
+                );
+                var filePath = model switch
+                {
+                    WebsiteModel.Product => "img\\product\\product_" + DateTime.Now.Ticks + ".jpg",
+                    WebsiteModel.Category => "img\\category\\cat_" + DateTime.Now.Ticks + ".jpg",
+                    WebsiteModel.Slider => "img\\slider\\slider_" + DateTime.Now.Ticks + ".jpg",
+                    WebsiteModel.Banner => "img\\banner\\banner_" + DateTime.Now.Ticks + ".jpg",
+                    _ => "img\\pic-" + DateTime.Now.Ticks + ".jpg"
+                };
+
+                await image.SaveAsync(Path.Combine(webRootPath, filePath));
+                return filePath;
             }
             catch (Exception)
             {
