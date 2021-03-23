@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Identity;
-using System.Spatial;
+using Peikresan.Services;
 
 namespace Peikresan.Data.Models
 {
@@ -23,9 +23,10 @@ namespace Peikresan.Data.Models
         public double? OpenTime2 { get; set; }
         public double? CloseTime2 { get; set; }
 
+        public bool IsOpenNow => Helper.IsOpenUser(this,DateTime.Now);
+        
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        [NotMapped] public GeographyPoint Location => GeographyPoint.Create(Latitude, Longitude);
 
         public virtual Role Role { get; set; }
         // public RoleStatus RoleStatus { get; set; } = RoleStatus.User;
