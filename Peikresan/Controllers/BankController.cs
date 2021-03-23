@@ -5,6 +5,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Peikresan.Data;
@@ -232,20 +233,20 @@ namespace Peikresan.Controllers
                 //_context.Orders.Update(order);
                 //await _context.SaveChangesAsync();
 
-                order.Sms2Admin = SmsServices.FastSms2AdminAfterBuy(order.Id, (int)order.TotalPrice);
                 // order.Sms2Customer = SmsServices.FastSms2CostumerAfterBuy(order.Mobile, order.Id);
-                order.Sms2Customer = SmsServices.FastSms2CostumerAfterBuy("09116310982", order.Id);
+                order.Sms2Customer = SmsServices.Sms2CostumerAfterBuy("09116310982",order.Name, order.Id);
+                order.Sms2Admin = SmsServices.Sms2AdminAfterBuy(order.Id, (int)order.TotalPrice);
                 // order.Sms2Delivery = SmsServices.FastSms2DeliveryAfterBuy(deliver.Mobile, order.Id);
-                order.Sms2Delivery = SmsServices.FastSms2DeliveryAfterBuy("09116310982", order.Id);
+                order.Sms2Delivery = SmsServices.Sms2DeliveryAfterBuy("09116310982", order.Id,Helper.OrderDeliverTime(order));
 
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
 
                 foreach (var suborder in suborders)
                 {
-                    var user = await _context.Users.FindAsync(suborder.SellerId);
+                    // var user = await _context.Users.FindAsync(suborder.SellerId);
                     // suborder.Sms2Seller = SmsServices.FastSms2SellerAfterBuy(user.Mobile, suborder.Id);
-                    suborder.Sms2Seller = SmsServices.FastSms2SellerAfterBuy("09116310982", suborder.Id);
+                    suborder.Sms2Seller = SmsServices.Sms2SellerAfterBuy("09116310982", suborder.Id, Helper.OrderDeliverTime(order));
                 }
                 _context.SubOrders.UpdateRange(suborders);
                 await _context.SaveChangesAsync();
@@ -266,20 +267,37 @@ namespace Peikresan.Controllers
         //    var order = await _context.Orders.OrderBy(or => or.Id).LastAsync();
         //    await UserServices.FindSeller(_context, order.Id);
 
+
+        //    var suborders = await UserServices.FindSeller(_context, order.Id);
+
         //    // Find Deliver
         //    var deliver = await UserServices.ClosestUser(_context, order.Latitude, order.Longitude, "Delivery");
 
         //    if (deliver != null)
         //        order.Deliver = deliver;
 
-        //    order.OrderStatus = OrderStatus.Verified;
-        //    order.VerifiedDateTime = DateTime.Now;
+        //    //_context.Orders.Update(order);
+        //    //await _context.SaveChangesAsync();
+
+        //    order.Sms2Admin = SmsServices.FastSms2AdminAfterBuy(order.Id, (int)order.TotalPrice);
+        //    // order.Sms2Customer = SmsServices.FastSms2CostumerAfterBuy(order.Mobile, order.Id);
+        //    order.Sms2Customer = SmsServices.FastSms2CostumerAfterBuy("09116310982", order.Id);
+        //    // order.Sms2Delivery = SmsServices.FastSms2DeliveryAfterBuy(deliver.Mobile, order.Id);
+        //    order.Sms2Delivery = SmsServices.FastSms2DeliveryAfterBuy("09116310982", order.Id);
 
         //    _context.Orders.Update(order);
         //    await _context.SaveChangesAsync();
 
-        //    return Redirect("/comeback/" + order.Id + "/?return_id=" + order.VerifyReturnId + "&message=" + order.VerifyMessage + "&trace_number=" + order.Tracenumber);
+        //    foreach (var suborder in suborders)
+        //    {
+        //        var user = await _context.Users.FindAsync(suborder.SellerId);
+        //        // suborder.Sms2Seller = SmsServices.FastSms2SellerAfterBuy(user.Mobile, suborder.Id);
+        //        suborder.Sms2Seller = SmsServices.FastSms2SellerAfterBuy("09116310982", suborder.Id);
+        //    }
+        //    _context.SubOrders.UpdateRange(suborders);
+        //    await _context.SaveChangesAsync();
 
+        //    return Redirect("/comeback/" + order.Id + "/?return_id=" + order.VerifyReturnId + "&message=" + order.VerifyMessage + "&trace_number=" + order.Tracenumber);
         //}
     }
 }
