@@ -16,20 +16,17 @@ import { OrderStatusDescription } from "../../shares/Functions";
 // only for delivery
 
 interface IDeliverOrdersProps {
-  role: string;
-  userId: string;
   orders: IOrder[];
   subOrders: ISubOrder[];
 
-  AnswerOrder: Function;
+  PackageTransaction: Function;
 }
 
 const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
-  role,
-  userId,
   orders,
   subOrders,
-  AnswerOrder,
+
+  PackageTransaction,
 }) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalOrder, setModalOrder] = React.useState<IOrder>();
@@ -109,40 +106,33 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
               //     </Button>,
               //   ];
               // } else
-              if (
-                role.toUpperCase() === UserRole.DELIVERY &&
-                record.orderStatus <= OrderStatus.DeliverAccepted
-              ) {
+              if (record.orderStatus <= OrderStatus.DeliverAccepted) {
                 buttons = [
                   <Button
                     key="back"
                     onClick={() => {
-                      AnswerOrder(
-                        OrderUrl.GET_PRODUCT,
-                        userId,
-                        record.id,
-                        true
+                      PackageTransaction(
+                        OrderUrl.GET_PRODUCT_FROM_SELLER,
+                        record.id
                       );
+
                       //context.DeliverGettingProduct(record.id);
                       setModalVisible(false);
                     }}
                   >
-                    تحویل گرفتن از فروشنده
+                    تحویل گرفتن همه کالا‌ها از فروشنده
                   </Button>,
                 ];
               } else if (
-                role === UserRole.DELIVERY &&
                 record.orderStatus === OrderStatus.DeliveryGetProduct
               ) {
                 buttons = [
                   <Button
                     key="back"
                     onClick={() => {
-                      AnswerOrder(
-                        OrderUrl.DELIVER_PRODUCT,
-                        userId,
-                        record.id,
-                        true
+                      PackageTransaction(
+                        OrderUrl.DELIVER_PRODUCT_TO_CUSTOMER,
+                        record.id
                       );
                       //context.DeliverGettingProduct(record.id);
                       setModalVisible(false);
@@ -166,10 +156,7 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
 
   const filterOrders =
     orders.length > 0
-      ? orders.filter(
-          (o) =>
-            o.orderStatus === 30 || o.orderStatus === 37 || o.orderStatus === 40
-        )
+      ? orders.filter((o) => o.orderStatus >= 10 && o.orderStatus < 50)
       : [];
 
   return (
@@ -203,9 +190,9 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
             subOrders
               .filter((so) => so.orderId === modalOrder.id)
               .map((so) => (
-                <div>
-                  <h4>نام فروشنده: </h4>
-                  <p>آدرس: </p>
+                <div key={so.id}>
+                  <h4>نام فروشنده: {so.sellerName}</h4>
+                  <p>آدرس: {so.sellerAddress}</p>
                   <p>لیست اقلام:</p>
                   <ul>
                     {so.items.map((item) => (
@@ -236,14 +223,12 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  role: state.auth ? state.auth.role : "",
-  userId: state.auth ? state.auth.id : "",
   orders: state.auth ? state.auth.orders : [],
   subOrders: state.auth ? state.auth.subOrders : [],
 });
 
 const mapDispatchToProps = {
-  AnswerOrder: actionCreators.answerOrder,
+  PackageTransaction: actionCreators.packageTransaction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeliverOrders);
