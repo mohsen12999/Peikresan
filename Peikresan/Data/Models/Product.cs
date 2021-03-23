@@ -36,6 +36,5 @@ namespace Peikresan.Data.Models
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         public bool Confirm { get; set; } = false;
-        public int DeliverConfirmCode { get; set; } = new Random().Next(1000, 100);
     }
 }

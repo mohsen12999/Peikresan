@@ -90,6 +90,8 @@ namespace Peikresan.Data.Models
         public DateTime? CustomerDeliveredDateTime { get; set; } = null;
         public DateTime? CustomerVoteDateTime { get; set; } = null;
 
+        public int DeliverConfirmCode { get; set; } = new Random().Next(1000, 100);
+
         [NotMapped]
         public decimal OrderItemsPrice => OrderItems.Sum(orderItem => orderItem.ItemsPrice);
     }
