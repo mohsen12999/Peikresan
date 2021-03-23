@@ -30,6 +30,7 @@ export interface IDataState {
   status: Status;
 
   sellersId: number[];
+  enableExpressDelivery: boolean;
   products: IProduct[];
   categories: ICategory[];
   suggestions: number[];
@@ -171,6 +172,7 @@ export const reducer: Reducer<IDataState> = (
       readFromCachedData: false,
       status: Status.INIT,
       sellersId: [],
+      enableExpressDelivery: false,
       products: [],
       categories: [],
       suggestions: [],
@@ -200,6 +202,9 @@ export const reducer: Reducer<IDataState> = (
         const data = action.payload.data;
         if (data.sellersId) {
           dataState.sellersId = data.sellersId;
+        }
+        if (data.enableExpressDelivery) {
+          dataState.enableExpressDelivery = data.enableExpressDelivery;
         }
         if (data.products) {
           dataState.products = data.products;
