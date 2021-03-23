@@ -297,10 +297,36 @@ namespace Peikresan.Controllers
             _context.SubOrders.Update(subOrder);
             await _context.SaveChangesAsync();
 
+            var subOrders = await _context.SubOrders
+                .Where(or => or.SellerId == subOrder.SellerId)
+                .Include(so => so.SubOrderItems)
+                .Include(so => so.Seller)
+                .Select(so => new ClientSubOrder()
+                {
+                    Id = so.Id,
+                    SellerId = so.SellerId,
+                    SellerName = so.Seller.FullName,
+                    SellerAddress = so.Seller.Address,
+                    RequestStatus = (int)so.RequestStatus,
+                    OrderId = so.OrderId,
+                    Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
+                    {
+                        Id = soi.Id,
+                        Count = soi.Count,
+                        ProductId = soi.ProductId,
+                        Product = soi.Product.Title,
+                        Price = soi.Price,
+                        Title = soi.Title
+                    }).ToList()
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
             return Ok(new
             {
                 success = true,
                 subOrder,
+                subOrders,
                 eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = user.Id.ToString(),
@@ -342,9 +368,49 @@ namespace Peikresan.Controllers
                 _context.Orders.Update(order);
 
                 await _context.SaveChangesAsync();
+
+                // SmsServices.Sms2CostumerAfterDeliveryGetProducts(order.Mobile, order.Name, order.Id);
+                SmsServices.Sms2CostumerAfterDeliveryGetProducts("09116310982", order.Name, order.Id);
+
+                var orders = await _context.Orders
+                    .Where(ord => ord.DeliverId == thisUser.Id)
+                    .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+                    .Include(o => o.Deliver)
+                    .OrderByDescending(ord => ord.Id)
+                    .Select(or => new ClientOrder()
+                    {
+                        Id = or.Id,
+                        State = or.State,
+                        City = or.City,
+                        Mobile = or.Mobile,
+                        Name = or.Name,
+                        FormattedAddress = or.FormattedAddress,
+                        Description = or.Description,
+                        Latitude = or.Latitude,
+                        Longitude = or.Longitude,
+                        OrderStatus = (int)or.OrderStatus,
+                        DeliverAtDoor = or.DeliverAtDoor,
+
+                        DeliveryId = or.DeliverId,
+                        Delivery = or.Deliver.FullName,
+                        Items = or.OrderItems.Select(oi => new ClientOrderItem()
+                        {
+                            Id = oi.Id,
+                            Count = oi.Count,
+                            ProductId = oi.ProductId,
+                            Product = oi.Product.Title,
+                            Price = oi.Price,
+                            Title = oi.Title
+                        }).ToList()
+                    })
+                    .AsNoTracking()
+                    .ToListAsync();
+
                 return Ok(new
                 {
                     order,
+                    orders,
                     success = true,
                     EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
@@ -393,9 +459,48 @@ namespace Peikresan.Controllers
                 _context.Orders.Update(order);
 
                 await _context.SaveChangesAsync();
+
+                SmsServices.Sms2CostumerAfterDeliverProducts(order.Mobile, order.Name, order.Id);
+
+                var orders = await _context.Orders
+                    .Where(ord => ord.DeliverId == thisUser.Id)
+                    .Include(o => o.OrderItems)
+                    .ThenInclude(oi => oi.Product)
+                    .Include(o => o.Deliver)
+                    .OrderByDescending(ord => ord.Id)
+                    .Select(or => new ClientOrder()
+                    {
+                        Id = or.Id,
+                        State = or.State,
+                        City = or.City,
+                        Mobile = or.Mobile,
+                        Name = or.Name,
+                        FormattedAddress = or.FormattedAddress,
+                        Description = or.Description,
+                        Latitude = or.Latitude,
+                        Longitude = or.Longitude,
+                        OrderStatus = (int)or.OrderStatus,
+                        DeliverAtDoor = or.DeliverAtDoor,
+
+                        DeliveryId = or.DeliverId,
+                        Delivery = or.Deliver.FullName,
+                        Items = or.OrderItems.Select(oi => new ClientOrderItem()
+                        {
+                            Id = oi.Id,
+                            Count = oi.Count,
+                            ProductId = oi.ProductId,
+                            Product = oi.Product.Title,
+                            Price = oi.Price,
+                            Title = oi.Title
+                        }).ToList()
+                    })
+                    .AsNoTracking()
+                    .ToListAsync();
+
                 return Ok(new
                 {
                     order,
+                    orders,
                     success = true,
                     EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
@@ -414,7 +519,7 @@ namespace Peikresan.Controllers
         }
 
         [HttpPost("order-data")]
-        public async Task<IActionResult> GetOrderDataAsync([FromBody] JustId justId)
+        public async Task<IActionResult> GetOrderDataForDeliveryAsync([FromBody] JustId justId)
         {
             var code = justId.Id.ToString();
             var id = Helper.DecodeNumber(code);
@@ -454,29 +559,29 @@ namespace Peikresan.Controllers
                 .FirstOrDefaultAsync();
 
             var suborders = await _context.SubOrders
-                .Where(or => or.OrderId == id)
-                .Include(so => so.SubOrderItems)
-                .Include(so => so.Seller)
-                .Select(so => new ClientSubOrder()
-                {
-                    Id = so.Id,
-                    SellerId = so.SellerId,
-                    SellerName = so.Seller.FullName,
-                    SellerAddress = so.Seller.Address,
-                    RequestStatus = (int)so.RequestStatus,
-                    OrderId = so.OrderId,
-                    Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
-                    {
-                        Id = soi.Id,
-                        Count = soi.Count,
-                        ProductId = soi.ProductId,
-                        Product = soi.Product.Title,
-                        Price = soi.Price,
-                        Title = soi.Title
-                    }).ToList()
-                })
-                .AsNoTracking()
-                .ToListAsync();
+               .Where(or => or.OrderId == id)
+               .Include(so => so.SubOrderItems)
+               .Include(so => so.Seller)
+               .Select(so => new ClientSubOrder()
+               {
+                   Id = so.Id,
+                   SellerId = so.SellerId,
+                   SellerName = so.Seller.FullName,
+                   SellerAddress = so.Seller.Address,
+                   RequestStatus = (int)so.RequestStatus,
+                   OrderId = so.OrderId,
+                   Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
+                   {
+                       Id = soi.Id,
+                       Count = soi.Count,
+                       ProductId = soi.ProductId,
+                       Product = soi.Product.Title,
+                       Price = soi.Price,
+                       Title = soi.Title
+                   }).ToList()
+               })
+               .AsNoTracking()
+               .ToListAsync();
 
             if (order == null)
             {
@@ -487,6 +592,67 @@ namespace Peikresan.Controllers
             {
                 order,
                 suborders,
+                success = true,
+                EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+                {
+                    WebsiteModel = WebsiteModel.Order,
+                    WebsiteEventType = WebsiteEventType.Other,
+                    ObjectId = order.Id,
+                    Description = "Show order",
+                    UserId = ""
+                })
+            });
+        }
+
+                [HttpPost("my-order-data")]
+        public async Task<IActionResult> GetOrderDataForCustomerAsync([FromBody] JustId justId)
+        {
+            var code = justId.Id.ToString();
+            var id = Helper.DecodeNumber(code);
+            var order = await _context.Orders
+                .Where(or => or.Id == id)
+                .Include(o => o.OrderItems)
+                .ThenInclude(oi => oi.Product)
+                .Include(o => o.Deliver)
+                .Select(ord => new ClientOrder()
+                {
+                    Id = ord.Id,
+                    State = ord.State,
+                    City = ord.City,
+                    Mobile = ord.Mobile,
+                    Name = ord.Name,
+                    FormattedAddress = ord.FormattedAddress,
+                    Description = ord.Description,
+                    Latitude = ord.Latitude,
+                    Longitude = ord.Longitude,
+                    OrderStatus = (int)ord.OrderStatus,
+                    DeliverAtDoor = ord.DeliverAtDoor,
+
+                    DeliveryId = ord.DeliverId,
+                    Delivery = ord.Deliver.FullName,
+                    DeliveryMobile = ord.Deliver.Mobile,
+                    Items = ord.OrderItems.Select(oi => new ClientOrderItem()
+                    {
+                        Id = oi.Id,
+                        Count = oi.Count,
+                        ProductId = oi.ProductId,
+                        Product = oi.Product.Title,
+                        Price = oi.Price,
+                        Title = oi.Title
+                    }).ToList()
+                })
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+
+            if (order == null)
+            {
+                return BadRequest("order not found");
+            }
+
+            return Ok(new
+            {
+                order,
+                // suborders,
                 success = true,
                 EventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
