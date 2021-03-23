@@ -12,20 +12,14 @@ import { OrderUrl } from "../../shares/URLs";
 import { actionCreators } from "../../store/Auth";
 
 interface ISellerOrdersProps {
-  role: string;
-  userId: string;
-  orders: IOrder[];
   subOrders: ISubOrder[];
 
-  AnswerOrder: Function;
+  PackageTransaction: Function;
 }
 
 const SellerOrders: React.FC<ISellerOrdersProps> = ({
-  role,
-  userId,
-  orders,
   subOrders,
-  AnswerOrder,
+  PackageTransaction,
 }) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalOrder, setModalOrder] = React.useState<ISubOrder>();
@@ -40,9 +34,12 @@ const SellerOrders: React.FC<ISellerOrdersProps> = ({
     {
       title: "وضعیت سفارش",
       key: "orderStatus",
-      render: (_: any, record: ISubOrder) => (
-        <Space size="middle">در انتظار جواب</Space>
-      ),
+      render: (_: any, record: ISubOrder) =>
+        record.requestStatus === RequestStatus.Pending ? (
+          <Space size="middle">در انتظار جواب</Space>
+        ) : (
+          <Space size="middle">کالا آماده هست</Space>
+        ),
     },
     {
       title: "عملیات",
@@ -59,12 +56,7 @@ const SellerOrders: React.FC<ISellerOrdersProps> = ({
                       <Button
                         key="back"
                         onClick={() => {
-                          AnswerOrder(
-                            OrderUrl.READY_PACKAGE,
-                            userId,
-                            record.id,
-                            false
-                          );
+                          PackageTransaction(OrderUrl.READY_PACKAGE, record.id);
                           setModalVisible(false);
                         }}
                       >
@@ -135,14 +127,11 @@ const SellerOrders: React.FC<ISellerOrdersProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
-  role: state.auth ? state.auth.role : "",
-  userId: state.auth ? state.auth.id : "",
-  orders: state.auth ? state.auth.orders : [],
   subOrders: state.auth ? state.auth.subOrders : [],
 });
 
 const mapDispatchToProps = {
-  AnswerOrder: actionCreators.answerOrder,
+  PackageTransaction: actionCreators.packageTransaction,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SellerOrders);
