@@ -370,7 +370,7 @@ namespace Peikresan.Controllers
                 await _context.SaveChangesAsync();
 
                 // SmsServices.Sms2CostumerAfterDeliveryGetProducts(order.Mobile, order.Name, order.Id);
-                SmsServices.Sms2CostumerAfterDeliveryGetProducts("09116310982", order.Name, order.Id);
+                SmsServices.Sms2CostumerAfterDeliveryGetProducts("09116310982", order.Name, order.Id, order.DeliverConfirmCode);
 
                 var orders = await _context.Orders
                     .Where(ord => ord.DeliverId == thisUser.Id)
@@ -430,13 +430,13 @@ namespace Peikresan.Controllers
 
         [Authorize]
         [HttpPost("deliver-product")]
-        public async Task<IActionResult> DeliverProductAsync([FromBody] JustId justId)
+        public async Task<IActionResult> DeliverProductAsync([FromBody] DeliverProductModel deliverProductModel)
         {
             var thisUser = await _context.Users
                 .Include(u => u.Role)
                 .FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
 
-            var orderId = Convert.ToInt32(justId.Id);
+            var orderId = deliverProductModel.OrderId;
             var order = await _context.Orders
                 .Where(ord => ord.Id == orderId)
                 .Include(o => o.OrderItems)
@@ -449,6 +449,11 @@ namespace Peikresan.Controllers
             if (order.Deliver != thisUser)
             {
                 return Unauthorized("wrong user! " + order.Deliver.Id + " != " + thisUser.Id);
+            }
+
+            if (order.DeliverConfirmCode != deliverProductModel.DeliverConfirmCode)
+            {
+                return BadRequest("Wrong code!");
             }
 
             order.OrderStatus = OrderStatus.DeliveredProduct;
