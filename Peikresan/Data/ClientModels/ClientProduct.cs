@@ -18,5 +18,7 @@ namespace Peikresan.Data.ClientModels
 
         public int? CategoryId { get; set; }
         public string Category { get; set; }
+
+        public bool Confirm { get; set; }
     }
 }
