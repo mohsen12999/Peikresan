@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using OfficeOpenXml;
 using Peikresan.Data;
 using Peikresan.Data.Models;
 using Peikresan.Data.ViewModels;
@@ -43,7 +45,7 @@ namespace Peikresan.Controllers
 
             if (string.IsNullOrEmpty(sellerProductModel.Id) || sellerProductModel.Id.ToLower() == "undefined")
             {
-                var sellerProduct = new SellerProduct { UserId = thisUser.Id, Count = sellerProductModel.Count, Price= sellerProductModel.Price, ProductId = product.Id };
+                var sellerProduct = new SellerProduct { UserId = thisUser.Id, Count = sellerProductModel.Count, Price = sellerProductModel.Price, ProductId = product.Id };
                 await _context.SellerProducts.AddAsync(sellerProduct);
                 try
                 {
@@ -51,7 +53,7 @@ namespace Peikresan.Controllers
 
                     return Ok(new
                     {
-                        element= sellerProduct,
+                        element = sellerProduct,
                         success = true,
                         sellerProduct,
                         product,
@@ -154,6 +156,65 @@ namespace Peikresan.Controllers
             catch (Exception)
             {
                 return BadRequest("can not remove sellerProduct");
+            }
+        }
+
+        [Authorize]
+        [HttpPost("upload-file")]
+        [DisableRequestSizeLimit]
+        public async Task<IActionResult> UploadExcelFile([FromForm] UploadFileModel uploadFileModel)
+        {
+            var thisUser = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.UserName == User.Identity.Name);
+
+            var oldSellerProducts = await _context.SellerProducts.Where(sp => sp.UserId == thisUser.Id).ToListAsync();
+            if (oldSellerProducts.Any())
+            {
+                _context.SellerProducts.RemoveRange(oldSellerProducts);
+                await _context.SaveChangesAsync();
+            }
+
+            var file = uploadFileModel.File;
+            await using var fileStream = file.OpenReadStream();
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            using (var package = new ExcelPackage(fileStream))
+            {
+                var worksheet = package.Workbook.Worksheets[0];
+                var iRowCnt = worksheet.Dimension.End.Row;
+
+                var sellerProducts = new List<SellerProduct>();
+
+                for (var i = 2; i < iRowCnt; i++)
+                {
+                    var barcodeObj = worksheet.Cells[i, 1].Value;
+                    var nameObj = worksheet.Cells[i, 2].Value;
+                    var countObj = worksheet.Cells[i, 3].Value;
+                    var priceObj = worksheet.Cells[i, 4].Value;
+
+                    if (!int.TryParse(barcodeObj.ToString(), out var barcode))
+                    {
+                        continue;
+                    }
+
+                    var product = await _context.Products.FirstOrDefaultAsync(p => p.Barcode == barcode);
+                    if (product != null)
+                    {
+                        sellerProducts.Add(new SellerProduct() { ProductId = product.Id, UserId = thisUser.Id, Count = int.Parse(countObj.ToString() ?? "0"), Price = decimal.Parse(priceObj.ToString() ?? "0") });
+                    }
+                    else
+                    {
+                        // new product
+                        var newProduct = new Product() { Barcode = barcode, Title = nameObj.ToString() };
+                        await _context.Products.AddAsync(newProduct);
+                        await _context.SaveChangesAsync();
+
+                        sellerProducts.Add(new SellerProduct() { ProductId = newProduct.Id, UserId = thisUser.Id, Count = int.Parse(countObj.ToString() ?? "0"), Price = decimal.Parse(priceObj.ToString() ?? "0") });
+                    }
+                }
+                
+                await _context.SellerProducts.AddRangeAsync(sellerProducts);
+                await _context.SaveChangesAsync();
+                return Ok(new { success = true, sellerProducts });
             }
         }
     }
