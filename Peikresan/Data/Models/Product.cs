@@ -34,5 +34,7 @@ namespace Peikresan.Data.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
+
+        public bool Confirm { get; set; } = false;
     }
 }
