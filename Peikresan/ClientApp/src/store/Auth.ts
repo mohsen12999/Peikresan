@@ -309,6 +309,49 @@ export const actionCreators = {
 
   resetStatus: () => ({ type: RESET_STATUS } as IResetStatus),
 
+  packageTransaction: (
+    url: OrderUrl,
+    id: number
+  ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+    const status = getState().auth?.status;
+    if (status === Status.LOADING) {
+      dispatch({
+        type: AuthActions.LOGIN_FAILURE,
+        payload: { message: "we have another fetch " },
+      });
+      return false;
+    }
+
+    dispatch({ type: OrderAction.ORDER_REQUEST });
+
+    try {
+      axios.post(url, { id }, requestConfig).then((response) => {
+        if (response && response.data && response.data.success) {
+          dispatch({
+            type: OrderAction.ORDER_SUCCESS,
+            payload: {
+              message: "axios success get data",
+              data: response.data,
+            },
+          });
+          return true;
+        } else {
+          dispatch({
+            type: OrderAction.ORDER_FAILURE,
+            payload: { message: "axios not success", error: response },
+          });
+          return false;
+        }
+      });
+    } catch (error) {
+      dispatch({
+        type: OrderAction.ORDER_FAILURE,
+        payload: { message: "axios catch error", error: error },
+      });
+      return false;
+    }
+  },
+
   answerOrder: (
     url: OrderUrl,
     userId: string,
@@ -352,6 +395,52 @@ export const actionCreators = {
         type: OrderAction.ORDER_FAILURE,
         payload: { message: "axios catch error", error: error },
       });
+      return false;
+    }
+  },
+
+  uploadFile: (
+    url: AdminDataUrl,
+    formData: FormData
+  ): AppThunkAction<KnownAction> => async (dispatch, getState) => {
+    const status = getState().auth?.status;
+    if (status === Status.LOADING) {
+      dispatch({
+        type: AdminDataActions.ADD_CHANGE_FAILURE,
+        payload: { message: "we have another fetch " },
+      });
+      message.warning("خطا در بارگزاری!");
+      return false;
+    }
+    dispatch({ type: AdminDataActions.ADD_CHANGE_REQUEST });
+
+    try {
+      axios.post(url, formData, requestConfig).then((response) => {
+        if (response && response.data && response.data.success) {
+          dispatch({
+            type: AdminDataActions.ADD_CHANGE_SUCCESS,
+            payload: {
+              message: "axios success get data",
+              data: response.data,
+            },
+          });
+          message.success("با موفقیت بارگزاری شد.");
+          return true;
+        } else {
+          dispatch({
+            type: AdminDataActions.ADD_CHANGE_FAILURE,
+            payload: { message: "axios not success", error: response },
+          });
+          message.warning("خطا در بارگزاری!");
+          return false;
+        }
+      });
+    } catch (error) {
+      dispatch({
+        type: AdminDataActions.ADD_CHANGE_FAILURE,
+        payload: { message: "axios catch error", error: error },
+      });
+      message.warning("خطا در بارگزاری!");
       return false;
     }
   },
