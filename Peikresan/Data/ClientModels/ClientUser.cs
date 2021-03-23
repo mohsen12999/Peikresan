@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Peikresan.Data.ClientModels
+﻿namespace Peikresan.Data.ClientModels
 {
     public class ClientUser
     {
@@ -21,6 +16,11 @@ namespace Peikresan.Data.ClientModels
 
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+
+        public string OpenTimeStr { get; set; }
+        public string CloseTimeStr { get; set; }
+        public string OpenTime2Str { get; set; }
+        public string CloseTime2Str { get; set; }
     }
 }
 /*
