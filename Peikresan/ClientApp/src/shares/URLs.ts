@@ -66,6 +66,7 @@ export enum HomePath {
   Order = "/order/",
   MyOrder = "/my-order/",
   SubOrder = "/suborder/",
+  Poll = "/poll/",
 
   NotFound = "/notfound",
 }

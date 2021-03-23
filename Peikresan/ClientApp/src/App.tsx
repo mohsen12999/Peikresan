@@ -17,6 +17,7 @@ import Search from "./pages/home/Search";
 import Order from "./pages/home/Order";
 import MyOrder from "./pages/home/MyOrder";
 import Suborder from "./pages/home/Suborder";
+import Poll from "./pages/home/Poll";
 import Notfound from "./pages/home/Notfound";
 
 import Cart from "./pages/cart/Cart";
@@ -68,6 +69,7 @@ export default () => (
       <Route path={HomePath.Order + ":id"} component={Order} />
       <Route path={HomePath.MyOrder + ":id"} component={MyOrder} />
       <Route path={HomePath.SubOrder + ":id"} component={Suborder} />
+      <Route path={HomePath.Poll + ":id"} component={Poll} />
 
       <Route path={CartPath.Cart} component={Cart} />
       <Route path={CartPath.Map} component={DeliverMap} />
