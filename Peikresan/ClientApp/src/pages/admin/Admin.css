@@ -27,3 +27,15 @@
   bottom: 10%;
   z-index: 10;
 }
+
+
+input.hidden-input{
+  display: none;
+}
+
+.float-upload-btn{
+  position: fixed !important;
+  right: 25%;
+  bottom: 10%;
+  z-index: 10;
+}
