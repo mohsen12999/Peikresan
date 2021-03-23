@@ -99,20 +99,17 @@ namespace Peikresan.Controllers
             // find 3 nearer seller
             var sellersId = await UserServices.NearUsersId(_context, latitude, longitude, "Seller", 3);
 
-            // get this sellers products
-            //var products1 = await _context.Products
-            //    .Include(p => p.SellerProducts.Where(sp=>sp.UserId != null && sellersId.Contains((Guid)sp.UserId)))
-            //    .Where(p => p.SellerProducts!=null &&  p.SellerProducts.Any(sp => sp.UserId != null && sellersId.Contains((Guid)sp.UserId)))
-            //    .Include(p => p.Category)
-            //    .Select(p => new ClientProduct() { Id = p.Id, Title = p.Title, Description = p.Description, Img = p.Img, Max = p.Max, Order = p.Order, SoldByWeight = p.SoldByWeight, MinWeight = p.MinWeight, CategoryId = p.CategoryId, Category = p.Category.Title, Price = p.SellerProducts.Min(sp=>sp.Price) })
-            //    .AsNoTracking()
-            //    .ToListAsync();
+            var openSeller = await _context.Users.CountAsync(u => sellersId.Contains(u.Id) && Helper.IsOpenUser(u, DateTime.Now));
+            var enableExpressDelivery = openSeller > 0;
 
             var sellersProducts = await _context.SellerProducts
-                .Include(sp=>sp.Product)
-                .ThenInclude(sp=>sp.Category)
-                .Where(sp => sellersId.Contains((Guid)sp.UserId))
+                .Include(sp => sp.User)
+                .Include(sp => sp.Product)
+                .ThenInclude(sp => sp.Category)
+                .Where(sp => sellersId.Contains((Guid)sp.UserId) && (openSeller == 0 || openSeller == 3 || Helper.IsOpenNullableUser(sp.User, DateTime.Now)))
                 .ToListAsync();
+
+
             var products = sellersProducts
                 .GroupBy(sp => sp.Product)
                 .Select(p => new ClientProduct()
@@ -127,8 +124,8 @@ namespace Peikresan.Controllers
                     MinWeight = p.Key.MinWeight,
                     CategoryId = p.Key.CategoryId,
                     Category = p.Key.Category.Title,
-                    Price = p.Min(sp=>sp.Price)
-                }).ToList();
+                    Price = p.Min(sp => sp.Price)
+                }).Where(p => p.Confirm).ToList();
 
             var categories = await _context.Categories
                 .Select(c => new { c.Id, c.Title, c.Description, c.Img, c.ParentId, c.HaveChild, c.Order })
@@ -166,6 +163,7 @@ namespace Peikresan.Controllers
             return Ok(new
             {
                 sellersId,
+                enableExpressDelivery,
                 products,
                 categories,
                 sliders,
