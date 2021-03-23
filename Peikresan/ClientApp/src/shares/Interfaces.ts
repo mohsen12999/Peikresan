@@ -29,6 +29,8 @@ export interface IProduct {
 
   categoryId: number;
   category: string;
+
+  confirm: boolean;
   // count?: number;
 }
 

@@ -1,9 +1,20 @@
 import React from "react";
 import { connect } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Input, Space, Button, InputNumber, Checkbox, Cascader } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
-
+import {
+  Input,
+  Space,
+  Button,
+  InputNumber,
+  Checkbox,
+  Cascader,
+  Switch,
+} from "antd";
+import {
+  UploadOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
 import { ICategory, IProduct } from "../../shares/Interfaces";
@@ -46,6 +57,7 @@ const Product: React.FC<IProductProps> = ({
   const [category, setCategory] = React.useState<string>();
   const [soldByWeight, setSoldByWeight] = React.useState(false);
   const [minWeight, setMinWeight] = React.useState<number>();
+  const [confirm, setConfirm] = React.useState<boolean>(false);
   const [showImage, setShowImage] = React.useState<string>();
 
   const validateInputs = () => title && title.length > 1;
@@ -62,6 +74,7 @@ const Product: React.FC<IProductProps> = ({
       setSoldByWeight(product.soldByWeight);
       setMinWeight(product.minWeight);
       setShowImage(product.img);
+      setConfirm(product.confirm);
     }
   }
 
@@ -79,6 +92,7 @@ const Product: React.FC<IProductProps> = ({
     formData.append("category", category ? category : "");
     formData.append("soldByWeight", soldByWeight ? "1" : "0");
     formData.append("minWeight", String(minWeight));
+    formData.append("confirm", String(confirm));
 
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_PRODUCT_URL,
@@ -206,6 +220,18 @@ const Product: React.FC<IProductProps> = ({
               }}
             />
           )}
+
+          <div>
+            تاپید شده
+            <Switch
+              defaultChecked={confirm}
+              checkedChildren={<CheckOutlined />}
+              unCheckedChildren={<CloseOutlined />}
+              onChange={(checked) => {
+                setConfirm(checked);
+              }}
+            />
+          </div>
 
           <Button
             type="primary"

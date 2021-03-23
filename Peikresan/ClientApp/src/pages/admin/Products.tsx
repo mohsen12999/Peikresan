@@ -60,9 +60,16 @@ const Products: React.FC<IProductsProps> = ({
     },
     {
       title: "دسته بندی",
+      dataIndex: "category",
       key: "category",
+    },
+    {
+      title: "تاپید",
+      key: "confirm",
       render: (_: any, record: IProduct) => (
-        <Space size="middle">{record.category}</Space>
+        <Space size="middle">
+          {record.confirm ? "تاپید شده" : "تاپید نشده"}
+        </Space>
       ),
     },
     {
