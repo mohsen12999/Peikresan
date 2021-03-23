@@ -16,6 +16,7 @@ const { TabPane } = Tabs;
 
 interface IDeliverTimeProps {
   deliverTimes: IDeliverTime[];
+  enableExpressDelivery: boolean;
 
   SetShopCartTime: Function;
   SetDeliverAtDoor: Function;
@@ -23,6 +24,7 @@ interface IDeliverTimeProps {
 
 const DeliverTime: React.FC<IDeliverTimeProps> = ({
   deliverTimes,
+  enableExpressDelivery,
   SetShopCartTime,
   SetDeliverAtDoor,
 }) => {
@@ -90,18 +92,20 @@ const DeliverTime: React.FC<IDeliverTimeProps> = ({
           </TabPane>
         </Tabs>
 
-        <Radio.Group
-          onChange={(e) => {
-            setRadioValue(0);
-            SetShopCartTime({
-              time: 0,
-              deliverDay: DeliverDay.EXPRESS,
-            } as IDeliverTime);
-          }}
-          value={radioValue}
-        >
-          <Radio value={0}>ارسال فوری تا 59 دقیقه - 5000 تومان</Radio>
-        </Radio.Group>
+        {enableExpressDelivery && (
+          <Radio.Group
+            onChange={(e) => {
+              setRadioValue(0);
+              SetShopCartTime({
+                time: 0,
+                deliverDay: DeliverDay.EXPRESS,
+              } as IDeliverTime);
+            }}
+            value={radioValue}
+          >
+            <Radio value={0}>ارسال فوری تا 59 دقیقه - 5000 تومان</Radio>
+          </Radio.Group>
+        )}
 
         <br />
         <Checkbox
@@ -129,6 +133,7 @@ const DeliverTime: React.FC<IDeliverTimeProps> = ({
 };
 
 const mapStateToProps = (state: ApplicationState) => ({
+  enableExpressDelivery: state.data ? state.data.enableExpressDelivery : false,
   deliverTimes: state.data ? state.data.deliverTimes : [],
 });
 
