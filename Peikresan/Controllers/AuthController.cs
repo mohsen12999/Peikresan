@@ -82,7 +82,11 @@ namespace Peikresan.Controllers
                         RoleId = us.Role.Id.ToString(),
                         Address = us.Address,
                         Latitude = us.Latitude,
-                        Longitude = us.Longitude
+                        Longitude = us.Longitude,
+                        OpenTimeStr = Helper.MakeTimeFromNullableNumber(us.OpenTime),
+                        CloseTimeStr = Helper.MakeTimeFromNullableNumber(us.CloseTime), 
+                        OpenTime2Str = Helper.MakeTimeFromNullableNumber(us.OpenTime2),
+                        CloseTime2Str = Helper.MakeTimeFromNullableNumber(us.CloseTime2),
                     })
                     .AsNoTracking()
                     .ToListAsync();
@@ -165,7 +169,8 @@ namespace Peikresan.Controllers
                     Barcode = p.Barcode,
                     Order = p.Order,
                     CategoryId = p.CategoryId,
-                    Category = p.Category.Title
+                    Category = p.Category.Title,
+                    Confirm = p.Confirm
                 })
                 .AsNoTracking()
                 .ToListAsync();
@@ -288,6 +293,32 @@ namespace Peikresan.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
+            var subOrders = await _context.SubOrders
+                .Include(so => so.Order)
+                .Where(so=>so.Order.DeliverId == thisUser.Id)
+                .Include(so => so.SubOrderItems)
+                .Include(so => so.Seller)
+                .Select(so => new ClientSubOrder()
+                {
+                    Id = so.Id,
+                    SellerId = so.SellerId,
+                    SellerName = so.Seller.FullName,
+                    SellerAddress = so.Seller.Address,
+                    RequestStatus = (int)so.RequestStatus,
+                    OrderId = so.OrderId,
+                    Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
+                    {
+                        Id = soi.Id,
+                        Count = soi.Count,
+                        ProductId = soi.ProductId,
+                        Product = soi.Product.Title,
+                        Price = soi.Price,
+                        Title = soi.Title
+                    }).ToList()
+                })
+                .AsNoTracking()
+                .ToListAsync();
+
             return Ok(new
             {
                 success = true,
@@ -297,6 +328,7 @@ namespace Peikresan.Controllers
                 userName = thisUser.UserName,
                 role = thisUser.Role?.Name ?? "",
                 orders,
+                subOrders,
                 eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
