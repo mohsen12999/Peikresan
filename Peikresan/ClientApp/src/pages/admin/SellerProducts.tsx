@@ -2,7 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import { Table, Tag, Space, Popconfirm, message, Tooltip, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ISellerProduct } from "../../shares/Interfaces";
@@ -18,14 +18,14 @@ interface ISellerProductsProps {
   status: Status;
 
   RemoveElement: Function;
-  ResetStatus: Function;
+  UploadFile: Function;
 }
 
 const SellerProducts: React.FC<ISellerProductsProps> = ({
   sellerProducts,
   status,
   RemoveElement,
-  ResetStatus,
+  UploadFile,
 }) => {
   //React.useEffect(() => {
   // if (status === Status.SUCCEEDED) {
@@ -93,6 +93,33 @@ const SellerProducts: React.FC<ISellerProductsProps> = ({
             <Button type="primary" shape="circle" icon={<PlusOutlined />} />
           </Link>
         </Tooltip>
+        <Tooltip title="بارگزاری فایل اکسل محصولات">
+          <input
+            type="file"
+            name="excel_file"
+            id="excel_file"
+            className="hidden-input"
+            accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+            onChange={(e) => {
+              const files = e.target.files;
+              if (files) {
+                var formData = new FormData();
+                formData.append("file", files[0] ? files[0] : "");
+
+                UploadFile(AdminDataUrl.UPLOAD_SELLER_PRODUCT_URL, formData);
+              }
+            }}
+          />
+          <Button
+            icon={<UploadOutlined />}
+            onClick={() => {
+              document.getElementById("excel_file")?.click();
+            }}
+            className="float-upload-btn"
+          >
+            فایل اکسل محصولات
+          </Button>
+        </Tooltip>
 
         {sellerProducts.length > 0 ? (
           <Table
@@ -120,7 +147,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = {
   RemoveElement: actionCreators.removeElement,
-  ResetStatus: actionCreators.resetStatus,
+  UploadFile: actionCreators.uploadFile,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(SellerProducts);
