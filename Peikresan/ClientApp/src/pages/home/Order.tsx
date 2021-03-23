@@ -29,7 +29,7 @@ const Order = () => {
           setLoading(false);
           setSuccess(true);
           setOrder(response.data.order);
-          setSubOrders(response.data.suborders);
+          setSubOrders(response.data.subOrders);
         } else {
           setLoading(false);
           setSuccess(false);
