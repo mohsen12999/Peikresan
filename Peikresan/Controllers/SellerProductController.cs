@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using Peikresan.Data;
+using Peikresan.Data.ClientModels;
 using Peikresan.Data.Models;
 using Peikresan.Data.ViewModels;
 using Peikresan.Services;
@@ -191,7 +192,7 @@ namespace Peikresan.Controllers
                     var countObj = worksheet.Cells[i, 3].Value;
                     var priceObj = worksheet.Cells[i, 4].Value;
 
-                    if (!int.TryParse(barcodeObj.ToString(), out var barcode))
+                    if (!decimal.TryParse(barcodeObj.ToString(), out var barcode))
                     {
                         continue;
                     }
@@ -211,10 +212,15 @@ namespace Peikresan.Controllers
                         sellerProducts.Add(new SellerProduct() { ProductId = newProduct.Id, UserId = thisUser.Id, Count = int.Parse(countObj.ToString() ?? "0"), Price = decimal.Parse(priceObj.ToString() ?? "0") });
                     }
                 }
-                
+
                 await _context.SellerProducts.AddRangeAsync(sellerProducts);
                 await _context.SaveChangesAsync();
-                return Ok(new { success = true, sellerProducts });
+                return Ok(new
+                {
+                    success = true,
+                    sellerProducts = sellerProducts
+                        .Select(sp => new ClientSellerProduct() { ProductId = sp.ProductId ?? 0, Price = sp.Price, Count = sp.Count, ProductTitle = sp.Product.Title })
+                });
             }
         }
     }
