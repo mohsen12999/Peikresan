@@ -23,7 +23,7 @@ namespace Peikresan.Data.Models
         public double? OpenTime2 { get; set; }
         public double? CloseTime2 { get; set; }
 
-        public bool IsOpenNow => Helper.IsOpenUser(this,DateTime.Now);
+        // public bool IsOpenNow => Helper.IsOpenUser(this,DateTime.Now);
         
         public double Latitude { get; set; }
         public double Longitude { get; set; }
