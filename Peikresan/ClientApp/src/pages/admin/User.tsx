@@ -36,6 +36,8 @@ const User: React.FC<IUserProps> = ({
   const [email, setEmail] = React.useState<string>();
   const [password, setPassword] = React.useState<string>();
   const [roleId, setRoleId] = React.useState<string>();
+
+  const [title, setTitle] = React.useState<string>();
   const [firstName, setFirstName] = React.useState<string>();
   const [lastName, setLastName] = React.useState<string>();
   const [mobile, setMobile] = React.useState<string>();
@@ -47,8 +49,10 @@ const User: React.FC<IUserProps> = ({
   const validateInputs = () =>
     userName &&
     userName.length > 1 &&
-    email &&
-    email.length > 1 &&
+    mobile &&
+    mobile.length > 1 &&
+    // email &&
+    // email.length > 1 &&
     password &&
     password.length > 1;
 
@@ -56,9 +60,10 @@ const User: React.FC<IUserProps> = ({
     const user = users.find((u) => u.id === id);
     if (user !== undefined && userName === undefined) {
       setUserName(user.userName);
-      setEmail(user.email);
+      // setEmail(user.email);
       setPassword(user.password);
       setRoleId(user.roleId);
+      setTitle(user.title);
       setFirstName(user.firstName);
       setLastName(user.lastName);
       setMobile(user.mobile);
@@ -74,9 +79,10 @@ const User: React.FC<IUserProps> = ({
     var formData = new FormData();
     formData.append("id", id);
     formData.append("userName", userName ? userName : "");
-    formData.append("email", email ? email : "");
+    // formData.append("email", email ? email : "");
     formData.append("password", password ? password : "");
     formData.append("roleId", roleId ? roleId : "");
+    formData.append("title", title ? title : "");
     formData.append("firstName", firstName ? firstName : "");
     formData.append("lastName", lastName ? lastName : "");
     formData.append("mobile", mobile ? mobile : "");
@@ -99,12 +105,31 @@ const User: React.FC<IUserProps> = ({
         <Space direction="vertical">
           <Input
             className="input-style"
+            placeholder="نام کاربری - انگلیسی"
+            value={userName}
+            onChange={(e) => {
+              setUserName(e.target.value);
+            }}
+          />
+
+          <Input
+            className="input-style"
+            placeholder="عنوان"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+            }}
+          />
+
+          <Input
+            className="input-style"
             placeholder="نام"
             value={firstName}
             onChange={(e) => {
               setFirstName(e.target.value);
             }}
           />
+
           <Input
             className="input-style"
             placeholder="نام خانوادگی"
@@ -130,22 +155,15 @@ const User: React.FC<IUserProps> = ({
             }}
           />
 
-          <Input
-            className="input-style"
-            placeholder="نام کاربری"
-            value={userName}
-            onChange={(e) => {
-              setUserName(e.target.value);
-            }}
-          />
-          <Input
+          {/* <Input
             className="input-style"
             placeholder="ایمیل"
             value={email}
             onChange={(e) => {
               setEmail(e.target.value);
             }}
-          />
+          /> */}
+
           <Input.Password
             className="input-style"
             placeholder="رمزعبور"
