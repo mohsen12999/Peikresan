@@ -14,11 +14,11 @@ namespace Peikresan.Data.Models
         // [Column(TypeName = "decimal(10,3)")]
         // public decimal? Price { get; set; }
 
-        [Column(TypeName = "decimal(10,0)")]
+        [Column(TypeName = "decimal(20,0)")]
         public decimal? Barcode { get; set; }
 
         public string Img { get; set; }
-        // public string Pic => string.IsNullOrEmpty(Img) ? "/img/no-image.png" : "/" + Img;
+        [NotMapped] public string Pic => string.IsNullOrEmpty(Img) ? "/img/no-image.png" : "/" + Img;
 
         public int Max { get; set; }
         public int Order { get; set; } = 0;
