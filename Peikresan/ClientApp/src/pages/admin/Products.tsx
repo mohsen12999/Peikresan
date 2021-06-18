@@ -64,11 +64,11 @@ const Products: React.FC<IProductsProps> = ({
       key: "category",
     },
     {
-      title: "تاپید",
+      title: "تايید",
       key: "confirm",
       render: (_: any, record: IProduct) => (
         <Space size="middle">
-          {record.confirm ? "تاپید شده" : "تاپید نشده"}
+          {record.confirm ? "تايید شده" : "تايید نشده"}
         </Space>
       ),
     },
