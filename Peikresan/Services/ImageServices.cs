@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -11,15 +12,19 @@ namespace Peikresan.Services
 {
     public static class ImageServices
     {
-        public static async Task<string> SaveAndConvertImage(IFormFile file, string webRootPath, WebsiteModel model, int width=500, int height=500)
+        public static async Task<string> SaveAndConvertImage(IFormFile file, string webRootPath, WebsiteModel model, int width = 500, int height = 500)
         {
             try
             {
+                if (file == null || file.Length == 0)
+                {
+                    return "";
+                }
                 await using var fileStream = file.OpenReadStream();
                 using var image = await Image.LoadAsync<Rgba32>(fileStream);
 
                 image.Mutate(x => x.Resize(width, height)
-                    //.Grayscale()
+                //.Grayscale()
                 );
                 var filePath = model switch
                 {
