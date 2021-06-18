@@ -38,9 +38,8 @@ namespace Peikresan.Services
 
         public static bool Sms2CostumerAfterBuy(string mobile, string name, int orderId)
         {
-
             var message =
-                $"پیک‌رسان\n {name} عزیز\nسفارش تان ثبت شد و در حال پردازش آن هستیم شما می‌توانید وضعیت آن را از نشانی زیر پیگیری کنید.\nشماره سفارش : {orderId}\nلینک پیگیری : https://peikresan.com/my-order/ {Helper.EncodeNumber(orderId)}";
+                $"پیک‌رسان\n {name} عزیز\nسفارش تان ثبت شد و در حال پردازش آن هستیم شما می‌توانید وضعیت آن را از نشانی زیر پیگیری کنید.\nشماره سفارش : {orderId}\nلینک پیگیری : https://peikresan.com/my-order/{Helper.EncodeNumber(orderId)}";
             return SendSms(mobile, message);
         }
 
@@ -70,7 +69,7 @@ namespace Peikresan.Services
 
         public static bool Sms2CostumerAfterDeliverProducts(string mobile, string name, int orderId)
         {
-            var message = $"پیک رسان\n{name} عزیز\nاز خریدتان ممنونیم.از شما دعوت میکنیم تا از طریق نشانی زیر به پرسش های ما پاسخ دهید و با بیان نظرهای خود کمک کنید تا کیفیت خدمات مان را بهبود دهیم.\nلینک : https://peikresan.com/";
+            var message = $"پیک رسان\n{name} عزیز\nاز خریدتان ممنونیم.از شما دعوت میکنیم تا از طریق نشانی زیر به پرسش های ما پاسخ دهید و با بیان نظرهای خود کمک کنید تا کیفیت خدمات مان را بهبود دهیم.\nلینک : https://peikresan.com/poll/{Helper.EncodeNumber(orderId)}";
             return SendSms(mobile, message);
         }
 
@@ -90,14 +89,22 @@ namespace Peikresan.Services
             return ultraFastSendResponse.IsSuccessful;
         }
 
-        public static bool FastSms2CostumerAfterBuy(string mobile, int orderId)
+        public static bool FastSms2CostumerAfterBuy(string mobile, string name, int orderId)
         {
             var mobileLong = Convert.ToInt64(mobile);
-            return UltraFastSms(mobileLong, 44302, new List<UltraFastParameters>
+            return UltraFastSms(mobileLong, 45456, new List<UltraFastParameters>
             {
                 new UltraFastParameters()
                 {
+                    Parameter = "name", ParameterValue = name
+                },
+                new UltraFastParameters()
+                {
                     Parameter = "order_id", ParameterValue = orderId.ToString()
+                },
+                new UltraFastParameters()
+                {
+                    Parameter = "code", ParameterValue = Helper.EncodeNumber(orderId)
                 }
             });
         }
@@ -105,7 +112,7 @@ namespace Peikresan.Services
         public static bool FastSms2AdminAfterBuy(int orderId, int price)
         {
             var mobileLong = Convert.ToInt64(AdminNumber);
-            return UltraFastSms(mobileLong, 44305, new List<UltraFastParameters>
+            return UltraFastSms(mobileLong, 45457, new List<UltraFastParameters>
             {
                 new UltraFastParameters()
                 {
@@ -118,14 +125,18 @@ namespace Peikresan.Services
             });
         }
 
-        public static bool FastSms2SellerAfterBuy(string mobile, int subOrderId)
+        public static bool FastSms2SellerAfterBuy(string mobile, int subOrderId, string time)
         {
             var mobileLong = Convert.ToInt64(mobile);
-            return UltraFastSms(mobileLong, 44306, new List<UltraFastParameters>
+            return UltraFastSms(mobileLong, 45458, new List<UltraFastParameters>
             {
                 new UltraFastParameters()
                 {
                     Parameter = "suborder_id", ParameterValue = subOrderId.ToString()
+                },
+                new UltraFastParameters()
+                {
+                    Parameter = "time", ParameterValue = time
                 },
                 new UltraFastParameters()
                 {
@@ -134,11 +145,55 @@ namespace Peikresan.Services
             });
         }
 
-        public static bool FastSms2DeliveryAfterBuy(string mobile, int orderId)
+        public static bool FastSms2DeliveryAfterBuy(string mobile, int orderId, string time)
         {
             var mobileLong = Convert.ToInt64(mobile);
-            return UltraFastSms(mobileLong, 44329, new List<UltraFastParameters>
+            return UltraFastSms(mobileLong, 45459, new List<UltraFastParameters>
             {
+                new UltraFastParameters()
+                {
+                    Parameter = "order_id", ParameterValue = orderId.ToString()
+                },
+                new UltraFastParameters()
+                {
+                    Parameter = "time", ParameterValue = time
+                },
+                new UltraFastParameters()
+                {
+                    Parameter = "code", ParameterValue = Helper.EncodeNumber(orderId)
+                }
+            });
+        }
+
+        public static bool FastSms2CostumerAfterDeliveryGetProducts(string mobile, string name, int orderId, int deliveryCode)
+        {
+            var mobileLong = Convert.ToInt64(mobile);
+            return UltraFastSms(mobileLong, 45460, new List<UltraFastParameters>
+            {
+                new UltraFastParameters()
+                {
+                    Parameter = "name", ParameterValue = name
+                },
+                new UltraFastParameters()
+                {
+                    Parameter = "order_id", ParameterValue = orderId.ToString()
+                },
+                new UltraFastParameters()
+                {
+                    Parameter = "delivery_code", ParameterValue = deliveryCode.ToString()
+                }
+            });
+        }
+        
+        public static bool FastSms2CostumerAfterDeliverProducts(string mobile, string name, int orderId)
+        {
+            var mobileLong = Convert.ToInt64(mobile);
+            return UltraFastSms(mobileLong, 45460, new List<UltraFastParameters>
+            {
+                new UltraFastParameters()
+                {
+                    Parameter = "name", ParameterValue = name
+                },
                 new UltraFastParameters()
                 {
                     Parameter = "order_id", ParameterValue = orderId.ToString()
