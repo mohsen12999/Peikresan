@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Table, Tag, Space, Button, Modal } from "antd";
+import { Table, Tag, Space, Button,InputNumber, Modal } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
@@ -20,6 +20,7 @@ interface IDeliverOrdersProps {
   subOrders: ISubOrder[];
 
   PackageTransaction: Function;
+  DeliverPackage: Function;
 }
 
 const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
@@ -27,10 +28,12 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
   subOrders,
 
   PackageTransaction,
+  DeliverPackage,
 }) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [modalOrder, setModalOrder] = React.useState<IOrder>();
   const [modalBtn, setModalBtn] = React.useState<JSX.Element[]>();
+  const [confirmCode, setConfirmCode] = React.useState<number>();
 
   const columns = [
     {
@@ -127,12 +130,21 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
                 record.orderStatus === OrderStatus.DeliveryGetProduct
               ) {
                 buttons = [
+                  <InputNumber
+              value={confirmCode}
+              placeholder="وزن پایه"
+              onChange={(value) => {
+                setConfirmCode(Number(value));
+              }}
+            />
+                  ,
                   <Button
                     key="back"
                     onClick={() => {
-                      PackageTransaction(
+                      DeliverPackage(
                         OrderUrl.DELIVER_PRODUCT_TO_CUSTOMER,
-                        record.id
+                        record.id,
+                        confirmCode
                       );
                       //context.DeliverGettingProduct(record.id);
                       setModalVisible(false);
@@ -229,6 +241,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const mapDispatchToProps = {
   PackageTransaction: actionCreators.packageTransaction,
+  DeliverPackage: actionCreators.deliverPackage,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(DeliverOrders);
