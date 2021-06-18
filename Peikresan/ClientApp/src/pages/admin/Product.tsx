@@ -90,7 +90,7 @@ const Product: React.FC<IProductProps> = ({
     formData.append("description", description ? description : "");
     formData.append("order", String(order));
     formData.append("category", category ? category : "");
-    formData.append("soldByWeight", soldByWeight ? "1" : "0");
+    formData.append("soldByWeight", String(soldByWeight));
     formData.append("minWeight", String(minWeight));
     formData.append("confirm", String(confirm));
 
@@ -222,7 +222,7 @@ const Product: React.FC<IProductProps> = ({
           )}
 
           <div>
-            تاپید شده
+            تايید شده
             <Switch
               defaultChecked={confirm}
               checkedChildren={<CheckOutlined />}
