@@ -20,7 +20,7 @@ export enum AdminDataUrl {
   REMOVE_SLIDER_URL = "api/slider/remove-slider",
 
   ADD_CHANGE_USER_URL = "api/user",
-  REMOVE_USER_URL = "api/user/remove-user",
+  REMOVE_USER_URL = "api/user/remove",
 
   ADD_CHANGE_SELLER_PRODUCT_URL = "api/sellerproduct",
   REMOVE_SELLER_PRODUCT_URL = "api/sellerproduct/remove-seller-product",
