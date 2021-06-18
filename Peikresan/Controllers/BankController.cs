@@ -234,10 +234,10 @@ namespace Peikresan.Controllers
                 //await _context.SaveChangesAsync();
 
                 // order.Sms2Customer = SmsServices.FastSms2CostumerAfterBuy(order.Mobile, order.Id);
-                order.Sms2Customer = SmsServices.Sms2CostumerAfterBuy("09116310982",order.Name, order.Id);
-                order.Sms2Admin = SmsServices.Sms2AdminAfterBuy(order.Id, (int)order.TotalPrice);
+                order.Sms2Customer = SmsServices.FastSms2CostumerAfterBuy("09116310982",order.Name, order.Id);
+                order.Sms2Admin = SmsServices.FastSms2AdminAfterBuy(order.Id, (int)order.TotalPrice);
                 // order.Sms2Delivery = SmsServices.FastSms2DeliveryAfterBuy(deliver.Mobile, order.Id);
-                order.Sms2Delivery = SmsServices.Sms2DeliveryAfterBuy("09116310982", order.Id,Helper.OrderDeliverTime(order));
+                order.Sms2Delivery = SmsServices.FastSms2DeliveryAfterBuy("09116310982", order.Id,Helper.OrderDeliverTime(order));
 
                 _context.Orders.Update(order);
                 await _context.SaveChangesAsync();
@@ -246,7 +246,7 @@ namespace Peikresan.Controllers
                 {
                     // var user = await _context.Users.FindAsync(suborder.SellerId);
                     // suborder.Sms2Seller = SmsServices.FastSms2SellerAfterBuy(user.Mobile, suborder.Id);
-                    suborder.Sms2Seller = SmsServices.Sms2SellerAfterBuy("09116310982", suborder.Id, Helper.OrderDeliverTime(order));
+                    suborder.Sms2Seller = SmsServices.FastSms2SellerAfterBuy("09116310982", suborder.Id, Helper.OrderDeliverTime(order));
                 }
                 _context.SubOrders.UpdateRange(suborders);
                 await _context.SaveChangesAsync();
