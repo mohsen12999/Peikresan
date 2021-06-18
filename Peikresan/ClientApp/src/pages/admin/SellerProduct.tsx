@@ -39,7 +39,9 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
   const validateInputs = () => product && product.length > 1 && count;
 
   if (id !== undefined) {
-    const sellerProduct = sellerProducts.find((p) => p.id === Number(id));
+    const sellerProduct = sellerProducts.find(
+      (p) => p.productId === Number(id)
+    );
     if (sellerProduct !== undefined && product === undefined) {
       setProduct(sellerProduct.productTitle);
       setCount(sellerProduct.count);

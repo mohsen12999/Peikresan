@@ -64,7 +64,7 @@ const SellerProducts: React.FC<ISellerProductsProps> = ({
               RemoveElement(
                 AdminDataUrl.REMOVE_SELLER_PRODUCT_URL,
                 AdminDataModel.SellerProducts,
-                record.id
+                record.productId
               );
             }}
             onCancel={(e) => {
@@ -75,7 +75,7 @@ const SellerProducts: React.FC<ISellerProductsProps> = ({
           >
             <Tag color="red">حذف</Tag>
           </Popconfirm>
-          <Link to={AdminPath.SellerProduct + record.id}>
+          <Link to={AdminPath.SellerProduct + record.productId}>
             <Tag color="blue">تغییر</Tag>
           </Link>
         </Space>
@@ -106,7 +106,11 @@ const SellerProducts: React.FC<ISellerProductsProps> = ({
                 var formData = new FormData();
                 formData.append("file", files[0] ? files[0] : "");
 
-                UploadFile(AdminDataUrl.UPLOAD_SELLER_PRODUCT_URL, formData);
+                UploadFile(
+                  AdminDataUrl.UPLOAD_SELLER_PRODUCT_URL,
+                  formData,
+                  AdminDataModel.SellerProducts
+                );
               }
             }}
           />
