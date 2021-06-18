@@ -99,7 +99,8 @@ namespace Peikresan.Controllers
             // find 3 nearer seller
             var sellersId = await UserServices.NearUsersId(_context, latitude, longitude, "Seller", 3);
 
-            var openSeller = await _context.Users.CountAsync(u => sellersId.Contains(u.Id) && Helper.IsOpenUser(u, DateTime.Now));
+            var openSeller = await UserServices.CountOpenUserNow(_context, sellersId);
+
             var enableExpressDelivery = openSeller > 0;
 
             var sellersProducts = await _context.SellerProducts
@@ -117,7 +118,7 @@ namespace Peikresan.Controllers
                     Id = p.Key.Id,
                     Title = p.Key.Title,
                     Description = p.Key.Description,
-                    Img = p.Key.Img,
+                    Img = p.Key.Pic,
                     Max = p.Key.Max,
                     Order = p.Key.Order,
                     SoldByWeight = p.Key.SoldByWeight,
