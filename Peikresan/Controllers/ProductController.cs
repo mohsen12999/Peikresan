@@ -33,8 +33,7 @@ namespace Peikresan.Controllers
         [HttpGet]
         public async Task<IActionResult> ProductsAsync()
         {
-            var products = await _context.Products.ToListAsync();
-            return Ok(new { products });
+            return Ok(new { products = await ProductServices.GetAllProducts(_context) });
         }
 
         [Authorize]
@@ -93,10 +92,12 @@ namespace Peikresan.Controllers
 
                 return Ok(new
                 {
-                    element= product,
-                    cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
-                    product = new { product.Id, product.Title, product.Description, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
+                    products = await ProductServices.GetAllProducts(_context),
+
+                    element = product,
+                    cat = cat?.ConvertToClientCategory(),
+                    product = product.ConvertToClientProduct(),
                     eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog()
                     {
                         UserId = thisUser.Id.ToString(),
@@ -143,9 +144,11 @@ namespace Peikresan.Controllers
 
                 return Ok(new
                 {
-                    cat = cat == null ? null : new { cat.Id, cat.Title, cat.Description, cat.Img, cat.ParentId, cat.HaveChild, cat.Order },
-                    product = new { product.Id, product.Title, product.Description, product.Img, product.Max, product.Order, product.SoldByWeight, product.MinWeight, product.CategoryId },
                     success = true,
+                    products = await ProductServices.GetAllProducts(_context),
+
+                    cat = cat?.ConvertToClientCategory(),
+                    product = product.ConvertToClientProduct(),
                     eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),
@@ -176,15 +179,12 @@ namespace Peikresan.Controllers
             }
             _context.Products.Remove(product);
             await _context.SaveChangesAsync();
-
-            var products = await _context.Products
-                .Select(p => new { p.Id, p.Title, p.Description, p.Img, p.Max, p.Order, p.SoldByWeight, p.MinWeight, p.CategoryId })
-                .ToListAsync();
+            
 
             return Ok(new
             {
-                products,
                 success = true,
+                products = await ProductServices.GetAllProducts(_context),
                 eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),

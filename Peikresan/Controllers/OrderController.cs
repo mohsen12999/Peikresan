@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -370,7 +371,7 @@ namespace Peikresan.Controllers
                 await _context.SaveChangesAsync();
 
                 // SmsServices.Sms2CostumerAfterDeliveryGetProducts(order.Mobile, order.Name, order.Id);
-                SmsServices.Sms2CostumerAfterDeliveryGetProducts("09116310982", order.Name, order.Id, order.DeliverConfirmCode);
+                SmsServices.FastSms2CostumerAfterDeliveryGetProducts("09116310982", order.Name, order.Id, order.DeliverConfirmCode);
 
                 var orders = await _context.Orders
                     .Where(ord => ord.DeliverId == thisUser.Id)
@@ -378,34 +379,17 @@ namespace Peikresan.Controllers
                     .ThenInclude(oi => oi.Product)
                     .Include(o => o.Deliver)
                     .OrderByDescending(ord => ord.Id)
-                    .Select(or => new ClientOrder()
-                    {
-                        Id = or.Id,
-                        State = or.State,
-                        City = or.City,
-                        Mobile = or.Mobile,
-                        Name = or.Name,
-                        FormattedAddress = or.FormattedAddress,
-                        Description = or.Description,
-                        Latitude = or.Latitude,
-                        Longitude = or.Longitude,
-                        OrderStatus = (int)or.OrderStatus,
-                        DeliverAtDoor = or.DeliverAtDoor,
-
-                        DeliveryId = or.DeliverId,
-                        Delivery = or.Deliver.FullName,
-                        Items = or.OrderItems.Select(oi => new ClientOrderItem()
-                        {
-                            Id = oi.Id,
-                            Count = oi.Count,
-                            ProductId = oi.ProductId,
-                            Product = oi.Product.Title,
-                            Price = oi.Price,
-                            Title = oi.Title
-                        }).ToList()
-                    })
+                    .Select(or => or.ConvertToClientOrder())
                     .AsNoTracking()
                     .ToListAsync();
+
+                orders = orders.Select(ord =>
+                {
+                    ord.InitDateTimeString = ord.InitDateTime.ToString("s",
+                        CultureInfo.CreateSpecificCulture("fa-Ir"));
+                    return ord;
+
+                }).ToList();
 
                 return Ok(new
                 {
@@ -453,7 +437,12 @@ namespace Peikresan.Controllers
 
             if (order.DeliverConfirmCode != deliverProductModel.DeliverConfirmCode)
             {
-                return BadRequest("Wrong code!");
+                //return BadRequest("Wrong code!");
+                return Ok(new
+                {
+                    success = false,
+                    message = "wrong code"
+                });
             }
 
             order.OrderStatus = OrderStatus.DeliveredProduct;
@@ -473,34 +462,17 @@ namespace Peikresan.Controllers
                     .ThenInclude(oi => oi.Product)
                     .Include(o => o.Deliver)
                     .OrderByDescending(ord => ord.Id)
-                    .Select(or => new ClientOrder()
-                    {
-                        Id = or.Id,
-                        State = or.State,
-                        City = or.City,
-                        Mobile = or.Mobile,
-                        Name = or.Name,
-                        FormattedAddress = or.FormattedAddress,
-                        Description = or.Description,
-                        Latitude = or.Latitude,
-                        Longitude = or.Longitude,
-                        OrderStatus = (int)or.OrderStatus,
-                        DeliverAtDoor = or.DeliverAtDoor,
-
-                        DeliveryId = or.DeliverId,
-                        Delivery = or.Deliver.FullName,
-                        Items = or.OrderItems.Select(oi => new ClientOrderItem()
-                        {
-                            Id = oi.Id,
-                            Count = oi.Count,
-                            ProductId = oi.ProductId,
-                            Product = oi.Product.Title,
-                            Price = oi.Price,
-                            Title = oi.Title
-                        }).ToList()
-                    })
+                    .Select(or => or.ConvertToClientOrder())
                     .AsNoTracking()
                     .ToListAsync();
+
+                orders = orders.Select(ord =>
+                {
+                    ord.InitDateTimeString = ord.InitDateTime.ToString("s",
+                        CultureInfo.CreateSpecificCulture("fa-Ir"));
+                    return ord;
+
+                }).ToList();
 
                 return Ok(new
                 {
@@ -533,35 +505,14 @@ namespace Peikresan.Controllers
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
                 .Include(o => o.Deliver)
-                .Select(ord => new ClientOrder()
-                {
-                    Id = ord.Id,
-                    State = ord.State,
-                    City = ord.City,
-                    Mobile = ord.Mobile,
-                    Name = ord.Name,
-                    FormattedAddress = ord.FormattedAddress,
-                    Description = ord.Description,
-                    Latitude = ord.Latitude,
-                    Longitude = ord.Longitude,
-                    OrderStatus = (int)ord.OrderStatus,
-                    DeliverAtDoor = ord.DeliverAtDoor,
-
-                    DeliveryId = ord.DeliverId,
-                    Delivery = ord.Deliver.FullName,
-                    DeliveryMobile = ord.Deliver.Mobile,
-                    Items = ord.OrderItems.Select(oi => new ClientOrderItem()
-                    {
-                        Id = oi.Id,
-                        Count = oi.Count,
-                        ProductId = oi.ProductId,
-                        Product = oi.Product.Title,
-                        Price = oi.Price,
-                        Title = oi.Title
-                    }).ToList()
-                })
+                .Select(ord => ord.ConvertToClientOrder())
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
+
+            
+                order.InitDateTimeString = order.InitDateTime.ToString("s",
+                    CultureInfo.CreateSpecificCulture("fa-Ir"));
+                
 
             var suborders = await _context.SubOrders
                .Where(or => or.OrderId == id)
@@ -609,7 +560,7 @@ namespace Peikresan.Controllers
             });
         }
 
-                [HttpPost("my-order-data")]
+        [HttpPost("my-order-data")]
         public async Task<IActionResult> GetOrderDataForCustomerAsync([FromBody] JustId justId)
         {
             var code = justId.Id.ToString();
@@ -619,40 +570,21 @@ namespace Peikresan.Controllers
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
                 .Include(o => o.Deliver)
-                .Select(ord => new ClientOrder()
-                {
-                    Id = ord.Id,
-                    State = ord.State,
-                    City = ord.City,
-                    Mobile = ord.Mobile,
-                    Name = ord.Name,
-                    FormattedAddress = ord.FormattedAddress,
-                    Description = ord.Description,
-                    Latitude = ord.Latitude,
-                    Longitude = ord.Longitude,
-                    OrderStatus = (int)ord.OrderStatus,
-                    DeliverAtDoor = ord.DeliverAtDoor,
-
-                    DeliveryId = ord.DeliverId,
-                    Delivery = ord.Deliver.FullName,
-                    DeliveryMobile = ord.Deliver.Mobile,
-                    Items = ord.OrderItems.Select(oi => new ClientOrderItem()
-                    {
-                        Id = oi.Id,
-                        Count = oi.Count,
-                        ProductId = oi.ProductId,
-                        Product = oi.Product.Title,
-                        Price = oi.Price,
-                        Title = oi.Title
-                    }).ToList()
-                })
+                .Select(ord => ord.ConvertToClientOrder())
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
+
+           
+                
 
             if (order == null)
             {
                 return BadRequest("order not found");
             }
+
+
+            order.InitDateTimeString = order.InitDateTime.ToString("s",
+                CultureInfo.CreateSpecificCulture("fa-Ir"));
 
             return Ok(new
             {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
@@ -66,70 +67,28 @@ namespace Peikresan.Controllers
 
         private async Task<IActionResult> AdminAccessData(User thisUser, string tokenString)
         {
-            var users = await _context.Users
-                    .Include(u => u.Role)
-                    .Select(us => new ClientUser
-                    {
-                        Id = us.Id.ToString(),
-                        Title = us.Title,
-                        UserName = us.UserName,
-                        Email = us.Email,
-                        FirstName = us.FirstName,
-                        LastName = us.LastName,
-                        FullName = us.FirstName + " " + us.LastName,
-                        Mobile = us.Mobile,
-                        Role = us.Role.Name,
-                        RoleId = us.Role.Id.ToString(),
-                        Address = us.Address,
-                        Latitude = us.Latitude,
-                        Longitude = us.Longitude,
-                        OpenTimeStr = Helper.MakeTimeFromNullableNumber(us.OpenTime),
-                        CloseTimeStr = Helper.MakeTimeFromNullableNumber(us.CloseTime), 
-                        OpenTime2Str = Helper.MakeTimeFromNullableNumber(us.OpenTime2),
-                        CloseTime2Str = Helper.MakeTimeFromNullableNumber(us.CloseTime2),
-                    })
-                    .AsNoTracking()
-                    .ToListAsync();
+            var users = await UserServices.GetAllUsers(_context);
 
             var roles = await _context.Roles
                 .ToListAsync();
 
-            // TODO: select order info for not send too much data to client
             var orders = await _context.Orders
                 .Where(or => or.OrderStatus != OrderStatus.Init)
                 .Include(o => o.OrderItems)
                 .ThenInclude(oi => oi.Product)
                 .Include(o => o.Deliver)
                 .OrderByDescending(ord => ord.Id)
-                .Select(order => new ClientOrder()
-                {
-                    Id = order.Id,
-                    State = order.State,
-                    City = order.City,
-                    Mobile = order.Mobile,
-                    Name = order.Name,
-                    FormattedAddress = order.FormattedAddress,
-                    Description = order.Description,
-                    Latitude = order.Latitude,
-                    Longitude = order.Longitude,
-                    OrderStatus = (int)order.OrderStatus,
-                    DeliverAtDoor = order.DeliverAtDoor,
-
-                    DeliveryId = order.DeliverId,
-                    Delivery = order.Deliver.FullName,
-                    DeliveryMobile = order.Deliver.Mobile,
-                    Items = order.OrderItems.Select(oi => new ClientOrderItem()
-                    {
-                        Id = oi.Id,
-                        Count = oi.Count,
-                        ProductId = oi.ProductId,
-                        Product = oi.Product.Title,
-                        Price = oi.Price,
-                        Title = oi.Title
-                    }).ToList()
-                })
+                .Select(order => order.ConvertToClientOrder())
                 .AsNoTracking()
                 .ToListAsync();
+
+            orders = orders.Select(ord =>
+            {
+                ord.InitDateTimeString = ord.InitDateTime.ToString("s",
+                    CultureInfo.CreateSpecificCulture("fa-Ir"));
+                return ord;
+
+            }).ToList();
 
             var subOrders = await _context.SubOrders
                 .Include(so => so.SubOrderItems)
@@ -157,21 +116,7 @@ namespace Peikresan.Controllers
 
             var products = await _context.Products
                 .Include(p => p.Category)
-                .Select(p => new ClientProduct
-                {
-                    Id = p.Id,
-                    Title = p.Title,
-                    Description = p.Description,
-                    Img = p.Img,
-                    Max = p.Max,
-                    SoldByWeight = p.SoldByWeight,
-                    MinWeight = p.MinWeight,
-                    Barcode = p.Barcode,
-                    Order = p.Order,
-                    CategoryId = p.CategoryId,
-                    Category = p.Category.Title,
-                    Confirm = p.Confirm
-                })
+                .Select(p => p.ConvertToClientProduct())
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -209,7 +154,9 @@ namespace Peikresan.Controllers
         {
             var sellerProducts = await _context.SellerProducts
                 .Where(sp => sp.UserId == thisUser.Id)
-                .Include(sp => sp.Product).ToListAsync();
+                .Include(sp => sp.Product)
+                .Select(sp => new ClientSellerProduct() { ProductId = sp.ProductId ?? 0, Price = sp.Price, Count = sp.Count, ProductTitle = sp.Product.Title })
+                .ToListAsync();
 
             var subOrders = await _context.SubOrders
                 .Where(so => so.SellerId == thisUser.Id)
@@ -264,38 +211,21 @@ namespace Peikresan.Controllers
                 .ThenInclude(oi => oi.Product)
                 .Include(o => o.Deliver)
                 .OrderByDescending(ord => ord.Id)
-                .Select(order => new ClientOrder()
-                {
-                    Id = order.Id,
-                    State = order.State,
-                    City = order.City,
-                    Mobile = order.Mobile,
-                    Name = order.Name,
-                    FormattedAddress = order.FormattedAddress,
-                    Description = order.Description,
-                    Latitude = order.Latitude,
-                    Longitude = order.Longitude,
-                    OrderStatus = (int)order.OrderStatus,
-                    DeliverAtDoor = order.DeliverAtDoor,
-
-                    DeliveryId = order.DeliverId,
-                    Delivery = order.Deliver.FullName,
-                    Items = order.OrderItems.Select(oi => new ClientOrderItem()
-                    {
-                        Id = oi.Id,
-                        Count = oi.Count,
-                        ProductId = oi.ProductId,
-                        Product = oi.Product.Title,
-                        Price = oi.Price,
-                        Title = oi.Title
-                    }).ToList()
-                })
+                .Select(order => order.ConvertToClientOrder())
                 .AsNoTracking()
                 .ToListAsync();
 
+            orders = orders.Select(ord =>
+            {
+                ord.InitDateTimeString = ord.InitDateTime.ToString("s",
+                    CultureInfo.CreateSpecificCulture("fa-Ir"));
+                return ord;
+
+            }).ToList();
+
             var subOrders = await _context.SubOrders
                 .Include(so => so.Order)
-                .Where(so=>so.Order.DeliverId == thisUser.Id)
+                .Where(so => so.Order.DeliverId == thisUser.Id)
                 .Include(so => so.SubOrderItems)
                 .Include(so => so.Seller)
                 .Select(so => new ClientSubOrder()
@@ -412,60 +342,60 @@ namespace Peikresan.Controllers
             return await AccessData(thisUser);
         }
 
-        [AllowAnonymous]
-        [HttpPost("register")]
-        public async Task<IActionResult> RegisterAsync([FromBody] RegisterModel registerModel)
-        {
-            try
-            {
-                var user = new User() { UserName = registerModel.Username, Email = registerModel.Email };
-                var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.RoleId.Trim()).FirstAsync();
-                if (role != null) user.Role = role;
+        //[AllowAnonymous]
+        //[HttpPost("register")]
+        //public async Task<IActionResult> RegisterAsync([FromBody] RegisterModel registerModel)
+        //{
+        //    try
+        //    {
+        //        var user = new User() { UserName = registerModel.Username, Email = registerModel.Email };
+        //        var role = await _context.Roles.Where(r => r.Id.ToString() == registerModel.RoleId.Trim()).FirstAsync();
+        //        if (role != null) user.Role = role;
 
-                if (string.IsNullOrEmpty(registerModel.FirstName) == false && registerModel.FirstName.ToLower() != "undefined")
-                {
-                    user.FirstName = registerModel.FirstName.Trim();
-                }
-                if (string.IsNullOrEmpty(registerModel.LastName) == false && registerModel.LastName.ToLower() != "undefined")
-                {
-                    user.LastName = registerModel.LastName.Trim();
-                }
-                if (string.IsNullOrEmpty(registerModel.Mobile) == false && registerModel.Mobile.ToLower() != "undefined")
-                {
-                    user.Mobile = registerModel.Mobile.Trim();
-                }
-                if (string.IsNullOrEmpty(registerModel.Address) == false && registerModel.Address.ToLower() != "undefined")
-                {
-                    user.Address = registerModel.Address.Trim();
-                }
+        //        if (string.IsNullOrEmpty(registerModel.FirstName) == false && registerModel.FirstName.ToLower() != "undefined")
+        //        {
+        //            user.FirstName = registerModel.FirstName.Trim();
+        //        }
+        //        if (string.IsNullOrEmpty(registerModel.LastName) == false && registerModel.LastName.ToLower() != "undefined")
+        //        {
+        //            user.LastName = registerModel.LastName.Trim();
+        //        }
+        //        if (string.IsNullOrEmpty(registerModel.Mobile) == false && registerModel.Mobile.ToLower() != "undefined")
+        //        {
+        //            user.Mobile = registerModel.Mobile.Trim();
+        //        }
+        //        if (string.IsNullOrEmpty(registerModel.Address) == false && registerModel.Address.ToLower() != "undefined")
+        //        {
+        //            user.Address = registerModel.Address.Trim();
+        //        }
 
-                var passwordHasher = new PasswordHasher<User>();
-                var passwordHash = passwordHasher.HashPassword(user, registerModel.Password);
-                user.PasswordHash = passwordHash;
+        //        var passwordHasher = new PasswordHasher<User>();
+        //        var passwordHash = passwordHasher.HashPassword(user, registerModel.Password);
+        //        user.PasswordHash = passwordHash;
 
-                await _context.Users.AddAsync(user);
-                await _context.SaveChangesAsync();
+        //        await _context.Users.AddAsync(user);
+        //        await _context.SaveChangesAsync();
 
-                var tokenString = GenerateJwtToken(user);
+        //        var tokenString = GenerateJwtToken(user);
 
-                return Ok(new
-                {
-                    token = tokenString,
-                    userDetails = user,
-                    eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
-                    {
-                        UserId = user.Id.ToString(),
-                        WebsiteModel = WebsiteModel.User,
-                        WebsiteEventType = WebsiteEventType.Insert,
-                        Description = "add user " + user.FullName
-                    })
-                });
-            }
-            catch
-            {
-                return BadRequest();
-            }
-        }
+        //        return Ok(new
+        //        {
+        //            token = tokenString,
+        //            userDetails = user,
+        //            eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
+        //            {
+        //                UserId = user.Id.ToString(),
+        //                WebsiteModel = WebsiteModel.User,
+        //                WebsiteEventType = WebsiteEventType.Insert,
+        //                Description = "add user " + user.FullName
+        //            })
+        //        });
+        //    }
+        //    catch
+        //    {
+        //        return BadRequest();
+        //    }
+        //}
 
         //[Authorize("Admin")]
         //[HttpPost("admin-access")]
