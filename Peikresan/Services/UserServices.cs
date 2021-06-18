@@ -4,12 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Peikresan.Data;
+using Peikresan.Data.ClientModels;
 using Peikresan.Data.Models;
 
 namespace Peikresan.Services
 {
     public static class UserServices
     {
+        public static async Task<List<ClientUser>> GetAllUsers(ApplicationDbContext context)
+            => await context.Users
+                .Include(u => u.Role)
+                .Select(user => user.ConvertToClientUser())
+                .AsNoTracking()
+                .ToListAsync();
+
         public static async Task<User> ClosestUser(ApplicationDbContext context, double latitude, double longitude, string role)
         {
             return await context.Users
@@ -42,6 +50,24 @@ namespace Peikresan.Services
                 .Select(u => u.Id)
                 .Take(count)
                 .ToListAsync();
+        }
+
+        public static async Task<int> CountOpenUser(ApplicationDbContext context, List<Guid> sellersIdList,
+            DateTime dateTime)
+        {
+            var dateTimeNumeric = dateTime.Hour + (dateTime.Minute / 60.0);
+            return await context.Users
+                .Where(u => sellersIdList.Contains(u.Id))
+                .CountAsync(user => user.OpenTime == null || user.CloseTime == null ||
+                                    (dateTimeNumeric > user.OpenTime && dateTimeNumeric < user.CloseTime &&
+                                     (user.OpenTime2 == null || user.CloseTime2 == null || (dateTimeNumeric > user.OpenTime2 &&
+                                         dateTimeNumeric < user.CloseTime2))));
+        }
+
+        public static async Task<int> CountOpenUserNow(ApplicationDbContext context, List<Guid> sellersIdList)
+        {
+            var nowDateTime = DateTime.Now;
+            return await CountOpenUser(context, sellersIdList, DateTime.Now);
         }
 
         public static async Task<List<SubOrder>> FindSeller(ApplicationDbContext context, int orderId)
