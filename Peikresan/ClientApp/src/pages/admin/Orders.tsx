@@ -47,6 +47,11 @@ const Orders: React.FC<IOrdersProps> = ({ orders, subOrders }) => {
       key: "name",
     },
     {
+      title: "تاریخ سفارش",
+      dataIndex: "initDateTime",
+      key: "initDateTime",
+    },
+    {
       title: "وضعیت سفارش",
       key: "orderStatus",
       render: (_: any, record: IOrder) => (
