@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Peikresan.Data.Models
 {
@@ -13,7 +14,7 @@ namespace Peikresan.Data.Models
         public bool HaveChild { get; set; } = false;
 
         public string Img { get; set; }
-        // public string Pic => string.IsNullOrEmpty(Img) ? "/img/no-image.png" : "/" + Img;
+        [NotMapped] public string Pic => string.IsNullOrEmpty(Img) ? "/img/no-image.png" : "/" + Img;
 
         public int Order { get; set; } = 0;
 
