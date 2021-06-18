@@ -73,6 +73,9 @@ export interface IOrder extends IAddress {
   deliveryId: number;
   delivery: string;
   deliveryMobile: string;
+
+  initDateTime: string;
+  initDateTimeString: string;
 }
 
 export interface ISubOrder {
@@ -98,8 +101,6 @@ export interface IOrderItem {
 }
 
 export interface ISellerProduct {
-  id: number;
-
   productId: number;
   productTitle: string;
 
