@@ -21,6 +21,9 @@ namespace Peikresan.Data.ClientModels
         public string Delivery { get; set; }
         public string DeliveryMobile { get; set; }
 
+        public DateTime InitDateTime { get; set; }
+        public string InitDateTimeString { get; set; }
+
         public List<ClientOrderItem> Items { get; set; }
     }
 }
