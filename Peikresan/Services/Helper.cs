@@ -42,13 +42,14 @@ namespace Peikresan.Services
         public static bool IsOpenNullableUser(User? user, DateTime dateTime) =>
             user != null && IsOpenUser(user, dateTime);
 
-        public static bool IsOpenUser(User user, DateTime dateTime) =>
-            (user.OpenTime == null || user.CloseTime == null) ||
-            (ChangeDateTimeToNumber(dateTime) > user.OpenTime &&
-            ChangeDateTimeToNumber(dateTime) < user.CloseTime) ||
-            (user.OpenTime2 != null && user.CloseTime2 != null &&
-             ChangeDateTimeToNumber(dateTime) > user.OpenTime2 &&
-             ChangeDateTimeToNumber(dateTime) < user.CloseTime2);
+        public static bool IsOpenUser(User user, DateTime dateTime)
+        {
+            var nowTimeNumeric = ChangeDateTimeToNumber(dateTime);
+            return user.OpenTime == null || user.CloseTime == null ||
+                   (nowTimeNumeric > user.OpenTime && nowTimeNumeric < user.CloseTime &&
+                    (user.OpenTime2 == null || user.CloseTime2 == null || (nowTimeNumeric > user.OpenTime2 &&
+                                                                           nowTimeNumeric < user.CloseTime2)));
+        }
 
         // public static bool IsOpenUserNow(User user) => IsOpenUser(user, DateTime.Now);
 
