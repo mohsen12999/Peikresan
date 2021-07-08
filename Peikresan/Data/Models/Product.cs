@@ -36,5 +36,7 @@ namespace Peikresan.Data.Models
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         public bool Confirm { get; set; } = false;
+
+        public virtual IList<Comment> Comments { get; set; }
     }
 }
