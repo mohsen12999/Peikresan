@@ -40,6 +40,12 @@ namespace Peikresan.Data
                 .WithOne(i => i.SubOrder)
                 .HasForeignKey(p => p.SubOrderId);
 
+            // Product & Comments
+            modelBuilder.Entity<Product>()
+                .HasMany(p => p.Comments)
+                .WithOne(c => c.Product)
+                .HasForeignKey(c => c.ProductId);
+
             // Seller Product
             modelBuilder.Entity<SellerProduct>()
                 .HasKey(sp => new { sp.ProductId, sp.UserId });
@@ -52,8 +58,16 @@ namespace Peikresan.Data
                 .WithMany(p => p.SellerProducts)
                 .HasForeignKey(sp => sp.ProductId);
 
-            modelBuilder.Entity<Order>().HasOne(o => o.Deliver).WithMany(u => u.DeliverOrders).HasForeignKey(or => or.DeliverId).OnDelete(DeleteBehavior.NoAction);
-            modelBuilder.Entity<SubOrder>().HasOne(o => o.Seller).WithMany(u => u.SellSubOrders).HasForeignKey(or => or.SellerId).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<Order>()
+                .HasOne(o => o.Deliver)
+                .WithMany(u => u.DeliverOrders)
+                .HasForeignKey(or => or.DeliverId)
+                .OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<SubOrder>()
+                .HasOne(o => o.Seller)
+                .WithMany(u => u.SellSubOrders)
+                .HasForeignKey(or => or.SellerId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
             modelBuilder.Entity<Product>().HasIndex(p => p.Barcode).IsUnique();
@@ -73,6 +87,8 @@ namespace Peikresan.Data
 
         public DbSet<SellerProduct> SellerProducts { get; set; }
         public DbSet<AwesomeProduct> AwesomeProducts { get; set; }
+
+        public DbSet<Comment> Comments { get; set; }
 
         public DbSet<WebsiteLog> WebsiteLog { get; set; }
     }
