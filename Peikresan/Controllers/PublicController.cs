@@ -103,15 +103,23 @@ namespace Peikresan.Controllers
 
             var enableExpressDelivery = openSeller > 0;
 
+            var nowTimeNumeric = Helper.ChangeDateTimeToNumber(DateTime.Now);
             var sellersProducts = await _context.SellerProducts
                 .Include(sp => sp.User)
                 .Include(sp => sp.Product)
                 .ThenInclude(sp => sp.Category)
-                .Where(sp => sellersId.Contains((Guid)sp.UserId) && (openSeller == 0 || openSeller == 3 || Helper.IsOpenNullableUser(sp.User, DateTime.Now)))
+                //.Where(sp => sellersId.Contains((Guid)sp.UserId) && (openSeller == 0 || openSeller == 3 || Helper.IsOpenNullableUser(sp.User, DateTime.Now)))
+                .Where(sp => sellersId.Contains((Guid)sp.UserId) && (openSeller == 0 || openSeller == 3 || (sp.User != null && (
+                    sp.User.OpenTime == null || sp.User.CloseTime == null ||
+                    (nowTimeNumeric > sp.User.OpenTime && nowTimeNumeric < sp.User.CloseTime &&
+                     (sp.User.OpenTime2 == null || sp.User.CloseTime2 == null || (nowTimeNumeric > sp.User.OpenTime2 &&
+                                                                               nowTimeNumeric < sp.User.CloseTime2)))
+                        ))))
                 .ToListAsync();
 
 
             var products = sellersProducts
+                .Where(sp => sp.Product != null && sp.Product.Confirm)
                 .GroupBy(sp => sp.Product)
                 .Select(p => new ClientProduct()
                 {
@@ -124,9 +132,10 @@ namespace Peikresan.Controllers
                     SoldByWeight = p.Key.SoldByWeight,
                     MinWeight = p.Key.MinWeight,
                     CategoryId = p.Key.CategoryId,
-                    Category = p.Key.Category.Title,
+                    Category = p.Key.Category?.Title ?? "",
                     Price = p.Min(sp => sp.Price)
-                }).Where(p => p.Confirm).ToList();
+                }).ToList();
+
 
             var categories = await _context.Categories
                 .Select(c => new { c.Id, c.Title, c.Description, c.Img, c.ParentId, c.HaveChild, c.Order })
