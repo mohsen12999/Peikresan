@@ -123,6 +123,7 @@ namespace Peikresan.Controllers
             var categories = await _context.Categories.AsNoTracking().ToListAsync();
             var banners = await _context.Banners.AsNoTracking().ToListAsync();
             var sliders = await _context.Sliders.AsNoTracking().ToListAsync();
+            var comments = await _context.Comments.AsNoTracking().ToListAsync();
 
             return Ok(new
             {
@@ -140,6 +141,7 @@ namespace Peikresan.Controllers
                 categories,
                 banners,
                 sliders,
+                comments,
                 eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                 {
                     UserId = thisUser.Id.ToString(),
