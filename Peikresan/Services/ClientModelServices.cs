@@ -64,6 +64,7 @@ namespace Peikresan.Services
                 LastName = user.LastName,
                 FullName = user.FullName,
                 Mobile = user.Mobile,
+                Tel = user.Tel,
                 Address = user.Address,
                 Role = user.Role.Name,
                 RoleId = user.Role.Id.ToString(),
@@ -72,7 +73,16 @@ namespace Peikresan.Services
                 OpenTimeStr = Helper.MakeTimeFromNullableNumber(user.OpenTime),
                 CloseTimeStr = Helper.MakeTimeFromNullableNumber(user.CloseTime),
                 OpenTime2Str = Helper.MakeTimeFromNullableNumber(user.OpenTime2),
-                CloseTime2Str = Helper.MakeTimeFromNullableNumber(user.CloseTime2)
+                CloseTime2Str = Helper.MakeTimeFromNullableNumber(user.CloseTime2),
+
+                IdNumber = user.IdNumber,
+                IdPic = user.IdPic,
+                LicenseNumber = user.LicenseNumber,
+                LicensePic = user.LicensePic,
+                Staff = user.Staff,
+                BankNumber = user.BankNumber,
+                State = user.State,
+                City = user.City,
             };
 
         public static ClientCategory ConvertToClientCategory(this Category category)

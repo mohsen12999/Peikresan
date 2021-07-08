@@ -9,6 +9,7 @@
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string FullName { get; set; }
+        public string Tel { get; set; }
         public string Mobile { get; set; }
         public string Address { get; set; }
         public string Role { get; set; }
@@ -21,6 +22,19 @@
         public string CloseTimeStr { get; set; }
         public string OpenTime2Str { get; set; }
         public string CloseTime2Str { get; set; }
+
+
+        public string IdNumber { get; set; }
+        public string IdPic { get; set; }
+
+        public string LicenseNumber { get; set; }
+        public string LicensePic { get; set; }
+
+        public int Staff { get; set; }
+        public string BankNumber { get; set; }
+
+        public string State { get; set; }
+        public string City { get; set; }
     }
 }
 /*
