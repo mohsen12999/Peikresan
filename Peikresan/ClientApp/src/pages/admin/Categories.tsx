@@ -103,7 +103,11 @@ const Categories: React.FC<ICategoriesProps> = ({
           </Link>
         </Tooltip>
 
-        <Table columns={columns} dataSource={categories} pagination={false} />
+        <Table
+          columns={columns}
+          dataSource={categories}
+          // pagination={false}
+        />
       </div>
     </MyPrivateLayout>
   );

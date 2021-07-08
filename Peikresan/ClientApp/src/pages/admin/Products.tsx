@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Table, Tag, Space, Popconfirm, message, Tooltip, Button } from "antd";
+import { Table, Tag, Space, Popconfirm, Tabs, Tooltip, Button } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
@@ -10,6 +10,8 @@ import { ApplicationState } from "../../store";
 import { actionCreators } from "../../store/Auth";
 import { AdminDataModel, Status } from "../../shares/Constants";
 import { AdminPath, AdminDataUrl } from "../../shares/URLs";
+
+const { TabPane } = Tabs;
 
 import "./Admin.css";
 
@@ -25,7 +27,7 @@ const Products: React.FC<IProductsProps> = ({
   products,
   status,
   RemoveElement,
-  ResetStatus,
+  //ResetStatus,
 }) => {
   //React.useEffect(() => {
   // if (status === Status.SUCCEEDED) {
@@ -121,7 +123,28 @@ const Products: React.FC<IProductsProps> = ({
           </Link>
         </Tooltip>
 
-        <Table columns={columns} dataSource={products} pagination={false} />
+        {/* <Table columns={columns} dataSource={products} pagination={false} /> */}
+
+        <div className="card-container">
+          <Tabs type="card">
+            <TabPane tab="کالاهای تائید شده" key="1">
+              <h2>لیست کالاهای تائید شده</h2>
+              <Table
+                columns={columns}
+                dataSource={products.filter((p) => p.confirm)}
+                //pagination={false}
+              />
+            </TabPane>
+            <TabPane tab="کالاهای تائید نشده" key="2">
+              <h2>لیست کالاهای تائید نشده</h2>
+              <Table
+                columns={columns}
+                dataSource={products.filter((p) => !p.confirm)}
+                //pagination={false}
+              />
+            </TabPane>
+          </Tabs>
+        </div>
       </div>
     </MyPrivateLayout>
   );
