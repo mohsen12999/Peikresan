@@ -96,8 +96,8 @@ namespace Peikresan.Controllers
                     products = await ProductServices.GetAllProducts(_context),
 
                     element = product,
-                    cat = cat?.ConvertToClientCategory(),
-                    product = product.ConvertToClientProduct(),
+                    cat = cat?.ToDto(),
+                    product = product.ToDto(),
                     eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog()
                     {
                         UserId = thisUser.Id.ToString(),
@@ -147,8 +147,8 @@ namespace Peikresan.Controllers
                     success = true,
                     products = await ProductServices.GetAllProducts(_context),
 
-                    cat = cat?.ConvertToClientCategory(),
-                    product = product.ConvertToClientProduct(),
+                    cat = cat?.ToDto(),
+                    product = product.ToDto(),
                     eventId = await WebsiteLogServices.SaveEventLog(_context, new WebsiteLog
                     {
                         UserId = thisUser.Id.ToString(),

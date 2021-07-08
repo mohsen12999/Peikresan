@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Peikresan.Data.ClientModels
+namespace Peikresan.Data.Dto
 {
-    public class ClientOrder
+    public class OrderDto
     {
         public int Id { get; set; }
         public string State { get; set; }
@@ -24,6 +24,6 @@ namespace Peikresan.Data.ClientModels
         public DateTime InitDateTime { get; set; }
         public string InitDateTimeString { get; set; }
 
-        public List<ClientOrderItem> Items { get; set; }
+        public List<OrderItemDto> Items { get; set; }
     }
 }

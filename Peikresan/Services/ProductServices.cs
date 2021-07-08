@@ -3,16 +3,16 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Peikresan.Data;
-using Peikresan.Data.ClientModels;
+using Peikresan.Data.Dto;
 
 namespace Peikresan.Services
 {
     public static class ProductServices
     {
-        public static async Task<List<ClientProduct>> GetAllProducts(ApplicationDbContext context)
+        public static async Task<List<ProductDto>> GetAllProducts(ApplicationDbContext context)
             => await context.Products
                 .Include(p=>p.Category)
-                .Select(product => product.ConvertToClientProduct())
+                .Select(product => product.ToDto())
                 .AsNoTracking()
                 .ToListAsync();
     }

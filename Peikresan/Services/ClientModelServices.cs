@@ -1,13 +1,13 @@
 ﻿using System.Linq;
-using Peikresan.Data.ClientModels;
+using Peikresan.Data.Dto;
 using Peikresan.Data.Models;
 
 namespace Peikresan.Services
 {
     public static class ClientModelServices
     {
-        public static ClientOrder ConvertToClientOrder(this Order order)
-            => new ClientOrder
+        public static OrderDto ToDto(this Order order)
+            => new OrderDto
             {
                 Id = order.Id,
                 State = order.State,
@@ -25,7 +25,7 @@ namespace Peikresan.Services
                 Delivery = order.Deliver.FullName,
                 DeliveryMobile = order.Deliver.Mobile,
                 InitDateTime = order.InitDateTime,
-                Items = order.OrderItems.Select(oi => new ClientOrderItem()
+                Items = order.OrderItems.Select(oi => new OrderItemDto()
                 {
                     Id = oi.Id,
                     Count = oi.Count,
@@ -36,8 +36,8 @@ namespace Peikresan.Services
                 }).ToList()
             };
 
-        public static ClientProduct ConvertToClientProduct(this Product product)
-            => new ClientProduct
+        public static ProductDto ToDto(this Product product)
+            => new ProductDto
             {
                 Id = product.Id,
                 Title = product.Title,
@@ -53,8 +53,8 @@ namespace Peikresan.Services
                 Confirm = product.Confirm
             };
 
-        public static ClientUser ConvertToClientUser(this User user)
-            => new ClientUser
+        public static UserDto ToDto(this User user)
+            => new UserDto
             {
                 Id = user.Id.ToString(),
                 Title = user.Title,
@@ -85,14 +85,14 @@ namespace Peikresan.Services
                 City = user.City,
             };
 
-        public static ClientCategory ConvertToClientCategory(this Category category)
-        => new ClientCategory
-        {
-            Id = category.Id,
-            Title = category.Title,
-            Description = category.Description,
-            Img = category.Img,
-            ParentId = category.ParentId
-        };
+        public static CategoryDto ToDto(this Category category)
+            => new CategoryDto
+            {
+                Id = category.Id,
+                Title = category.Title,
+                Description = category.Description,
+                Img = category.Img,
+                ParentId = category.ParentId
+            };
     }
 }

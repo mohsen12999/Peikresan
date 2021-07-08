@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OfficeOpenXml;
 using Peikresan.Data;
-using Peikresan.Data.ClientModels;
+using Peikresan.Data.Dto;
 using Peikresan.Data.Models;
 using Peikresan.Data.ViewModels;
 using Peikresan.Services;
@@ -219,7 +219,7 @@ namespace Peikresan.Controllers
                 {
                     success = true,
                     sellerProducts = sellerProducts
-                        .Select(sp => new ClientSellerProduct() { ProductId = sp.ProductId ?? 0, Price = sp.Price, Count = sp.Count, ProductTitle = sp.Product.Title })
+                        .Select(sp => new SellerProductDto() { ProductId = sp.ProductId ?? 0, Price = sp.Price, Count = sp.Count, ProductTitle = sp.Product.Title })
                 });
             }
         }

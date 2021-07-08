@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Peikresan.Data.ClientModels
+namespace Peikresan.Data.Dto
 {
-    public class ClientSubOrder
+    public class SubOrderDto
     {
         public int Id { get; set; }
         public Guid? SellerId { get; set; }
@@ -11,6 +11,6 @@ namespace Peikresan.Data.ClientModels
         public string SellerAddress { get; set; }
         public int RequestStatus { get; set; }
         public int OrderId { get; set; }
-        public List<ClientOrderItem> Items { get; set; }
+        public List<OrderItemDto> Items { get; set; }
     }
 }

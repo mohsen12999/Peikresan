@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Peikresan.Data;
-using Peikresan.Data.ClientModels;
+using Peikresan.Data.Dto;
 using Peikresan.Data.Models;
 using Peikresan.Data.ViewModels;
 using Peikresan.Services;
@@ -121,7 +121,7 @@ namespace Peikresan.Controllers
             var products = sellersProducts
                 .Where(sp => sp.Product != null && sp.Product.Confirm)
                 .GroupBy(sp => sp.Product)
-                .Select(p => new ClientProduct()
+                .Select(p => new ProductDto()
                 {
                     Id = p.Key.Id,
                     Title = p.Key.Title,

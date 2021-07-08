@@ -1,6 +1,6 @@
-﻿namespace Peikresan.Data.ClientModels
+﻿namespace Peikresan.Data.Dto
 {
-    public class ClientUser
+    public class UserDto
     {
         public string Id { get; set; }
         public string Title { get; set; }

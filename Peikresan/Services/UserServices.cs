@@ -4,17 +4,17 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Peikresan.Data;
-using Peikresan.Data.ClientModels;
+using Peikresan.Data.Dto;
 using Peikresan.Data.Models;
 
 namespace Peikresan.Services
 {
     public static class UserServices
     {
-        public static async Task<List<ClientUser>> GetAllUsers(ApplicationDbContext context)
+        public static async Task<List<UserDto>> GetAllUsers(ApplicationDbContext context)
             => await context.Users
                 .Include(u => u.Role)
-                .Select(user => user.ConvertToClientUser())
+                .Select(user => user.ToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -139,7 +139,7 @@ namespace Peikresan.Services
 
                 await context.SubOrderItems.AddRangeAsync(subOrderItems);
                 await context.SaveChangesAsync();
-                return new List<SubOrder>(){ subOrder };
+                return new List<SubOrder>() { subOrder };
             }
 
             // 2 Seller

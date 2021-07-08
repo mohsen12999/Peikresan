@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Peikresan.Data;
-using Peikresan.Data.ClientModels;
+using Peikresan.Data.Dto;
 using Peikresan.Data.Models;
 using Peikresan.Data.ViewModels;
 using Peikresan.Services;
@@ -78,7 +78,7 @@ namespace Peikresan.Controllers
                 .ThenInclude(oi => oi.Product)
                 .Include(o => o.Deliver)
                 .OrderByDescending(ord => ord.Id)
-                .Select(order => order.ConvertToClientOrder())
+                .Select(order => order.ToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -93,7 +93,7 @@ namespace Peikresan.Controllers
             var subOrders = await _context.SubOrders
                 .Include(so => so.SubOrderItems)
                 .Include(so => so.Seller)
-                .Select(so => new ClientSubOrder()
+                .Select(so => new SubOrderDto()
                 {
                     Id = so.Id,
                     SellerId = so.SellerId,
@@ -101,7 +101,7 @@ namespace Peikresan.Controllers
                     SellerAddress = so.Seller.Address,
                     RequestStatus = (int)so.RequestStatus,
                     OrderId = so.OrderId,
-                    Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
+                    Items = so.SubOrderItems.Select(soi => new OrderItemDto()
                     {
                         Id = soi.Id,
                         Count = soi.Count,
@@ -116,7 +116,7 @@ namespace Peikresan.Controllers
 
             var products = await _context.Products
                 .Include(p => p.Category)
-                .Select(p => p.ConvertToClientProduct())
+                .Select(p => p.ToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -155,14 +155,14 @@ namespace Peikresan.Controllers
             var sellerProducts = await _context.SellerProducts
                 .Where(sp => sp.UserId == thisUser.Id)
                 .Include(sp => sp.Product)
-                .Select(sp => new ClientSellerProduct() { ProductId = sp.ProductId ?? 0, Price = sp.Price, Count = sp.Count, ProductTitle = sp.Product.Title })
+                .Select(sp => new SellerProductDto() { ProductId = sp.ProductId ?? 0, Price = sp.Price, Count = sp.Count, ProductTitle = sp.Product.Title })
                 .ToListAsync();
 
             var subOrders = await _context.SubOrders
                 .Where(so => so.SellerId == thisUser.Id)
                 .Include(so => so.SubOrderItems)
                 .Include(so => so.Seller)
-                .Select(so => new ClientSubOrder()
+                .Select(so => new SubOrderDto()
                 {
                     Id = so.Id,
                     SellerId = so.SellerId,
@@ -170,7 +170,7 @@ namespace Peikresan.Controllers
                     SellerAddress = so.Seller.Address,
                     RequestStatus = (int)so.RequestStatus,
                     OrderId = so.OrderId,
-                    Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
+                    Items = so.SubOrderItems.Select(soi => new OrderItemDto()
                     {
                         Id = soi.Id,
                         Count = soi.Count,
@@ -211,7 +211,7 @@ namespace Peikresan.Controllers
                 .ThenInclude(oi => oi.Product)
                 .Include(o => o.Deliver)
                 .OrderByDescending(ord => ord.Id)
-                .Select(order => order.ConvertToClientOrder())
+                .Select(order => order.ToDto())
                 .AsNoTracking()
                 .ToListAsync();
 
@@ -228,7 +228,7 @@ namespace Peikresan.Controllers
                 .Where(so => so.Order.DeliverId == thisUser.Id)
                 .Include(so => so.SubOrderItems)
                 .Include(so => so.Seller)
-                .Select(so => new ClientSubOrder()
+                .Select(so => new SubOrderDto()
                 {
                     Id = so.Id,
                     SellerId = so.SellerId,
@@ -236,7 +236,7 @@ namespace Peikresan.Controllers
                     SellerAddress = so.Seller.Address,
                     RequestStatus = (int)so.RequestStatus,
                     OrderId = so.OrderId,
-                    Items = so.SubOrderItems.Select(soi => new ClientOrderItem()
+                    Items = so.SubOrderItems.Select(soi => new OrderItemDto()
                     {
                         Id = soi.Id,
                         Count = soi.Count,
