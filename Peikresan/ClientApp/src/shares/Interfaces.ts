@@ -48,6 +48,7 @@ export interface IUser {
   firstName: string;
   lastName: string;
   mobile: string;
+  tel: string;
   address: string;
   title: string;
 
@@ -56,6 +57,18 @@ export interface IUser {
 
   latitude: number;
   longitude: number;
+
+  idNumber: string;
+  idPic: string;
+
+  licenseNumber: string;
+  licensePic: string;
+
+  staffNumber: string;
+  bankNumber: string;
+
+  state: string;
+  city: string;
 }
 
 export interface IRole {

@@ -79,7 +79,7 @@ namespace Peikresan.Services
                 IdPic = user.IdPic,
                 LicenseNumber = user.LicenseNumber,
                 LicensePic = user.LicensePic,
-                Staff = user.Staff,
+                StaffNumber = user.StaffNumber,
                 BankNumber = user.BankNumber,
                 State = user.State,
                 City = user.City,
