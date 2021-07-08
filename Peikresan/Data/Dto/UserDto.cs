@@ -30,7 +30,7 @@
         public string LicenseNumber { get; set; }
         public string LicensePic { get; set; }
 
-        public int Staff { get; set; }
+        public int StaffNumber { get; set; }
         public string BankNumber { get; set; }
 
         public string State { get; set; }
