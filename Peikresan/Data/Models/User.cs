@@ -14,6 +14,7 @@ namespace Peikresan.Data.Models
         [NotMapped] public string FullName => FirstName + " " + LastName;
 
         public string Mobile { get; set; }
+        public string Tel { get; set; }
         public string Address { get; set; }
 
         public bool Active { get; set; } = true;
@@ -23,8 +24,20 @@ namespace Peikresan.Data.Models
         public double? OpenTime2 { get; set; }
         public double? CloseTime2 { get; set; }
 
+        public string IdNumber { get; set; }
+        public string IdPic { get; set; }
+
+        public string LicenseNumber { get; set; }
+        public string LicensePic { get; set; }
+
+        public int Staff { get; set; }
+        public string BankNumber { get; set; }
+
+        public string State { get; set; }
+        public string City { get; set; }
+
         // public bool IsOpenNow => Helper.IsOpenUser(this,DateTime.Now);
-        
+
         public double Latitude { get; set; }
         public double Longitude { get; set; }
 
