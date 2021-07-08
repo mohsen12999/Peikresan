@@ -10,6 +10,7 @@ import { IBanner } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
 import { AdminPath, AdminDataUrl } from "../../shares/URLs";
 import { AdminDataModel, Status } from "../../shares/Constants";
+import { useHistory } from "react-router-dom";
 
 interface IBannerProps {
   banners: IBanner[];
@@ -26,6 +27,8 @@ const Banner: React.FC<IBannerProps> = ({
   status,
   AddOrChangeElement,
 }) => {
+  const history = useHistory();
+
   const { id } = useParams<IParamTypes>();
 
   const [file, setFile] = React.useState<File>();
@@ -57,7 +60,8 @@ const Banner: React.FC<IBannerProps> = ({
       AdminDataUrl.ADD_CHANGE_BANNER_URL,
       AdminDataModel.Banners,
       formData,
-      AdminPath.Categories
+      AdminPath.Categories,
+      history
     );
   };
 
@@ -90,9 +94,8 @@ const Banner: React.FC<IBannerProps> = ({
           <Button
             icon={<UploadOutlined />}
             onClick={() => {
-              const productImageElement = document.getElementById(
-                "product-img"
-              );
+              const productImageElement =
+                document.getElementById("product-img");
               if (productImageElement) {
                 productImageElement.click();
               }

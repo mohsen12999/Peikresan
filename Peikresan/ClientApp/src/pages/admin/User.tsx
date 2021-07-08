@@ -9,6 +9,7 @@ import { IRole, IUser } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
 import { AdminDataUrl, AdminPath } from "../../shares/URLs";
 import { AdminDataModel, Status } from "../../shares/Constants";
+import { useHistory } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -30,6 +31,8 @@ const User: React.FC<IUserProps> = ({
   roles,
   AddOrChangeElement,
 }) => {
+  const history = useHistory();
+
   const { id } = useParams<IParamTypes>();
 
   const [userName, setUserName] = React.useState<string>();
@@ -94,7 +97,8 @@ const User: React.FC<IUserProps> = ({
       AdminDataUrl.ADD_CHANGE_USER_URL,
       AdminDataModel.Users,
       formData,
-      AdminPath.Categories
+      AdminPath.Categories,
+      history
     );
   };
 

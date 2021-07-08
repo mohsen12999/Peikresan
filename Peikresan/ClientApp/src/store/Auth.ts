@@ -213,7 +213,8 @@ export const actionCreators = {
       url: AdminDataUrl,
       model: AdminDataModel,
       data: FormData,
-      newPageUrl?: AdminPath
+      newPageUrl?: AdminPath,
+      history?: any
     ): AppThunkAction<KnownAction> =>
     async (dispatch, getState) => {
       const status = getState().auth?.status;
@@ -240,7 +241,10 @@ export const actionCreators = {
             });
             message.success("با موفقیت ذخیره شد.");
             if (newPageUrl) {
-              const history = useHistory();
+              if (!history) {
+                history = useHistory();
+              }
+              //const history = useHistory();
               history.push(newPageUrl);
             }
             return true;
@@ -262,6 +266,61 @@ export const actionCreators = {
         return false;
       }
     },
+
+  // addOrChangeElement:
+  //   (
+  //     url: AdminDataUrl,
+  //     model: AdminDataModel,
+  //     data: FormData,
+  //     newPageUrl?: AdminPath
+  //   ): AppThunkAction<KnownAction> =>
+  //   async (dispatch, getState) => {
+  //     const status = getState().auth?.status;
+  //     if (status === Status.LOADING) {
+  //       dispatch({
+  //         type: AuthActions.LOGIN_FAILURE,
+  //         payload: { message: "we have another fetch " },
+  //       });
+  //       return false;
+  //     }
+
+  //     dispatch({ type: AdminDataActions.ADD_CHANGE_REQUEST });
+
+  //     try {
+  //       axios.post(url, data, requestConfig()).then((response) => {
+  //         if (response && response.data && response.data.success) {
+  //           dispatch({
+  //             type: AdminDataActions.ADD_CHANGE_SUCCESS,
+  //             payload: {
+  //               message: "axios success get data",
+  //               data: response.data,
+  //               model: model,
+  //             },
+  //           });
+  //           message.success("با موفقیت ذخیره شد.");
+  //           if (newPageUrl) {
+  //             const history = useHistory();
+  //             history.push(newPageUrl);
+  //           }
+  //           return true;
+  //         } else {
+  //           dispatch({
+  //             type: AdminDataActions.ADD_CHANGE_FAILURE,
+  //             payload: { message: "axios not success", error: response },
+  //           });
+  //           message.error("اشکال در ذخیره");
+  //           return false;
+  //         }
+  //       });
+  //     } catch (error) {
+  //       dispatch({
+  //         type: AdminDataActions.ADD_CHANGE_FAILURE,
+  //         payload: { message: "axios catch error", error: error },
+  //       });
+  //       message.error("اشکال در ذخیره");
+  //       return false;
+  //     }
+  //   },
 
   removeElement:
     (

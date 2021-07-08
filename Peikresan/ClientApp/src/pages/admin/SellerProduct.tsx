@@ -9,6 +9,7 @@ import { IProduct, ISellerProduct } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
 import { AdminPath, AdminDataUrl } from "../../shares/URLs";
 import { AdminDataModel, Status } from "../../shares/Constants";
+import { useHistory } from "react-router-dom";
 
 import "./Admin.css";
 
@@ -30,6 +31,8 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
   status,
   AddOrChangeElement,
 }) => {
+  const history = useHistory();
+
   const { id } = useParams<IParamTypes>();
 
   const [product, setProduct] = React.useState<string>();
@@ -62,7 +65,8 @@ const SellerProduct: React.FC<ISellerProductProps> = ({
       AdminDataUrl.ADD_CHANGE_SELLER_PRODUCT_URL,
       AdminDataModel.SellerProducts,
       formData,
-      AdminPath.SellerProducts
+      AdminPath.SellerProducts,
+      history
     );
   };
 

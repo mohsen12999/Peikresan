@@ -22,6 +22,7 @@ import { actionCreators } from "../../store/Auth";
 import { AdminPath, AdminDataUrl } from "../../shares/URLs";
 import { AdminDataModel, Status } from "../../shares/Constants";
 import { MakeCategoryTree } from "../../shares/Functions";
+import { useHistory } from "react-router-dom";
 
 import "./Admin.css";
 
@@ -46,6 +47,8 @@ const Product: React.FC<IProductProps> = ({
 
   AddOrChangeElement,
 }) => {
+  const history = useHistory();
+
   const { id } = useParams<IParamTypes>();
 
   const [file, setFile] = React.useState<File>();
@@ -98,7 +101,8 @@ const Product: React.FC<IProductProps> = ({
       AdminDataUrl.ADD_CHANGE_PRODUCT_URL,
       AdminDataModel.Products,
       formData,
-      AdminPath.Products
+      AdminPath.Products,
+      history
     );
   };
 
