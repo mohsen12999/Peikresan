@@ -13,6 +13,7 @@ import {
   ISubOrder,
   IAdminFactor,
   ISlider,
+  IComment,
 } from "../shares/Interfaces";
 import { AddToken, GetToken, RemoveToken } from "../shares/LocalStorage";
 import { AdminDataModel, Status } from "../shares/Constants";
@@ -44,6 +45,7 @@ export interface IAuthState {
   categories: ICategory[];
   banners: IBanner[];
   sliders: ISlider[];
+  comments: IComment[];
 }
 
 export enum AuthActions {
@@ -595,6 +597,7 @@ export const reducer: Reducer<IAuthState> = (
       categories: [],
       banners: [],
       sliders: [],
+      comments: [],
     };
   }
 
@@ -653,6 +656,9 @@ export const reducer: Reducer<IAuthState> = (
         }
         if (data.banners) {
           loginState.banners = data.banners;
+        }
+        if (data.comments) {
+          loginState.comments = data.comments;
         }
       }
       return loginState;
