@@ -198,3 +198,14 @@ export interface ITreeNode {
   label: string;
   children: ITreeNode[];
 }
+
+export interface IComment {
+  id: number;
+  name: string;
+  mobile: string;
+  description: string;
+  score: number;
+  accept: boolean;
+  createdDateTime: string;
+  productId: number;
+}
