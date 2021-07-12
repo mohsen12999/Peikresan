@@ -43,6 +43,7 @@ const User: React.FC<IUserProps> = ({
   const [firstName, setFirstName] = React.useState<string>();
   const [lastName, setLastName] = React.useState<string>();
   const [mobile, setMobile] = React.useState<string>();
+  const [tel, setTel] = React.useState<string>();
   const [address, setAddress] = React.useState<string>();
 
   const [latitude, setLatitude] = React.useState<number>();
@@ -72,6 +73,7 @@ const User: React.FC<IUserProps> = ({
         setFirstName(user.firstName);
         setLastName(user.lastName);
         setMobile(user.mobile);
+        setTel(user.tel);
         setAddress(user.address);
         setLatitude(user.latitude);
         setLongitude(user.longitude);
@@ -101,6 +103,7 @@ const User: React.FC<IUserProps> = ({
     formData.append("firstName", firstName ? firstName : "");
     formData.append("lastName", lastName ? lastName : "");
     formData.append("mobile", mobile ? mobile : "");
+    formData.append("tel", tel ? tel : "");
     formData.append("address", address ? address : "");
     formData.append("latitude", latitude ? String(latitude) : "");
     formData.append("longitude", longitude ? String(longitude) : "");
@@ -180,6 +183,14 @@ const User: React.FC<IUserProps> = ({
             value={mobile}
             onChange={(e) => {
               setMobile(e.target.value);
+            }}
+          />
+          <Input
+            className="input-style"
+            placeholder="تلفن"
+            value={tel}
+            onChange={(e) => {
+              setTel(e.target.value);
             }}
           />
           <Input
