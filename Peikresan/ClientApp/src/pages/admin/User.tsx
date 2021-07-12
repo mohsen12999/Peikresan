@@ -32,11 +32,10 @@ const User: React.FC<IUserProps> = ({
   AddOrChangeElement,
 }) => {
   const history = useHistory();
-
   const { id } = useParams<IParamTypes>();
 
   const [userName, setUserName] = React.useState<string>();
-  const [email, setEmail] = React.useState<string>();
+  // const [email, setEmail] = React.useState<string>();
   const [password, setPassword] = React.useState<string>();
   const [roleId, setRoleId] = React.useState<string>();
 
@@ -49,6 +48,8 @@ const User: React.FC<IUserProps> = ({
   const [latitude, setLatitude] = React.useState<number>();
   const [longitude, setLongitude] = React.useState<number>();
 
+  const [role, setRole] = React.useState<string>();
+
   const validateInputs = () =>
     userName &&
     userName.length > 1 &&
@@ -59,22 +60,33 @@ const User: React.FC<IUserProps> = ({
     password &&
     password.length > 1;
 
-  if (id !== undefined) {
-    const user = users.find((u) => u.id === id);
-    if (user !== undefined && userName === undefined) {
-      setUserName(user.userName);
-      // setEmail(user.email);
-      setPassword(user.password);
-      setRoleId(user.roleId);
-      setTitle(user.title);
-      setFirstName(user.firstName);
-      setLastName(user.lastName);
-      setMobile(user.mobile);
-      setAddress(user.address);
-      setLatitude(user.latitude);
-      setLongitude(user.longitude);
+  React.useEffect(() => {
+    if (id !== undefined) {
+      const user = users.find((u) => u.id === id);
+      if (user !== undefined && userName === undefined) {
+        setUserName(user.userName);
+        // setEmail(user.email);
+        setPassword(user.password);
+        setRoleId(user.roleId);
+        setTitle(user.title);
+        setFirstName(user.firstName);
+        setLastName(user.lastName);
+        setMobile(user.mobile);
+        setAddress(user.address);
+        setLatitude(user.latitude);
+        setLongitude(user.longitude);
+
+        setRole(user.role);
+      }
     }
-  }
+  }, []);
+
+  React.useEffect(() => {
+    const roleObj = roles.find((r) => r.id === roleId);
+    if (roleObj) {
+      setRole(roleObj.name);
+    }
+  }, [roleId]);
 
   const sendData = () => {
     if (!validateInputs() || status === Status.LOADING) return;
@@ -106,8 +118,25 @@ const User: React.FC<IUserProps> = ({
     <MyPrivateLayout>
       <div className="admin-container">
         <h1>کاربر</h1>
+
+        <Select
+          className="input-style"
+          onChange={(value) => {
+            setRoleId(String(value));
+          }}
+        >
+          {roles.map((role) => (
+            <Option value={role.id}>
+              {role.description && role.description !== ""
+                ? role.description
+                : role.name}
+            </Option>
+          ))}
+        </Select>
+
         <Space direction="vertical">
           <Input
+            addonBefore="نام کاربری - انگلیسی"
             className="input-style"
             placeholder="نام کاربری - انگلیسی"
             value={userName}
@@ -118,6 +147,7 @@ const User: React.FC<IUserProps> = ({
 
           <Input
             className="input-style"
+            addonBefore="عنوان"
             placeholder="عنوان"
             value={title}
             onChange={(e) => {
@@ -127,6 +157,7 @@ const User: React.FC<IUserProps> = ({
 
           <Input
             className="input-style"
+            addonBefore="نام"
             placeholder="نام"
             value={firstName}
             onChange={(e) => {
@@ -136,6 +167,7 @@ const User: React.FC<IUserProps> = ({
 
           <Input
             className="input-style"
+            addonBefore="نام خانوادگی"
             placeholder="نام خانوادگی"
             value={lastName}
             onChange={(e) => {
@@ -152,6 +184,7 @@ const User: React.FC<IUserProps> = ({
           />
           <Input
             className="input-style"
+            addonBefore="آدرس"
             placeholder="آدرس"
             value={address}
             onChange={(e) => {
@@ -170,6 +203,7 @@ const User: React.FC<IUserProps> = ({
 
           <Input.Password
             className="input-style"
+            addonBefore="رمزعبور"
             placeholder="رمزعبور"
             value={password}
             onChange={(e) => {
@@ -210,21 +244,6 @@ const User: React.FC<IUserProps> = ({
               setLongitude(Number(value));
             }}
           />
-
-          <Select
-            className="input-style"
-            onChange={(value) => {
-              setRoleId(String(value));
-            }}
-          >
-            {roles.map((role) => (
-              <Option value={role.id}>
-                {role.description && role.description !== ""
-                  ? role.description
-                  : role.name}
-              </Option>
-            ))}
-          </Select>
 
           <Button
             type="primary"
