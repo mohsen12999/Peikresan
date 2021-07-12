@@ -13,6 +13,9 @@ namespace Peikresan.Data.Models
         public string LastName { get; set; }
         [NotMapped] public string FullName => FirstName + " " + LastName;
 
+        public string Img { get; set; }
+        [NotMapped] public string Pic => string.IsNullOrEmpty(Img) ? "/img/no-image.png" : "/" + Img;
+
         public string Mobile { get; set; }
         public string Tel { get; set; }
         public string Address { get; set; }
