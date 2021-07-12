@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Table, Tag, Space, Popconfirm, Tooltip, Button, message } from "antd";
+import { Table, Tag, Space, Popconfirm, Tooltip, Button, Tabs } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
@@ -9,7 +9,9 @@ import { ApplicationState } from "../../store";
 import { IUser } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
 import { AdminDataUrl, AdminPath } from "../../shares/URLs";
-import { AdminDataModel, Status } from "../../shares/Constants";
+import { AdminDataModel, Status, UserRole } from "../../shares/Constants";
+
+const { TabPane } = Tabs;
 
 import "./Admin.css";
 
@@ -88,7 +90,42 @@ const Users: React.FC<IUsersProps> = ({ users, status, RemoveElement }) => {
           </Link>
         </Tooltip>
 
-        <Table columns={columns} dataSource={users} pagination={false} />
+        {/* <Table columns={columns} dataSource={users} pagination={false} /> */}
+
+        <div className="card-container">
+          <Tabs type="card">
+            <TabPane tab="فروشگاه‌ها" key="1">
+              <h2>لیست فروشگاه‌ها</h2>
+              <Table
+                columns={columns}
+                dataSource={users.filter(
+                  (u) => u.role.toUpperCase() === UserRole.SELLER
+                )}
+                //pagination={false}
+              />
+            </TabPane>
+            <TabPane tab="پیک‌ها" key="2">
+              <h2>لیست پیک‌ها</h2>
+              <Table
+                columns={columns}
+                dataSource={users.filter(
+                  (u) => u.role.toUpperCase() === UserRole.DELIVERY
+                )}
+                //pagination={false}
+              />
+            </TabPane>
+            <TabPane tab="مدیران سایت" key="3">
+              <h2>لیست مدیران سایت</h2>
+              <Table
+                columns={columns}
+                dataSource={users.filter(
+                  (u) => u.role.toUpperCase() === UserRole.ADMIN
+                )}
+                //pagination={false}
+              />
+            </TabPane>
+          </Tabs>
+        </div>
       </div>
     </MyPrivateLayout>
   );
