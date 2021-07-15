@@ -101,7 +101,6 @@ export enum AdminPath {
   Slider = "/admin/slider/",
 
   Comments = "/admin/comments",
-  Comment = "/admin/comment/",
 
   Banners = "/admin/banners",
   Banner = "/admin/banner/",
