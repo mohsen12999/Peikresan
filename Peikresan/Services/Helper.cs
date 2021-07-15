@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Globalization;
 using Peikresan.Data.Models;
 
 namespace Peikresan.Services
@@ -57,6 +58,9 @@ namespace Peikresan.Services
             order.DeliverTime == 0 ?
                 "فوری" :
                 (order.DeliverDay == "TODAY" ? "امروز" : "فردا") + " ساعت " + order.DeliverTime;
+
+        public static string ToJalali(this DateTime dateTime)
+            => dateTime.ToString("s", CultureInfo.CreateSpecificCulture("fa-Ir"));
 
     }
 }
