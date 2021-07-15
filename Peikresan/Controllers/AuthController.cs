@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.IdentityModel.Tokens.Jwt;
@@ -84,8 +83,7 @@ namespace Peikresan.Controllers
 
             orders = orders.Select(ord =>
             {
-                ord.InitDateTimeString = ord.InitDateTime.ToString("s",
-                    CultureInfo.CreateSpecificCulture("fa-Ir"));
+                ord.InitDateTimeString = ord.InitDateTime.ToJalali();
                 return ord;
 
             }).ToList();
@@ -123,7 +121,7 @@ namespace Peikresan.Controllers
             var categories = await _context.Categories.AsNoTracking().ToListAsync();
             var banners = await _context.Banners.AsNoTracking().ToListAsync();
             var sliders = await _context.Sliders.AsNoTracking().ToListAsync();
-            var comments = await _context.Comments.AsNoTracking().ToListAsync();
+            var comments = await CommentServices.GetAllComments(_context);
 
             return Ok(new
             {
@@ -219,8 +217,7 @@ namespace Peikresan.Controllers
 
             orders = orders.Select(ord =>
             {
-                ord.InitDateTimeString = ord.InitDateTime.ToString("s",
-                    CultureInfo.CreateSpecificCulture("fa-Ir"));
+                ord.InitDateTimeString = ord.InitDateTime.ToJalali();
                 return ord;
 
             }).ToList();
