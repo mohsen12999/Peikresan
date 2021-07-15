@@ -203,6 +203,7 @@ export interface IComment {
   id: number;
   name: string;
   mobile: string;
+  email: string;
   description: string;
   score: number;
   accept: boolean;
