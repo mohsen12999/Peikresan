@@ -208,4 +208,5 @@ export interface IComment {
   accept: boolean;
   createdDateTime: string;
   productId: number;
+  product: string;
 }
