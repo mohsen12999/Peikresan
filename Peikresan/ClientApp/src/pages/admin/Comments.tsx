@@ -1,15 +1,12 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Link } from "react-router-dom";
-import { Table, Tag, Space, Popconfirm, Tooltip, Button } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Table, Tag, Space, Button, Modal } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { IComment } from "../../shares/Interfaces";
 import { ApplicationState } from "../../store";
 import { actionCreators } from "../../store/Auth";
-import { AdminDataModel, Status } from "../../shares/Constants";
-import { AdminPath, AdminDataUrl } from "../../shares/URLs";
+import { Status } from "../../shares/Constants";
 
 interface ICategoriesProps {
   comments: IComment[];
@@ -23,15 +20,9 @@ const Comments: React.FC<ICategoriesProps> = ({
   status,
   RemoveElement,
 }) => {
-  //React.useEffect(() => {
-  // if (status === Status.SUCCEEDED) {
-  //   message.success("با موفقیت حذف شد.");
-  //   ResetStatus();
-  // } else if (status === Status.FAILED) {
-  //   message.error("اشکال در حذف");
-  //   ResetStatus();
-  // }
-  //}, [status]);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalComment, setModalComment] = React.useState<IComment>();
+  const [modalBtn, setModalBtn] = React.useState<JSX.Element[]>();
 
   const columns = [
     // {
@@ -72,34 +63,57 @@ const Comments: React.FC<ICategoriesProps> = ({
       key: "action",
       render: (_: any, record: IComment) => (
         <Space size="middle">
-          {/* <Popconfirm
-            title="از حذف اطمینان دارید؟"
-            onConfirm={(e) => {
-              if (status === Status.LOADING) return;
-              RemoveElement(
-                AdminDataUrl.REMOVE_CATEGORY_URL,
-                AdminDataModel.Categories,
-                record.id
-              );
+          <Tag
+            color="blue"
+            onClick={() => {
+              setModalComment(record);
+              const buttons = record.accept
+                ? [
+                    <Button
+                      key="hidden"
+                      // onClick={() => {
+                      //   PackageTransaction(OrderUrl.READY_PACKAGE, record.id);
+                      //   setModalVisible(false);
+                      // }}
+                    >
+                      عدم نمایش
+                    </Button>,
+                    <Button
+                      key="delete"
+                      // onClick={() => {
+                      //   PackageTransaction(OrderUrl.READY_PACKAGE, record.id);
+                      //   setModalVisible(false);
+                      // }}
+                    >
+                      حذف کامنت
+                    </Button>,
+                  ]
+                : [
+                    <Button
+                      key="show"
+                      // onClick={() => {
+                      //   PackageTransaction(OrderUrl.READY_PACKAGE, record.id);
+                      //   setModalVisible(false);
+                      // }}
+                    >
+                      تایید کامنت
+                    </Button>,
+                    <Button
+                      key="delete"
+                      // onClick={() => {
+                      //   PackageTransaction(OrderUrl.READY_PACKAGE, record.id);
+                      //   setModalVisible(false);
+                      // }}
+                    >
+                      حذف کامنت
+                    </Button>,
+                  ];
+              setModalBtn(buttons);
+              setModalVisible(true);
             }}
-            onCancel={(e) => {
-              console.log("cancel delete");
-            }}
-            okText="بله"
-            cancelText="خیر"
           >
-            <Tag color="red">حذف</Tag>
-          </Popconfirm> */}
-          <Link to={AdminPath.Category + record.id}>
-            <Tag
-              color="blue"
-              // onClick={() => {
-              //   console.log("edit cat", record.id);
-              // }}
-            >
-              نمایش کامنت
-            </Tag>
-          </Link>
+            نمایش کامنت
+          </Tag>
         </Space>
       ),
     },
@@ -116,6 +130,28 @@ const Comments: React.FC<ICategoriesProps> = ({
           // pagination={false}
         />
       </div>
+
+      <Modal
+        visible={modalVisible}
+        title={
+          "کامنت " + (modalComment && modalComment.id ? modalComment.id : "")
+        }
+        onOk={() => {
+          setModalVisible(false);
+        }}
+        onCancel={() => {
+          setModalVisible(false);
+        }}
+        footer={modalBtn}
+      >
+        <p>نام نظر دهنده: {modalComment.name}</p>
+        <p>نام محصول: {modalComment.product}</p>
+        <p>موبایل: {modalComment.mobile}</p>
+        <p>ایمیل: {modalComment.email}</p>
+        <p>امتیاز: {modalComment.score}</p>
+        <p>توضیح: {modalComment.description}</p>
+        <p>وضعیت: {modalComment.accept ? "تایید شده" : "تاپید نشده"} </p>
+      </Modal>
     </MyPrivateLayout>
   );
 };
