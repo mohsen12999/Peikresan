@@ -4,7 +4,7 @@ using Peikresan.Data.Models;
 
 namespace Peikresan.Services
 {
-    public static class ClientModelServices
+    public static class DtoServices
     {
         public static OrderDto ToDto(this Order order)
             => new OrderDto
@@ -93,6 +93,21 @@ namespace Peikresan.Services
                 Description = category.Description,
                 Img = category.Img,
                 ParentId = category.ParentId
+            };
+
+        public static CommentDto ToDto(this Comment comment)
+            => new CommentDto
+            {
+                Id = comment.Id,
+                Name = comment.Name,
+                Mobile = comment.Mobile,
+                Email = comment.Email,
+                Description = comment.Description,
+                Score = comment.Score,
+                Accept = comment.Accept,
+                CreateDateTime = comment.CreateDateTime.ToJalali(),
+                ProductId = comment.ProductId,
+                Product = comment.Product.Title,
             };
     }
 }
