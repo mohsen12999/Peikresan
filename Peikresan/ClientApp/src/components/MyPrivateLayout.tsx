@@ -1,16 +1,13 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Input, Drawer, Menu, Divider, Badge, Spin } from "antd";
+import { Input, Drawer, Menu, Divider, Spin } from "antd";
 import {
   MenuUnfoldOutlined,
   DashboardOutlined,
-  HomeOutlined,
   AppstoreOutlined,
   ShopOutlined,
   ReconciliationOutlined,
-  ShoppingCartOutlined,
-  DollarOutlined,
-  UserOutlined,
+  CommentOutlined,
   LogoutOutlined,
   UsergroupAddOutlined,
   FundOutlined,
@@ -21,7 +18,7 @@ import { Link, useLocation, Redirect } from "react-router-dom";
 
 import { ApplicationState } from "../store";
 import { Status, UserRole } from "../shares/Constants";
-import { AdminPath, CartPath, HomePath } from "../shares/URLs";
+import { AdminPath } from "../shares/URLs";
 import { actionCreators } from "../store/Auth";
 import "./MyLayout.css";
 
@@ -134,6 +131,11 @@ const MyPrivateLayout: React.FC<IMyPrivateLayoutProps> = ({
               <Menu.Item key={AdminPath.Users}>
                 <UsergroupAddOutlined />
                 <Link to={AdminPath.Users}>لیست کاربرها</Link>
+              </Menu.Item>
+
+              <Menu.Item key={AdminPath.Comments}>
+                <CommentOutlined />
+                <Link to={AdminPath.Comments}>لیست کامنت‌ها</Link>
               </Menu.Item>
 
               <Menu.Item key={AdminPath.Orders}>
