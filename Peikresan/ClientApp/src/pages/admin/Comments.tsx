@@ -144,13 +144,17 @@ const Comments: React.FC<ICategoriesProps> = ({
         }}
         footer={modalBtn}
       >
-        <p>نام نظر دهنده: {modalComment.name}</p>
-        <p>نام محصول: {modalComment.product}</p>
-        <p>موبایل: {modalComment.mobile}</p>
-        <p>ایمیل: {modalComment.email}</p>
-        <p>امتیاز: {modalComment.score}</p>
-        <p>توضیح: {modalComment.description}</p>
-        <p>وضعیت: {modalComment.accept ? "تایید شده" : "تاپید نشده"} </p>
+        {modalComment && (
+          <div>
+            <p>نام نظر دهنده: {modalComment.name}</p>
+            <p>نام محصول: {modalComment.product}</p>
+            <p>موبایل: {modalComment.mobile}</p>
+            <p>ایمیل: {modalComment.email}</p>
+            <p>امتیاز: {modalComment.score}</p>
+            <p>توضیح: {modalComment.description}</p>
+            <p>وضعیت: {modalComment.accept ? "تائید شده" : "تائید نشده"} </p>
+          </div>
+        )}
       </Modal>
     </MyPrivateLayout>
   );
