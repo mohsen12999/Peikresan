@@ -50,6 +50,7 @@ import AdminFactors from "./pages/admin/Factors";
 import Orders from "./pages/admin/Orders";
 import SellerOrders from "./pages/admin/SellerOrders";
 import DeliverOrders from "./pages/admin/DeliverOrders";
+import AdminComments from "./pages/admin/Comments";
 
 import "./custom.css";
 
@@ -108,6 +109,7 @@ export default () => (
       <Route path={AdminPath.DeliverOrders} component={DeliverOrders} />
 
       <Route path={AdminPath.Factors} component={AdminFactors} />
+      <Route path={AdminPath.Comments} component={AdminComments} />
 
       <Route component={Notfound} />
     </Switch>
