@@ -87,6 +87,7 @@ const User: React.FC<IUserProps> = ({
     const roleObj = roles.find((r) => r.id === roleId);
     if (roleObj) {
       setRole(roleObj.name);
+      console.log(roleObj.name);
     }
   }, [roleId]);
 
@@ -122,22 +123,22 @@ const User: React.FC<IUserProps> = ({
       <div className="admin-container">
         <h1>کاربر</h1>
 
-        <Select
-          className="input-style"
-          onChange={(value) => {
-            setRoleId(String(value));
-          }}
-        >
-          {roles.map((role) => (
-            <Option value={role.id}>
-              {role.description && role.description !== ""
-                ? role.description
-                : role.name}
-            </Option>
-          ))}
-        </Select>
-
         <Space direction="vertical">
+          <Select
+            className="input-style"
+            onChange={(value) => {
+              setRoleId(String(value));
+            }}
+          >
+            {roles.map((role) => (
+              <Option value={role.id}>
+                {role.description && role.description !== ""
+                  ? role.description
+                  : role.name}
+              </Option>
+            ))}
+          </Select>
+
           <Input
             addonBefore="نام کاربری - انگلیسی"
             className="input-style"
