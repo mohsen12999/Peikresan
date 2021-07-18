@@ -74,6 +74,7 @@ const Users: React.FC<IUsersProps> = ({ users, status, RemoveElement }) => {
           <Link to={AdminPath.User + record.id}>
             <Tag color="blue">تغییر</Tag>
           </Link>
+          <Tag color="blue">نمایش</Tag>
         </Space>
       ),
     },
