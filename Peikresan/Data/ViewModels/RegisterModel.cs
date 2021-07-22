@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Http;
 namespace Peikresan.Data.ViewModels
 {
     public class RegisterModel
@@ -21,10 +22,10 @@ namespace Peikresan.Data.ViewModels
 
         public string Tel { get; set; }
         public string IdNumber { get; set; }
-        public string IdPicFile { get; set; }
+        public IFormFile IdPicFile { get; set; }
 
         public string LicenseNumber { get; set; }
-        public string LicensePicFile { get; set; }
+        public IFormFile LicensePicFile { get; set; }
 
         public string StaffNumber { get; set; }
         public string BankNumber { get; set; }

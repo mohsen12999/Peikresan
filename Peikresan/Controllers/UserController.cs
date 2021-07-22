@@ -1,10 +1,13 @@
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Peikresan.Data;
 using Peikresan.Data.Models;
@@ -19,13 +22,15 @@ namespace Peikresan.Controllers
     {
         private readonly ILogger<UserController> _logger;
         private readonly ApplicationDbContext _context;
+        private readonly string _webRootPath;
 
-        public UserController(ILogger<UserController> logger, ApplicationDbContext context)
+        public UserController(ILogger<UserController> logger, ApplicationDbContext context, IWebHostEnvironment appEnvironment)
         {
             _logger = logger;
             _context = context;
-        }
+            _webRootPath = appEnvironment.WebRootPath ?? Path.Combine(Directory.GetCurrentDirectory(), appEnvironment.IsDevelopment() ? "ClientApp\\public" : "ClientApp\\build");
 
+        }
 
         [Authorize]
         [HttpPost]
@@ -75,6 +80,69 @@ namespace Peikresan.Controllers
                         registerModel.Address.ToLower() != "undefined")
                     {
                         user.Address = registerModel.Address.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
                     }
 
                     var passwordHasher = new PasswordHasher<User>();
@@ -137,6 +205,1015 @@ namespace Peikresan.Controllers
                     {
                         user.Address = registerModel.Address.Trim();
                     }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+                    
+                    if (string.IsNullOrEmpty(registerModel.Tel) == false &&
+                        registerModel.Tel.ToLower() != "undefined")
+                    {
+                        user.Tel = registerModel.Tel.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.IdNumber) == false &&
+                        registerModel.IdNumber.ToLower() != "undefined")
+                    {
+                        user.IdNumber = registerModel.IdNumber.Trim();
+                    }
+
+                    if (registerModel.IdPicFile!=null && registerModel.IdPicFile.Length>0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.IdPicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.IdPic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.LicenseNumber) == false &&
+                        registerModel.LicenseNumber.ToLower() != "undefined")
+                    {
+                        user.LicenseNumber = registerModel.LicenseNumber.Trim();
+                    }
+
+                    if (registerModel.LicensePicFile != null && registerModel.LicensePicFile.Length > 0)
+                    {
+                        var filename =
+                            await ImageServices.SaveAndConvertImage(registerModel.LicensePicFile, _webRootPath, WebsiteModel.Product, 500, 500);
+                        if (filename.Length > 0)
+                        {
+                            user.LicensePic = filename;
+                        }
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.StaffNumber) == false &&
+                        registerModel.StaffNumber.ToLower() != "undefined")
+                    {
+                        int.TryParse(registerModel.StaffNumber, out int staffNumber);
+                        user.StaffNumber = staffNumber;
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.BankNumber) == false &&
+                        registerModel.BankNumber.ToLower() != "undefined")
+                    {
+                        user.BankNumber = registerModel.BankNumber.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.State) == false &&
+                        registerModel.State.ToLower() != "undefined")
+                    {
+                        user.State = registerModel.State.Trim();
+                    }
+
+                    if (string.IsNullOrEmpty(registerModel.City) == false &&
+                        registerModel.City.ToLower() != "undefined")
+                    {
+                        user.City = registerModel.City.Trim();
+                    }
+
 
                     if (string.IsNullOrEmpty(registerModel.Password) == false &&
                         registerModel.Password.ToLower() != "undefined")
