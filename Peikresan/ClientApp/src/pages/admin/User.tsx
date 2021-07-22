@@ -8,7 +8,7 @@ import { ApplicationState } from "../../store";
 import { IRole, IUser } from "../../shares/Interfaces";
 import { actionCreators } from "../../store/Auth";
 import { AdminDataUrl, AdminPath } from "../../shares/URLs";
-import { AdminDataModel, Status } from "../../shares/Constants";
+import { AdminDataModel, Status, UserRole } from "../../shares/Constants";
 import { useHistory } from "react-router-dom";
 
 const { Option } = Select;
@@ -49,6 +49,18 @@ const User: React.FC<IUserProps> = ({
   const [latitude, setLatitude] = React.useState<number>();
   const [longitude, setLongitude] = React.useState<number>();
 
+  const [idNumber, setIdNumber] = React.useState<string>();
+  const [IdPicFile, setIdPicFile] = React.useState<File>();
+
+  const [licenseNumber, setLicenseNumber] = React.useState<string>();
+  const [licensePicFile, setLicensePicFile] = React.useState<File>();
+
+  const [staffNumber, setStaffNumber] = React.useState<number>();
+  const [bankNumber, setBankNumber] = React.useState<string>();
+
+  const [state, setState] = React.useState<string>();
+  const [city, setCity] = React.useState<string>();
+
   const [role, setRole] = React.useState<string>();
 
   const validateInputs = () =>
@@ -65,6 +77,8 @@ const User: React.FC<IUserProps> = ({
     if (id !== undefined) {
       const user = users.find((u) => u.id === id);
       if (user !== undefined && userName === undefined) {
+        console.log("load user ", user);
+
         setUserName(user.userName);
         // setEmail(user.email);
         setPassword(user.password);
@@ -86,8 +100,8 @@ const User: React.FC<IUserProps> = ({
   React.useEffect(() => {
     const roleObj = roles.find((r) => r.id === roleId);
     if (roleObj) {
-      setRole(roleObj.name);
-      console.log(roleObj.name);
+      setRole(roleObj.name.toUpperCase());
+      console.log("current role: ", roleObj.name);
     }
   }, [roleId]);
 
@@ -108,6 +122,15 @@ const User: React.FC<IUserProps> = ({
     formData.append("address", address ? address : "");
     formData.append("latitude", latitude ? String(latitude) : "");
     formData.append("longitude", longitude ? String(longitude) : "");
+
+    formData.append("idNumber", idNumber ? idNumber : "");
+    formData.append("IdPicFile", IdPicFile ? IdPicFile : "");
+    formData.append("licenseNumber", licenseNumber ? licenseNumber : "");
+    formData.append("licensePicFile", licensePicFile ? licensePicFile : "");
+    formData.append("staffNumber", staffNumber ? String(staffNumber) : "");
+    formData.append("bankNumber", bankNumber ? bankNumber : "");
+    formData.append("state", state ? state : "");
+    formData.append("city", city ? city : "");
 
     AddOrChangeElement(
       AdminDataUrl.ADD_CHANGE_USER_URL,
@@ -256,6 +279,93 @@ const User: React.FC<IUserProps> = ({
               setLongitude(Number(value));
             }}
           />
+
+          {(role == UserRole.SELLER || role == UserRole.DELIVERY) && (
+            <React.Fragment>
+              <Input
+                className="input-style"
+                addonBefore="کد ملی"
+                placeholder="کد ملی"
+                value={idNumber}
+                onChange={(e) => {
+                  setIdNumber(e.target.value);
+                }}
+              />
+
+              <input
+                type="file"
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files) {
+                    const file = files[0];
+                    setIdPicFile(file);
+                  }
+                }}
+              />
+
+              <Input
+                className="input-style"
+                addonBefore="شماره جواز"
+                placeholder="شماره جواز"
+                value={licenseNumber}
+                onChange={(e) => {
+                  setLicenseNumber(e.target.value);
+                }}
+              />
+
+              <input
+                type="file"
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files) {
+                    const file = files[0];
+                    setLicensePicFile(file);
+                  }
+                }}
+              />
+
+              <Input
+                className="input-style"
+                addonBefore="شماره شبا"
+                placeholder="شماره شبا"
+                value={bankNumber}
+                onChange={(e) => {
+                  setBankNumber(e.target.value);
+                }}
+              />
+
+              <Input
+                className="input-style"
+                addonBefore="استان"
+                placeholder="استان"
+                value={state}
+                onChange={(e) => {
+                  setState(e.target.value);
+                }}
+              />
+
+              <Input
+                className="input-style"
+                addonBefore="شهر"
+                placeholder="شهر"
+                value={city}
+                onChange={(e) => {
+                  setCity(e.target.value);
+                }}
+              />
+            </React.Fragment>
+          )}
+
+          {role == UserRole.DELIVERY && (
+            <InputNumber
+              className="input-style"
+              value={staffNumber}
+              placeholder="تعداد پرسنل"
+              onChange={(value) => {
+                setStaffNumber(Number(value));
+              }}
+            />
+          )}
 
           <Button
             type="primary"
