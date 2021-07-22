@@ -18,5 +18,18 @@ namespace Peikresan.Data.ViewModels
 
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
+
+        public string Tel { get; set; }
+        public string IdNumber { get; set; }
+        public string IdPicFile { get; set; }
+
+        public string LicenseNumber { get; set; }
+        public string LicensePicFile { get; set; }
+
+        public string StaffNumber { get; set; }
+        public string BankNumber { get; set; }
+
+        public string State { get; set; }
+        public string City { get; set; }
     }
 }
