@@ -136,7 +136,7 @@ const User: React.FC<IUserProps> = ({
       AdminDataUrl.ADD_CHANGE_USER_URL,
       AdminDataModel.Users,
       formData,
-      AdminPath.Categories,
+      AdminPath.Users,
       history
     );
   };
