@@ -13,7 +13,7 @@ namespace Peikresan.Data.Models
         [NotMapped] public string FullName => FirstName + " " + LastName;
 
         public string Img { get; set; }
-        [NotMapped] public string Pic => string.IsNullOrEmpty(Img) ? "/img/no-image.png" : "/" + Img;
+        [NotMapped] public string Pic => string.IsNullOrEmpty(Img) ? "/img/no-image.png" : Img[0] == '/' ? Img : "/" + Img;
 
         public string Mobile { get; set; }
         public string Tel { get; set; }
