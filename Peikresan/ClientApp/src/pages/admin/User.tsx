@@ -91,6 +91,14 @@ const User: React.FC<IUserProps> = ({
         setAddress(user.address);
         setLatitude(user.latitude);
         setLongitude(user.longitude);
+        setTel(user.tel);
+        setAddress(user.address);
+        setIdNumber(user.idNumber);
+        setLicenseNumber(user.licenseNumber);
+        setStaffNumber(Number(user.staffNumber));
+        setBankNumber(user.bankNumber);
+        setState(user.state);
+        setCity(user.city);
 
         setRole(user.role);
       }
@@ -221,6 +229,7 @@ const User: React.FC<IUserProps> = ({
             className="input-style"
             addonBefore="آدرس"
             placeholder="آدرس"
+            autoComplete="off"
             value={address}
             onChange={(e) => {
               setAddress(e.target.value);
@@ -241,6 +250,7 @@ const User: React.FC<IUserProps> = ({
             addonBefore="رمزعبور"
             placeholder="رمزعبور"
             value={password}
+            autoComplete="off"
             onChange={(e) => {
               setPassword(e.target.value);
             }}
