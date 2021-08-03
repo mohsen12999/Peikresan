@@ -35,7 +35,7 @@ namespace Peikresan.Services
                 };
 
                 await image.SaveAsync(Path.Combine(webRootPath, filePath));
-                return filePath;
+                return '/' + filePath;
             }
             catch (Exception)
             {
