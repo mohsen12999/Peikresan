@@ -1,7 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Table, Tag, Space, Popconfirm, Tooltip, Button, Tabs } from "antd";
+import {
+  Table,
+  Tag,
+  Space,
+  Popconfirm,
+  Tooltip,
+  Button,
+  Tabs,
+  Modal,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
@@ -23,6 +32,9 @@ interface IUsersProps {
 }
 
 const Users: React.FC<IUsersProps> = ({ users, status, RemoveElement }) => {
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [modalUser, setModalUser] = React.useState<IUser>();
+
   const columns = [
     {
       title: "عنوان",
@@ -78,6 +90,8 @@ const Users: React.FC<IUsersProps> = ({ users, status, RemoveElement }) => {
             color="blue"
             onClick={() => {
               // open modal
+              setModalUser(record);
+              setModalVisible(true);
             }}
           >
             نمایش کاربر
@@ -135,6 +149,75 @@ const Users: React.FC<IUsersProps> = ({ users, status, RemoveElement }) => {
           </Tabs>
         </div>
       </div>
+      <Modal
+        visible={modalVisible}
+        title={"اطلاعات کاربر " + (modalUser && modalUser.fullName)}
+        onOk={() => {
+          setModalVisible(false);
+        }}
+        onCancel={() => {
+          setModalVisible(false);
+        }}
+        footer={[
+          <Popconfirm
+            title="از حذف اطمینان دارید؟"
+            onConfirm={(e) => {
+              if (status === Status.LOADING) return;
+              RemoveElement(
+                AdminDataUrl.REMOVE_USER_URL,
+                AdminDataModel.Users,
+                modalUser && modalUser.id
+              );
+            }}
+            onCancel={(e) => {
+              console.log("cancel delete");
+            }}
+            okText="بله"
+            cancelText="خیر"
+          >
+            <Tag color="red">حذف</Tag>
+          </Popconfirm>,
+          <Link to={AdminPath.User + (modalUser && modalUser.id)}>
+            <Tag color="blue">تغییر</Tag>
+          </Link>,
+        ]}
+      >
+        <p>نام: {modalUser && modalUser.fullName}</p>
+        <p>موبایل: {modalUser && modalUser.mobile}</p>
+        <p>تلفن: {modalUser && modalUser.tel}</p>
+        <p>موبایل: {modalUser && modalUser.mobile}</p>
+        <p>آدرس: {modalUser && modalUser.address}</p>
+        <p>طول جغرافیایی: {modalUser && modalUser.latitude}</p>
+        <p>عرض جغرافیایی: {modalUser && modalUser.longitude}</p>
+        {modalUser && modalUser.idNumber && <p>کد ملی: {modalUser.idNumber}</p>}
+        {modalUser && modalUser.idPic && modalUser.idPic != "" && (
+          <img
+            src={modalUser.idPic}
+            alt="عکس کارت ملی"
+            style={{ maxWidth: "100%" }}
+          />
+        )}
+        {modalUser && modalUser.licenseNumber && (
+          <p>شماره جواز: {modalUser.licenseNumber}</p>
+        )}
+        {modalUser && modalUser.licensePic && modalUser.licensePic != "" && (
+          <img
+            src={modalUser.licensePic}
+            alt="عکس جواز"
+            style={{ maxWidth: "100%" }}
+          />
+        )}
+        {modalUser && modalUser.bankNumber && (
+          <p>شماره شبا: {modalUser.bankNumber}</p>
+        )}
+        {modalUser && modalUser.state && <p>استان: {modalUser.state}</p>}
+        {modalUser && modalUser.city && <p>شهر: {modalUser.city}</p>}
+        {modalUser && modalUser.staffNumber && modalUser.staffNumber != "0" ? (
+          <p>تعداد پرسنل: {modalUser.staffNumber}</p>
+        ) : (
+          ""
+        )}
+      </Modal>
     </MyPrivateLayout>
   );
 };
