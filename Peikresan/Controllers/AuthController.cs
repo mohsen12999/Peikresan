@@ -155,7 +155,7 @@ namespace Peikresan.Controllers
             var sellerProducts = await _context.SellerProducts
                 .Where(sp => sp.UserId == thisUser.Id)
                 .Include(sp => sp.Product)
-                .Select(sp => new SellerProductDto() { ProductId = sp.ProductId ?? 0, Price = sp.Price, Count = sp.Count, ProductTitle = sp.Product.Title, ProductBarcode = sp.Product.Barcode })
+                .Select(sp => new SellerProductDto() { ProductId = sp.ProductId ?? 0, Price = sp.Price, Count = sp.Count, ProductTitle = sp.Product.Title, ProductBarcode = sp.Product.Barcode ?? 0 })
                 .ToListAsync();
 
             var subOrders = await _context.SubOrders
