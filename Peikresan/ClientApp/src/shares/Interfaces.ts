@@ -116,6 +116,7 @@ export interface IOrderItem {
 export interface ISellerProduct {
   productId: number;
   productTitle: string;
+  productBarcode: string;
 
   count: number;
   price: number;

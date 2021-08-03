@@ -48,9 +48,19 @@ const SellerProducts: React.FC<ISellerProductsProps> = ({
       ),
     },
     {
+      title: "بارکد",
+      dataIndex: "productBarcode",
+      key: "productBarcode",
+    },
+    {
       title: "تعداد",
       dataIndex: "count",
       key: "count",
+    },
+    {
+      title: "قیمت",
+      dataIndex: "price",
+      key: "price",
     },
     {
       title: "عملیات",
