@@ -5,6 +5,7 @@ namespace Peikresan.Data.Dto
     {
         public int ProductId { get; set; }
         public string ProductTitle { get; set; }
+        public decimal ProductBarcode { get; set; }
 
         public int Count { get; set; }
         public decimal Price { get; set; }
