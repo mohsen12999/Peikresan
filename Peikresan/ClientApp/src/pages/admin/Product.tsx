@@ -25,6 +25,7 @@ import { MakeCategoryTree } from "../../shares/Functions";
 import { useHistory } from "react-router-dom";
 
 import "./Admin.css";
+import { CascaderValueType } from "antd/lib/cascader";
 
 const { TextArea } = Input;
 
@@ -57,7 +58,9 @@ const Product: React.FC<IProductProps> = ({
   const [max, setMax] = React.useState<number>();
   const [description, setDescription] = React.useState<string>();
   const [order, setOrder] = React.useState<number>();
-  const [category, setCategory] = React.useState<string>();
+  //const [category, setCategory] = React.useState<string>();
+  const [categoryCascade, setCategoryCascade] =
+    React.useState<CascaderValueType>([]);
   const [soldByWeight, setSoldByWeight] = React.useState(false);
   const [minWeight, setMinWeight] = React.useState<number>();
   const [confirm, setConfirm] = React.useState<boolean>(false);
@@ -78,6 +81,7 @@ const Product: React.FC<IProductProps> = ({
       setMinWeight(product.minWeight);
       setShowImage(product.img);
       setConfirm(product.confirm);
+      setCategoryCascade([product.category]);
     }
   }
 
@@ -92,7 +96,13 @@ const Product: React.FC<IProductProps> = ({
     formData.append("max", String(max));
     formData.append("description", description ? description : "");
     formData.append("order", String(order));
-    formData.append("category", category ? category : "");
+    formData.append(
+      "category",
+      categoryCascade.length > 0
+        ? String(categoryCascade[categoryCascade.length - 1])
+        : ""
+    );
+
     formData.append("soldByWeight", String(soldByWeight));
     formData.append("minWeight", String(minWeight));
     formData.append("confirm", String(confirm));
@@ -199,10 +209,12 @@ const Product: React.FC<IProductProps> = ({
             style={{ width: "100%" }}
             options={MakeCategoryTree(0, categories)}
             placeholder="نام دسته بندی"
+            value={categoryCascade}
             onChange={(value) => {
-              if (value.length > 0) {
-                setCategory(String(value[value.length - 1]));
-              }
+              setCategoryCascade(value);
+              // if (value.length > 0) {
+              //   setCategory(String(value[value.length - 1]));
+              // }
             }}
           />
 
