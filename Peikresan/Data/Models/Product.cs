@@ -18,7 +18,7 @@ namespace Peikresan.Data.Models
         public decimal? Barcode { get; set; }
 
         public string Img { get; set; }
-        [NotMapped] public string Pic => string.IsNullOrEmpty(Img) ? "/img/no-image.png" : "/" + Img;
+        [NotMapped] public string Pic => string.IsNullOrEmpty(Img) ? "/img/no-image.png" : Img[0] == '/' ? Img : '/' + Img;
 
         public int Max { get; set; }
         public int Order { get; set; } = 0;
