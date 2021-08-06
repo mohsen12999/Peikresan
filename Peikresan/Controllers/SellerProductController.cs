@@ -185,7 +185,7 @@ namespace Peikresan.Controllers
 
                 var sellerProducts = new List<SellerProduct>();
 
-                for (var i = 2; i < iRowCnt; i++)
+                for (var i = 1; i < iRowCnt; i++)
                 {
                     var barcodeObj = worksheet.Cells[i, 1].Value;
                     var nameObj = worksheet.Cells[i, 2].Value;
