@@ -1,7 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import { Table, Tag, Space, Popconfirm, Tabs, Tooltip, Button } from "antd";
+import {
+  Table,
+  Tag,
+  Space,
+  Popconfirm,
+  Tabs,
+  Tooltip,
+  Button,
+  Input,
+} from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
@@ -12,6 +21,7 @@ import { AdminDataModel, Status } from "../../shares/Constants";
 import { AdminPath, AdminDataUrl } from "../../shares/URLs";
 
 const { TabPane } = Tabs;
+const { Search } = Input;
 
 import "./Admin.css";
 
@@ -29,21 +39,29 @@ const Products: React.FC<IProductsProps> = ({
   RemoveElement,
   //ResetStatus,
 }) => {
-  //React.useEffect(() => {
-  // if (status === Status.SUCCEEDED) {
-  //   message.success("با موفقیت حذف شد.");
-  //   ResetStatus();
-  // } else if (status === Status.FAILED) {
-  //   message.error("اشکال در حذف");
-  //   ResetStatus();
-  // }
-  //}, [status]);
+  const [searchText, setSearchText] = React.useState("");
+  const [searchedProducts, setSearchedProducts] = React.useState<IProduct[]>(
+    []
+  );
+
+  React.useEffect(() => {
+    if (!searchText || searchText.length == 0) {
+      setSearchedProducts(products);
+    }
+    setSearchedProducts(
+      products.filter(
+        (p) =>
+          p.title.includes(searchText) || String(p.barcode).includes(searchText)
+      )
+    );
+  }, [products, searchText]);
 
   const columns = [
     {
       title: "شماره",
       dataIndex: "id",
       key: "id",
+      sorter: (a: IProduct, b: IProduct) => a.id - b.id,
     },
     {
       title: "عنوان کالا",
@@ -116,6 +134,12 @@ const Products: React.FC<IProductsProps> = ({
     <MyPrivateLayout>
       <div>
         <h1>لیست کالا ها</h1>
+        <Search
+          placeholder="input search text"
+          value={searchText}
+          onSearch={(value) => setSearchText(value)}
+          style={{ width: 200 }}
+        />
 
         <Tooltip title="کالای جدید">
           <Link to="/admin/product" className="float-add-btn">
@@ -131,7 +155,7 @@ const Products: React.FC<IProductsProps> = ({
               <h2>لیست کالاهای تائید شده</h2>
               <Table
                 columns={columns}
-                dataSource={products.filter((p) => p.confirm)}
+                dataSource={searchedProducts.filter((p) => p.confirm)}
                 //pagination={false}
               />
             </TabPane>
@@ -139,7 +163,7 @@ const Products: React.FC<IProductsProps> = ({
               <h2>لیست کالاهای تائید نشده</h2>
               <Table
                 columns={columns}
-                dataSource={products.filter((p) => !p.confirm)}
+                dataSource={searchedProducts.filter((p) => !p.confirm)}
                 //pagination={false}
               />
             </TabPane>
