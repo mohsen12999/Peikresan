@@ -1,6 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
-import { Table, Tag, Space, Button,InputNumber, Modal } from "antd";
+import { Table, Tag, Space, Button, InputNumber, Modal } from "antd";
 
 import MyPrivateLayout from "../../components/MyPrivateLayout";
 import { ApplicationState } from "../../store";
@@ -131,13 +131,12 @@ const DeliverOrders: React.FC<IDeliverOrdersProps> = ({
               ) {
                 buttons = [
                   <InputNumber
-              value={confirmCode}
-              placeholder="وزن پایه"
-              onChange={(value) => {
-                setConfirmCode(Number(value));
-              }}
-            />
-                  ,
+                    value={confirmCode}
+                    placeholder="کد دریافت"
+                    onChange={(value) => {
+                      setConfirmCode(Number(value));
+                    }}
+                  />,
                   <Button
                     key="back"
                     onClick={() => {
